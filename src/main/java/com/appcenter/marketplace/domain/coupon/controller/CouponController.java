@@ -21,8 +21,7 @@ public class CouponController {
 
         Coupon coupon = couponService.createCoupon(couponReqDto, id);
 
-        CouponInfoResDto couponResDto = CouponInfoResDto.toDto(coupon.getId()
-                ,coupon.getName(), coupon.getDescription(), coupon.getDeadLine(), coupon.getStock(), coupon.getIsHidden(), coupon.getCreatedAt() );
+        CouponInfoResDto couponResDto = CouponInfoResDto.toDto(coupon);
 
         return ResponseEntity.ok(couponResDto);
     }
