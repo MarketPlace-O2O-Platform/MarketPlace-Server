@@ -1,6 +1,6 @@
 package com.appcenter.marketplace.domain.member_coupon;
 
-import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.appcenter.marketplace.domain.coupon.domain.Coupon;
 import com.appcenter.marketplace.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
