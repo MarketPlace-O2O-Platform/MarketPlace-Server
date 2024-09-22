@@ -2,9 +2,11 @@ package com.appcenter.marketplace.domain.market;
 
 
 import com.appcenter.marketplace.domain.category.Category;
+import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +40,30 @@ public class Market extends BaseEntity {
     @Column(nullable = true)
     private String thumbnail;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Builder
+    public Market(String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail, Category category) {
+        this.name = name;
+        this.description = description;
+        this.operationHours = operationHours;
+        this.closedDays = closedDays;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        this.category = category;
+    }
+
+    public void updateMarketInfo(MarketUpdateReqDto marketUpdateReqDto, Category category){
+        this.name = name;
+        this.description = description;
+        this.operationHours = operationHours;
+        this.closedDays = closedDays;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        this.category= category;
+    }
 }

@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.category;
 
-import com.appcenter.marketplace.global.common.BaseEntity;
 import com.appcenter.marketplace.global.common.Major;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,6 +18,7 @@ public class Category {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Major major;
+
 
 //    @Column(nullable = false)
 //    @Enumerated(EnumType.STRING)
