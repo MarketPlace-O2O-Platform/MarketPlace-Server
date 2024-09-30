@@ -23,10 +23,10 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponResDto createCoupon(CouponReqDto couponReqDto, Long marketId) {
 
-        // MarketId로 존재 유무 파악 한 뒤, 진행
-        Market market = marketRepository.findById(marketId).orElseThrow(() -> new IllegalArgumentException("Market not found"));
+        // MarketId로 존재 유무 파악
+        Market market = marketRepository.findById(marketId).orElseThrow(IllegalArgumentException::new);
 
-        Coupon coupon =  couponRepository.save(Coupon.builder()
+        Coupon coupon = couponRepository.save(Coupon.builder()
                 .name(couponReqDto.getCouponName())
                 .description(couponReqDto.getDescription())
                 .deadLine(couponReqDto.getDeadLine())
@@ -35,6 +35,13 @@ public class CouponServiceImpl implements CouponService {
                 .isDeleted(false)
                 .market(market)
                 .build());
+
+        return CouponResDto.toDto(coupon);
+    }
+
+    @Override
+    public CouponResDto getCoupon(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
 
         return CouponResDto.toDto(coupon);
 

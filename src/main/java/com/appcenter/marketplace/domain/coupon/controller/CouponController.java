@@ -16,12 +16,17 @@ public class CouponController {
     private final CouponService couponService;
 
     @PostMapping("/coupons")
-    public ResponseEntity<CouponResDto> create(@RequestParam(name = "marketId")Long id,
+    public ResponseEntity<CouponResDto> createCoupon(@RequestParam(name = "marketId")Long id,
                                                 @RequestBody CouponReqDto couponReqDto) {
 
-        CouponResDto resDto = couponService.createCoupon(couponReqDto, id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(resDto);
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.createCoupon(couponReqDto, id));
     }
+
+    @GetMapping("/coupons/{couponId}")
+    public ResponseEntity<CouponResDto> getCoupon(@PathVariable Long couponId) {
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.getCoupon(couponId));
+    }
+
+    
 
 }

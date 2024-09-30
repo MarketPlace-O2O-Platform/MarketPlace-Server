@@ -8,4 +8,6 @@ public interface CouponService {
     // 쿠폰 등록 메서드
     CouponResDto createCoupon(CouponReqDto couponReqDto, Long marketId);
 
+    // 쿠폰 확인 메서드
+    CouponResDto getCoupon(Long couponId);
 }

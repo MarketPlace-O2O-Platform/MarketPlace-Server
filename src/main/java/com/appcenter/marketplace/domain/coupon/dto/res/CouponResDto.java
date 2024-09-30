@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.appcenter.marketplace.domain.market.Market;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CouponResDto {
     private final Long couponId;
+    private final Long marketId;
     private final String couponName;
     private final String description;
     private final LocalDateTime deadLine;
@@ -17,13 +19,14 @@ public class CouponResDto {
     private final LocalDateTime createdAt;
 
     @Builder
-    private CouponResDto(Long couponId, String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden, LocalDateTime createdAt) {
+    private CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden, LocalDateTime createdAt) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.description = description;
         this.deadLine = deadLine;
         this.stock = stock;
         this.isHidden = isHidden;
+        this.marketId = marketId;
         this.createdAt = createdAt;
     }
 
@@ -35,6 +38,7 @@ public class CouponResDto {
                 .deadLine(coupon.getDeadLine())
                 .stock(coupon.getStock())
                 .isHidden(coupon.getIsHidden())
+                .marketId(coupon.getMarket().getId())
                 .createdAt(coupon.getCreatedAt())
                 .build();
     }
