@@ -75,7 +75,7 @@ public class CouponServiceImpl implements CouponService {
 
         if (!coupon.getIsDeleted())
             return coupon;
-        
+
         else throw new IllegalArgumentException();
     }
 }
