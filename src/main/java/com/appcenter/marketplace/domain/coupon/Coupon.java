@@ -1,4 +1,4 @@
-package com.appcenter.marketplace.domain.coupon.domain;
+package com.appcenter.marketplace.domain.coupon;
 
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.global.common.BaseEntity;
