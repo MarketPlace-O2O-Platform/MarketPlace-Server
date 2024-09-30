@@ -68,4 +68,8 @@ public class Coupon extends BaseEntity {
         this.isHidden = couponHiddenReqDto.getHidden();
     }
 
+    public void deleteCoupon(){
+        this.isDeleted = true;
+    }
+
 }

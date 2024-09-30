@@ -19,4 +19,7 @@ public interface CouponService {
 
     // 쿠폰 숨김 처리 메서드
     CouponHiddenResDto updateCouponHidden(CouponHiddenReqDto couponHiddenReqDto, Long couponId);
+
+    // 쿠폰 삭제 메서드
+    void deleteCoupon(Long couponId);
 }

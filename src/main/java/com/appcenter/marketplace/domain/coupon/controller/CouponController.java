@@ -42,4 +42,9 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(couponService.updateCouponHidden(couponHiddenReqDto, couponId));
     }
 
+    @DeleteMapping("/coupons/{couponId}")
+    public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+        couponService.deleteCoupon(couponId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

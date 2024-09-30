@@ -57,6 +57,13 @@ public class CouponServiceImpl implements CouponService {
         return CouponHiddenResDto.toDto(coupon);
     }
 
+    @Override
+    @Transactional
+    public void deleteCoupon(Long couponId) {
+        Coupon coupon = findCouponById(couponId);
+        // 소프트 딜리트 적용
+        coupon.deleteCoupon();
+    }
 
 
     private Market findMarketById(Long marketId) {
@@ -64,6 +71,11 @@ public class CouponServiceImpl implements CouponService {
     }
 
     private Coupon findCouponById(Long couponId) {
-        return couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
+
+        if (!coupon.getIsDeleted())
+            return coupon;
+        
+        else throw new IllegalArgumentException();
     }
 }
