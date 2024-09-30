@@ -1,6 +1,9 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
+import com.appcenter.marketplace.domain.coupon.dto.req.CouponHiddenReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
+import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,16 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(couponService.getCoupon(couponId));
     }
 
-    
+    @PutMapping("/coupons/{couponId}")
+    public ResponseEntity<CouponResDto> updateCoupon(@RequestBody CouponUpdateReqDto couponUpdateReqDto,
+                                                        @PathVariable Long couponId ){
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.updateCoupon(couponUpdateReqDto, couponId));
+    }
+
+    @PutMapping("/coupons/hidden/{couponId}")
+    public ResponseEntity<CouponHiddenResDto> hiddenCoupon(@RequestBody CouponHiddenReqDto couponHiddenReqDto,
+                                                           @PathVariable Long couponId) {
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.updateCouponHidden(couponHiddenReqDto, couponId));
+    }
 
 }

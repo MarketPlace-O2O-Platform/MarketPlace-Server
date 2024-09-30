@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
-import com.appcenter.marketplace.domain.market.Market;
 import lombok.Builder;
 import lombok.Getter;
 
