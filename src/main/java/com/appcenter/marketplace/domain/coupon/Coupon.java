@@ -70,6 +70,7 @@ public class Coupon extends BaseEntity {
 
     public void deleteCoupon(){
         this.isDeleted = true;
+        this.isHidden = true;
     }
 
 }
