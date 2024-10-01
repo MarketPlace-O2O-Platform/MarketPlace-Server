@@ -45,6 +45,7 @@ public class MarketCreateReqDto {
                 .operationHours(operationHours)
                 .closedDays(closedDays)
                 .phoneNumber(phoneNumber)
+                .address(address)
                 .category(category)
                 .build();
     }
