@@ -35,7 +35,7 @@ public class ErrorResponse {
             this.reason = reason;
         }
         /*
-            1. BindingResult.getFieldErrors()를 사용해 BindingResult의 error들을 가져온다.
+            1. BindingResult.getFieldErrors()를 사용해 BindingResult의 오류들을 가져온다.
             2. 필요한 값들을 Validation Error에 매핑하여 사용한다.
 
             Field : 예외가 발생한 field

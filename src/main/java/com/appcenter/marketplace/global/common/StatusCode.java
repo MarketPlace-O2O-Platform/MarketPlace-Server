@@ -20,7 +20,10 @@ public enum StatusCode {
     COUPON_FOUND(OK,"쿠폰 조회 완료"),
     COUPON_UPDATE(OK,"쿠폰 수정 완료"),
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
-    COUPON_DELETE(OK,"쿠폰 삭제 완료");
+    COUPON_DELETE(OK,"쿠폰 삭제 완료"),
+
+    /* 400 BAD_REQUEST : 잘못된 요청 */
+    INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다.");
 
     private final HttpStatus status;
     private final String message;
