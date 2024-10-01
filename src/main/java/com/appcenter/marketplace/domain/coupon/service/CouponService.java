@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.coupon.service;
 
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponHiddenReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
@@ -18,7 +17,7 @@ public interface CouponService {
     CouponResDto updateCoupon(CouponUpdateReqDto couponUpdateReqDto, Long couponId);
 
     // 쿠폰 숨김 처리 메서드
-    CouponHiddenResDto updateCouponHidden(CouponHiddenReqDto couponHiddenReqDto, Long couponId);
+    CouponHiddenResDto updateCouponHidden(Long couponId);
 
     // 쿠폰 삭제 메서드
     void deleteCoupon(Long couponId);

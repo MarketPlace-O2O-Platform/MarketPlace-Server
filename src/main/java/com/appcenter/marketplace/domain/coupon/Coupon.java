@@ -1,13 +1,9 @@
 package com.appcenter.marketplace.domain.coupon;
 
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponHiddenReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,8 +60,8 @@ public class Coupon extends BaseEntity {
         this.stock = couponUpdateReqDto.getStock();
     }
 
-    public void updateHidden(CouponHiddenReqDto couponHiddenReqDto) {
-        this.isHidden = couponHiddenReqDto.getHidden();
+    public void updateHidden() {
+        this.isHidden = !this.isHidden;
     }
 
     public void deleteCoupon(){

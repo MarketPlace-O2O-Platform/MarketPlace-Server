@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponHiddenReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
@@ -51,9 +50,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
-    public CouponHiddenResDto updateCouponHidden(CouponHiddenReqDto couponHiddenReqDto, Long couponId) {
+    public CouponHiddenResDto updateCouponHidden(Long couponId) {
         Coupon coupon = findCouponById(couponId);
-        coupon.updateHidden(couponHiddenReqDto);
+        coupon.updateHidden();
         return CouponHiddenResDto.toDto(coupon);
     }
 

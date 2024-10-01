@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponHiddenReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
@@ -44,9 +43,8 @@ public class CouponController {
 
     @Operation(summary = "숨김/공개 처리 기능", description = "사장님은 생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.")
     @PutMapping("/coupons/hidden/{couponId}")
-    public ResponseEntity<CouponHiddenResDto> hiddenCoupon(@RequestBody CouponHiddenReqDto couponHiddenReqDto,
-                                                           @PathVariable Long couponId) {
-        return ResponseEntity.status(HttpStatus.OK).body(couponService.updateCouponHidden(couponHiddenReqDto, couponId));
+    public ResponseEntity<CouponHiddenResDto> hiddenCoupon(@PathVariable Long couponId) {
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.updateCouponHidden(couponId));
     }
 
     @Operation(summary = "사장님 쿠폰 삭제", description = "사장님은 쿠폰을 삭제할 수 있습니다. " +
