@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,14 @@ public class MarketOwnerController {
     private final MarketOwnerService marketOwnerService;
 
     @PostMapping
-    public ResponseEntity<MarketResDto> createMarket(@RequestBody MarketCreateReqDto marketCreateReqDto){
+    public ResponseEntity<MarketResDto> createMarket(@RequestBody @Valid MarketCreateReqDto marketCreateReqDto){
         return ResponseEntity
                 .status(201)
                 .body(marketOwnerService.createMarket(marketCreateReqDto));
     }
 
     @PutMapping("/{marketId}")
-    public ResponseEntity<MarketResDto> updateMarket(@RequestBody MarketUpdateReqDto marketUpdateReqDto,
+    public ResponseEntity<MarketResDto> updateMarket(@RequestBody @Valid MarketUpdateReqDto marketUpdateReqDto,
                                                      @PathVariable Long marketId) {
         return ResponseEntity.ok(marketOwnerService.updateMarket(marketUpdateReqDto,marketId));
     }
