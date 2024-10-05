@@ -15,7 +15,7 @@ public enum StatusCode {
     MARKET_UPDATE(OK,"매장 수정 완료"),
     MARKET_DELETE(OK,"매장 삭제 완료"),
 
-    // Market
+    // Coupon
     COUPON_CREATE(CREATED,"쿠폰 생성 완료"),
     COUPON_FOUND(OK,"쿠폰 조회 완료"),
     COUPON_UPDATE(OK,"쿠폰 수정 완료"),
@@ -23,7 +23,13 @@ public enum StatusCode {
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
-    INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다.");
+    INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
+
+
+    MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),
+    COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
+    COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다.");
+
 
     private final HttpStatus status;
     private final String message;
