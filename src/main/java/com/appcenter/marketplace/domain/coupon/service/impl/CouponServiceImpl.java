@@ -9,10 +9,12 @@ import com.appcenter.marketplace.domain.coupon.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.MarketRepository;
-import com.appcenter.marketplace.domain.member_coupon.MemberCouponRepository;
+import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,6 @@ public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
     private final MarketRepository marketRepository;
-    private final MemberCouponRepository memberCouponRepository;
 
     @Override
     @Transactional
@@ -66,15 +67,17 @@ public class CouponServiceImpl implements CouponService {
 
 
     private Market findMarketById(Long marketId) {
-        return marketRepository.findById(marketId).orElseThrow(IllegalArgumentException::new);
+        return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
+
     }
 
     private Coupon findCouponById(Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
 
+        // 나중에 쿼리로도 적용 예정
         if (!coupon.getIsDeleted())
             return coupon;
 
-        else throw new IllegalArgumentException();
+        else throw new CustomException(COUPON_IS_DELETED);
     }
 }

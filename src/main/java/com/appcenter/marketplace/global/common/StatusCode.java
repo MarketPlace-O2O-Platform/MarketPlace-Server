@@ -31,9 +31,12 @@ public enum StatusCode {
 
     /* 404 NOT_FOUND : 존재하지 않는 리소스 */
     CATEGORY_NOT_EXIST(NOT_FOUND,"존재하지 않는 카테고리입니다."),
-    MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다.");
+    MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),
+    COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
+    COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다.");
 
     /* 409 CONFLICT : 리소스 충돌 */
+
 
     private final HttpStatus status;
     private final String message;
