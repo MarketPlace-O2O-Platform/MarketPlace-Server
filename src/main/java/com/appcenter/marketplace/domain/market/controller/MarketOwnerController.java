@@ -4,9 +4,14 @@ import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
+import com.appcenter.marketplace.global.common.CommonResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,28 +19,32 @@ import org.springframework.web.bind.annotation.*;
 public class MarketOwnerController {
     private final MarketOwnerService marketOwnerService;
 
+    @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다.")
     @PostMapping
-    public ResponseEntity<MarketResDto> createMarket(@RequestBody MarketCreateReqDto marketCreateReqDto){
+    public ResponseEntity<CommonResponse<MarketResDto>> createMarket(@RequestBody @Valid MarketCreateReqDto marketCreateReqDto){
         return ResponseEntity
-                .status(201)
-                .body(marketOwnerService.createMarket(marketCreateReqDto));
+                .status(MARKET_CREATE.getStatus())
+                .body(CommonResponse.from(MARKET_CREATE.getMessage(),marketOwnerService.createMarket(marketCreateReqDto)));
     }
 
+    @Operation(summary = "사장님 매장 정보 수정", description = "사장님이 생성한 매장 정보를 수정합니다.")
     @PutMapping("/{marketId}")
-    public ResponseEntity<MarketResDto> updateMarket(@RequestBody MarketUpdateReqDto marketUpdateReqDto,
+    public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(@RequestBody @Valid MarketUpdateReqDto marketUpdateReqDto,
                                                      @PathVariable Long marketId) {
-        return ResponseEntity.ok(marketOwnerService.updateMarket(marketUpdateReqDto,marketId));
+        return ResponseEntity.ok(CommonResponse.from(MARKET_UPDATE.getMessage(),marketOwnerService.updateMarket(marketUpdateReqDto,marketId)));
     }
 
+    @Operation(summary = "사장님 매장 조회", description = "사장님이 생성한 매장 정보를 조회합니다.")
     @GetMapping("/{marketId}")
-    public ResponseEntity<MarketResDto> getMarket(@PathVariable Long marketId){
-        return ResponseEntity.ok(marketOwnerService.getMarket(marketId));
+    public ResponseEntity<CommonResponse<MarketResDto>> getMarket(@PathVariable Long marketId){
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketOwnerService.getMarket(marketId)));
     }
 
+    @Operation(summary = "사장님 매장 삭제", description = "사장님이 생성한 매장을 삭제합니다. ")
     @DeleteMapping("/{marketId}")
-    public ResponseEntity<Void> deleteMarket(@PathVariable Long marketId){
+    public ResponseEntity<CommonResponse<Object>> deleteMarket(@PathVariable Long marketId){
         marketOwnerService.deleteMarket(marketId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(CommonResponse.from(MARKET_DELETE.getMessage()));
     }
 
 }

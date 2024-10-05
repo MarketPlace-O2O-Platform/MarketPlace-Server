@@ -57,13 +57,12 @@ public class Market extends BaseEntity {
     }
 
     public void updateMarketInfo(MarketUpdateReqDto marketUpdateReqDto, Category category){
-        this.name = name;
-        this.description = description;
-        this.operationHours = operationHours;
-        this.closedDays = closedDays;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.thumbnail = thumbnail;
+        this.name = marketUpdateReqDto.getMarketName();
+        this.description = marketUpdateReqDto.getDescription();
+        this.operationHours = marketUpdateReqDto.getOperationHours();
+        this.closedDays = marketUpdateReqDto.getClosedDays();
+        this.phoneNumber = marketUpdateReqDto.getPhoneNumber();
+        this.address = marketUpdateReqDto.getAddress();
         this.category= category;
     }
 }

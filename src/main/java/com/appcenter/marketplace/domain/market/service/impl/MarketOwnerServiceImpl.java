@@ -9,9 +9,12 @@ import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.global.common.Major;
+import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -55,14 +58,14 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         // 카테고리 대분류명 존재 확인
         if(Major.exists(major)) {
             return categoryRepository.findByMajor(Major.valueOf(major))
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(() -> new CustomException(CATEGORY_NOT_EXIST));
         }
-        else throw new IllegalArgumentException();
+        else throw new CustomException(CATEGORY_NOT_EXIST);
     }
 
     // 마켓 조회
     private Market findMarketByMarketId(Long marketId){
         return marketRepository.findById(marketId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
     }
 }
