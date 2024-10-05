@@ -2,7 +2,6 @@ package com.appcenter.marketplace.global.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,15 +13,8 @@ import javax.sql.DataSource;
 @Configuration
 public class OracleConfig {
 
-    @Value("${oracle.database.url}")
-    private String url;
-    @Value("${oracle.database.user}")
-    private String username;
-    @Value("${oracle.database.password}")
-    private String password;
-
     @Bean(name = "oracleDataSource")
-    @ConfigurationProperties(prefix = "school.datasource")
+    @ConfigurationProperties(prefix = "oracle.datasource")
     public DataSource secondDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
