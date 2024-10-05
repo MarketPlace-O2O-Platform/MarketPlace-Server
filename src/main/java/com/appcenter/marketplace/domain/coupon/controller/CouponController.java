@@ -7,6 +7,7 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class CouponController {
     @Operation(summary = "사장님 쿠폰 생성", description = "사장님이 1개의 쿠폰을 생성합니다.")
     @PostMapping("/coupons")
     public ResponseEntity<CommonResponse<CouponResDto>> createCoupon(@RequestParam(name = "marketId")Long id,
-                                                                    @RequestBody CouponReqDto couponReqDto) {
+                                                                     @RequestBody @Valid CouponReqDto couponReqDto) {
 
         return ResponseEntity.status(COUPON_CREATE.getStatus()).body(CommonResponse.from(COUPON_CREATE.getMessage(),couponService.createCoupon(couponReqDto, id)));
     }
@@ -39,7 +40,7 @@ public class CouponController {
     @Operation(summary = "사장님 쿠폰 내용 수정", description = "사장님이 생성한 쿠폰의 내용을 수정합니다. " +
                                                   "<br> '숨김처리'를 제외한 내용을 수정할 수 있습니다. ")
     @PutMapping("/coupons/{couponId}")
-    public ResponseEntity<CommonResponse<CouponResDto>> updateCoupon(@RequestBody CouponUpdateReqDto couponUpdateReqDto,
+    public ResponseEntity<CommonResponse<CouponResDto>> updateCoupon(@RequestBody @Valid CouponUpdateReqDto couponUpdateReqDto,
                                                         @PathVariable Long couponId ){
         return ResponseEntity.status(COUPON_UPDATE.getStatus()).body(CommonResponse.from(COUPON_UPDATE.getMessage(),couponService.updateCoupon(couponUpdateReqDto, couponId)));
     }
