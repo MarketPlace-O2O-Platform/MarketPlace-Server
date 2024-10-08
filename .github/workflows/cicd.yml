@@ -63,4 +63,5 @@ jobs:
           script_stop: true
           script: |
             cd marketplace
+            chmod +x ./deploy.sh
             ./deploy.sh
