@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
+@Table(name ="market")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,13 +27,13 @@ public class Market extends BaseEntity {
     @Column(nullable = true)
     private String description;
 
-    @Column(nullable = true)
+    @Column(name = "operation_hours", nullable = true)
     private String operationHours;
 
-    @Column(nullable = true)
+    @Column(name = "closed_days", nullable = true)
     private String closedDays;
 
-    @Column(nullable = true)
+    @Column(name = "phone_number", nullable = true)
     private String phoneNumber;
 
     @Column(nullable = false)

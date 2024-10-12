@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Table(name = "image")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +23,7 @@ public class Image extends BaseEntity {
     @Column(nullable = false)
     private String folder;
 
-    @Column(nullable = false)
+    @Column(name = "original_name", nullable = false)
     private String originalName;
 
     @ManyToOne(fetch = FetchType.LAZY)

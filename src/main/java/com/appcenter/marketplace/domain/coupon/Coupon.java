@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Table(name = "coupon")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,16 +27,16 @@ public class Coupon extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "dead_line",nullable = false)
     private LocalDateTime deadLine;
 
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(nullable = false)
+    @Column(name = "is_hidden", nullable = false)
     private Boolean isHidden;
 
-    @Column(nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
