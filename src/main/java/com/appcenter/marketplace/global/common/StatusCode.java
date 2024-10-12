@@ -22,10 +22,15 @@ public enum StatusCode {
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 
+    // Member
+    MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
+
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
+    INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
 
     /* 401 UNAUTHORIZED : 비인증 사용자 */
+    UNAUTHORIZED_LOGIN_ERROR(UNAUTHORIZED, "학번 또는 비밀번호가 올바르지 않습니다."),
 
     /* 403 FORBIDDEN : 권한 없음 */
 
