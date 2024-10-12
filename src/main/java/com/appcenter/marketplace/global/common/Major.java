@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.global.common;
 
 public enum Major {
-    ICOOP,FOOD,CAFE,GAME,SPORT,BEAUTY,EDUCATION,ONLINE,INTERIOR;
+    FOOD, DESSERT, SPORT, BEAUTY, HOSPITAL, EDUCATION, ETC;
 
     public static boolean exists(String value) {
         for (Major major : values()) {
