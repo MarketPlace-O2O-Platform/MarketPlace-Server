@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.appcenter.marketplace.global.oracleRepository"})
+@EnableJpaRepositories
 public class OracleConfig {
 
     @Bean(name = "oracleDataSource")
