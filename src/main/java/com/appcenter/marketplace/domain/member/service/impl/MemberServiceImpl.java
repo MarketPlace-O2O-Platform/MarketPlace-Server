@@ -30,15 +30,8 @@ public class MemberServiceImpl implements MemberService {
     // 학번 로그인 검증 및 형변환
     private Long validateAndParseStudentId(MemberLoginReqDto memberLoginReqDto) {
         // 로그인 검증
-        if(!inuLoginRepository.loginCheck(memberLoginReqDto.getStudentId(), memberLoginReqDto.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_LOGIN_ERROR);
-        }
-        try {
-            // 형변환
+        if(inuLoginRepository.loginCheck(memberLoginReqDto.getStudentId(), memberLoginReqDto.getPassword()))
             return Long.valueOf(memberLoginReqDto.getStudentId());
-        }catch (Exception e){
-            throw new CustomException(INVALID_STUDENT_ID);
-        }
+        else throw new CustomException(UNAUTHORIZED_LOGIN_ERROR);
     }
-
 }
