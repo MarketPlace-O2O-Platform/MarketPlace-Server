@@ -26,5 +26,6 @@ public class InuLoginRepository {
             log.info("데이터베이스 연결 오류 메시지 : {}",e.getMessage());
             return false;
         }
+
     }
 }
