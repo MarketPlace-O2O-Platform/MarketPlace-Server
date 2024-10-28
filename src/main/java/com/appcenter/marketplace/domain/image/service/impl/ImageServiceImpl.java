@@ -26,6 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     // 이미지 리스트의 첫번째 요소를 썸네일로 설정
     @Override
+    @Transactional
     public void createImage(Market market, List<MultipartFile> multipartFileList) throws IOException {
 
         for (int i = 0; i < multipartFileList.size(); i++){

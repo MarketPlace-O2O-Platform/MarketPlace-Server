@@ -8,6 +8,7 @@ import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public class MarketOwnerController {
     private final MarketOwnerService marketOwnerService;
 
     @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다.")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketResDto>> createMarket(
             @RequestPart(value = "jsonData") @Valid MarketCreateReqDto marketCreateReqDto,
             @RequestPart(value = "files") List<MultipartFile> multipartFileList) throws IOException {
