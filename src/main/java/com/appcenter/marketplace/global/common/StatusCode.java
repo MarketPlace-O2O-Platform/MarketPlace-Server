@@ -28,6 +28,8 @@ public enum StatusCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
     INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
+    MULTI_PART_FILE_INVALID(BAD_REQUEST,"유효하지 않은 MultiPartFile입니다."),
+    FILE_INVALID(BAD_REQUEST,"파일 저장 중 오류가 발생했습니다."),
 
     /* 401 UNAUTHORIZED : 비인증 사용자 */
     UNAUTHORIZED_LOGIN_ERROR(UNAUTHORIZED, "학번 또는 비밀번호가 올바르지 않습니다."),

@@ -67,4 +67,7 @@ public class Market extends BaseEntity {
         this.address = marketUpdateReqDto.getAddress();
         this.category= category;
     }
+    public void updateThumbnailPath(String thumbnail){
+        this.thumbnail= thumbnail;
+    }
 }
