@@ -71,7 +71,6 @@ jobs:
         with:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USERNAME }}
-          password: ${{ secrets.DEPLOYMENT_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           source: .env
           target: /home/serverking/marketplace
@@ -81,7 +80,6 @@ jobs:
         with:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USERNAME }}
-          password: ${{ secrets.DEPLOYMENT_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           source: docker-compose.yml
           target: /home/serverking/marketplace
@@ -91,7 +89,6 @@ jobs:
         with:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USERNAME }}
-          password: ${{ secrets.DEPLOYMENT_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
           script: |
