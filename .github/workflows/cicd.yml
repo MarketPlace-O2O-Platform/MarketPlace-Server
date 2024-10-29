@@ -73,6 +73,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # .gitignore에 있는 properties파일 추가
+      - name: Add prod_properties
+        run: |
+          mkdir ./src/main/resources
+          touch ./src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application.properties
+
+      # .gitingnore에 있는 .env파일 docker compose 실행을 위해 추가
+      - name: Add .env
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" > .env
+
+      - name: Verify .env file
+        run: |
+          ls -l .env
+          cat .env
+      
+
       - name: Deploy .env to EC2
         uses: appleboy/scp-action@master
         with:
