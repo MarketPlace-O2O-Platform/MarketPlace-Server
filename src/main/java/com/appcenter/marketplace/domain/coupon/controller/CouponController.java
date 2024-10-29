@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
-import com.appcenter.marketplace.domain.coupon.service.CouponService;
+import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 @RequiredArgsConstructor
 public class CouponController {
 
-    private final CouponService couponService;
+    private final CouponOwnerService couponService;
 
     @Operation(summary = "사장님 쿠폰 생성", description = "사장님이 1개의 쿠폰을 생성합니다.")
     @PostMapping("/coupons")

@@ -6,7 +6,7 @@ import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.CouponRepository;
-import com.appcenter.marketplace.domain.coupon.service.CouponService;
+import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -18,7 +18,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Service
 @RequiredArgsConstructor
-public class CouponServiceImpl implements CouponService {
+public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     private final CouponRepository couponRepository;
     private final MarketRepository marketRepository;
