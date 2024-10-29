@@ -8,8 +8,13 @@ import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -19,12 +24,15 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 public class MarketOwnerController {
     private final MarketOwnerService marketOwnerService;
 
-    @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다.")
-    @PostMapping
-    public ResponseEntity<CommonResponse<MarketResDto>> createMarket(@RequestBody @Valid MarketCreateReqDto marketCreateReqDto){
+    @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다. <br>" +
+            "이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommonResponse<MarketResDto>> createMarket(
+            @RequestPart(value = "jsonData") @Valid MarketCreateReqDto marketCreateReqDto,
+            @RequestPart(value = "files") List<MultipartFile> multipartFileList) throws IOException {
         return ResponseEntity
                 .status(MARKET_CREATE.getStatus())
-                .body(CommonResponse.from(MARKET_CREATE.getMessage(),marketOwnerService.createMarket(marketCreateReqDto)));
+                .body(CommonResponse.from(MARKET_CREATE.getMessage(),marketOwnerService.createMarket(marketCreateReqDto,multipartFileList)));
     }
 
     @Operation(summary = "사장님 매장 정보 수정", description = "사장님이 생성한 매장 정보를 수정합니다.")

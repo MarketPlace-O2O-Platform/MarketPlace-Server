@@ -5,12 +5,14 @@ import com.appcenter.marketplace.domain.member.MemberRepository;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReqDto;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginResDto;
 import com.appcenter.marketplace.domain.member.service.MemberService;
-import static com.appcenter.marketplace.global.common.StatusCode.*;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.appcenter.marketplace.global.common.StatusCode.INVALID_STUDENT_ID;
+import static com.appcenter.marketplace.global.common.StatusCode.UNAUTHORIZED_LOGIN_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +35,6 @@ public class MemberServiceImpl implements MemberService {
         if(inuLoginRepository.loginCheck(memberLoginReqDto.getStudentId(), memberLoginReqDto.getPassword()))
             return Long.valueOf(memberLoginReqDto.getStudentId());
         else throw new CustomException(UNAUTHORIZED_LOGIN_ERROR);
+
     }
 }

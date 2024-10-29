@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.market.service.impl;
 
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
+import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.MarketRepository;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
@@ -13,8 +14,13 @@ import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import static com.appcenter.marketplace.global.common.StatusCode.*;
+import java.io.IOException;
+import java.util.List;
+
+import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
 
 @Transactional(readOnly = true)
 @Service
@@ -22,13 +28,15 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 public class MarketOwnerServiceImpl implements MarketOwnerService {
     private final MarketRepository marketRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageService imageService;
 
 
     @Override
     @Transactional
-    public MarketResDto createMarket(MarketCreateReqDto marketCreateReqDto) {
+    public MarketResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
+        imageService.createImage(market,multipartFileList);
         return MarketResDto.from(market);
     }
 
