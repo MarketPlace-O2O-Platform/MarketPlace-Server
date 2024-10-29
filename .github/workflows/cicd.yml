@@ -27,8 +27,13 @@ jobs:
           touch .env
           echo "${{ secrets.ENV }}" > .env
 
-      - name: Verify .env file
-        run: ls -l .env
+      - name: Verify .properties & .env file
+        run: |
+          ls -l .env
+          cat application.properties
+          cat .env
+          
+        
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -75,7 +80,7 @@ jobs:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: .env
+          source: ./.env
           target: /home/serverking/marketplace
 
       - name: Deploy docker compose file
@@ -84,7 +89,7 @@ jobs:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: docker-compose.yml
+          source: ./docker-compose.yml
           target: /home/serverking/marketplace
 
       - name: Deploy remote ssh commands using password
