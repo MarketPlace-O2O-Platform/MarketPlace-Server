@@ -3,6 +3,7 @@ package com.appcenter.marketplace.domain.coupon.controller;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponListResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -34,6 +35,11 @@ public class CouponController {
     @GetMapping("/coupons/{couponId}")
     public ResponseEntity<CommonResponse<CouponResDto>> getCoupon(@PathVariable Long couponId) {
         return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCoupon(couponId)));
+    }
+
+    @GetMapping("/coupons")
+    public ResponseEntity<CommonResponse<CouponListResDto>> getCouponList(@RequestParam(name= "marketId")Long id) {
+        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(id)));
     }
 
     @Operation(summary = "사장님 쿠폰 내용 수정", description = "사장님이 생성한 쿠폰의 내용을 수정합니다. " +

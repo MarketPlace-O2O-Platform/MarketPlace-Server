@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponListResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
@@ -13,6 +14,8 @@ import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -39,6 +42,14 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     @Transactional
     public CouponResDto getCoupon(Long couponId) {
         return CouponResDto.toDto(findCouponById(couponId));
+    }
+
+    @Override
+    @Transactional
+    public CouponListResDto getCouponList(Long marketId) {
+        Market market = findMarketById(marketId);
+        List<CouponResDto> couponList = couponRepository.findAllByMarketId(market.getId()).stream().map(CouponResDto::toDto).toList();
+        return CouponListResDto.toDto(couponList);
     }
 
     @Override
