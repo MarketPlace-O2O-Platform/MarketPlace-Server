@@ -27,10 +27,9 @@ jobs:
           touch .env
           echo "${{ secrets.ENV }}" > .env
 
-      - name: Verify .properties & .env file
+      - name: Verify .env file
         run: |
           ls -l .env
-          cat application.properties
           cat .env
           
         
