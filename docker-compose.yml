@@ -1,20 +1,12 @@
 version: '3.8'
 
 services:
-    mysql:
-      image: mysql:latest
-      container_name: mysql
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
-        MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      ports:
-        - "3306:3306"
-      volumes:
-        - mysql_data:/var/lib/mysql
-
-
-volumes:
-    mysql_data:
-
+  springboot:
+    container_name: marketplace
+    image: ${DOCKER_USER}/${DOCKER_REPO}:marketplace-server  # Docker Hub에서 가져올 이미지
+    volumes:
+      - /home/serverking/marketplace:/app/image
+    ports:
+      - "8088:8080"
+    environment:
+      TZ: "Asia/Seoul"
