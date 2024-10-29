@@ -15,10 +15,9 @@ public class CouponResDto {
     private final LocalDateTime deadLine;
     private final int stock;
     private final boolean isHidden;
-    private final LocalDateTime createdAt;
 
     @Builder
-    private CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden, LocalDateTime createdAt) {
+    private CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.description = description;
@@ -26,7 +25,6 @@ public class CouponResDto {
         this.stock = stock;
         this.isHidden = isHidden;
         this.marketId = marketId;
-        this.createdAt = createdAt;
     }
 
     public static CouponResDto toDto(Coupon coupon){
@@ -38,7 +36,6 @@ public class CouponResDto {
                 .stock(coupon.getStock())
                 .isHidden(coupon.getIsHidden())
                 .marketId(coupon.getMarket().getId())
-                .createdAt(coupon.getCreatedAt())
                 .build();
     }
 
