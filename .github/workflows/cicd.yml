@@ -73,6 +73,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       # .gitignore에 있는 properties파일 추가
       - name: Add prod_properties
         run: |
