@@ -24,7 +24,8 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 public class MarketOwnerController {
     private final MarketOwnerService marketOwnerService;
 
-    @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다.")
+    @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다. <br>" +
+            "이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketResDto>> createMarket(
             @RequestPart(value = "jsonData") @Valid MarketCreateReqDto marketCreateReqDto,
