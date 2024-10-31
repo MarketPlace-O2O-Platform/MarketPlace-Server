@@ -29,12 +29,8 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     @Override
     @Transactional
     public CouponResDto createCoupon(CouponReqDto couponReqDto, Long marketId) {
-
-        // MarketId로 존재 유무 파악
         Market market = findMarketById(marketId);
-
         Coupon coupon = couponRepository.save(couponReqDto.ofCreate(market));
-
         return CouponResDto.toDto(coupon);
     }
 

@@ -17,6 +17,7 @@ public enum StatusCode {
 
     // Coupon
     COUPON_CREATE(CREATED,"쿠폰 생성 완료"),
+    COUPON_ISSUED(OK,"쿠폰 발급 완료"),
     COUPON_FOUND(OK,"쿠폰 조회 완료"),
     COUPON_UPDATE(OK,"쿠폰 수정 완료"),
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
@@ -37,12 +38,14 @@ public enum StatusCode {
     /* 403 FORBIDDEN : 권한 없음 */
 
     /* 404 NOT_FOUND : 존재하지 않는 리소스 */
+    MEMBER_NOT_EXIST(NOT_FOUND, "존재하지 않는 회원입니다."),
     CATEGORY_NOT_EXIST(NOT_FOUND,"존재하지 않는 카테고리입니다."),
     MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),
     COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
-    COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다.");
+    COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다."),
 
     /* 409 CONFLICT : 리소스 충돌 */
+    COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다.");
 
 
     private final HttpStatus status;

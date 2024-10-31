@@ -19,7 +19,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 @RestController
 @RequestMapping("/api/owners")
 @RequiredArgsConstructor
-public class CouponController {
+public class CouponOwnerController {
 
     private final CouponOwnerService couponService;
 
@@ -37,6 +37,7 @@ public class CouponController {
         return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCoupon(couponId)));
     }
 
+    @Operation(summary = "사장님 매장별 전체 쿠폰 조회", description = "사장님의 특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
     @GetMapping("/coupons")
     public ResponseEntity<CommonResponse<CouponListResDto>> getCouponList(@RequestParam(name= "marketId")Long id) {
         return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(id)));
