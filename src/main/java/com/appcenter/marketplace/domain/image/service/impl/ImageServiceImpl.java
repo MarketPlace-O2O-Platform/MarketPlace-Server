@@ -38,10 +38,12 @@ public class ImageServiceImpl implements ImageService {
 
             Image image= Image.builder()
                     .name(imageFileName)
+                    .order(i+1)
                     .market(market)
                     .build();
             imageRepository.save(image);
 
+            // 첫번 째 요소는 썸네일로 지정
             if(i==0){
                 market.updateThumbnailPath(image.getName());
             }
