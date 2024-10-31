@@ -33,4 +33,6 @@ public class Image extends BaseEntity {
         this.market = market;
         this.order = order;
     }
+
+    public void updateOrder(Integer order){ this.order= order;}
 }

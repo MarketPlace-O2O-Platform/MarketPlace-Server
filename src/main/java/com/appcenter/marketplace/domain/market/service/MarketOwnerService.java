@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.service;
 
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,10 @@ public interface MarketOwnerService {
 
     MarketResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multiPartFileList) throws IOException;
 
-    MarketResDto updateMarket(MarketUpdateReqDto marketUpdateReqDto, Long marketId);
+    MarketResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto);
+
+    MarketResDto updateMarketImage (Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto,
+                                   List<MultipartFile> multiPartFileList) throws IOException;
 
     MarketResDto getMarket(Long marketId);
 

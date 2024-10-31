@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.MarketRepository;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
@@ -42,11 +43,19 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketResDto updateMarket(MarketUpdateReqDto marketUpdateReqDto, Long marketId) {
+    public MarketResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto) {
         Market market=findMarketByMarketId(marketId);
         Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
         market.updateMarketInfo(marketUpdateReqDto,category);
         return MarketResDto.from(market);
+    }
+
+    @Override
+    @Transactional
+    public MarketResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
+        Market market=findMarketByMarketId(marketId);
+        imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
+        return null;
     }
 
     @Override

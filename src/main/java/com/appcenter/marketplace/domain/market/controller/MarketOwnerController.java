@@ -39,7 +39,7 @@ public class MarketOwnerController {
     @PutMapping("/{marketId}")
     public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(@RequestBody @Valid MarketUpdateReqDto marketUpdateReqDto,
                                                      @PathVariable Long marketId) {
-        return ResponseEntity.ok(CommonResponse.from(MARKET_UPDATE.getMessage(),marketOwnerService.updateMarket(marketUpdateReqDto,marketId)));
+        return ResponseEntity.ok(CommonResponse.from(MARKET_UPDATE.getMessage(),marketOwnerService.updateMarket(marketId, marketUpdateReqDto)));
     }
 
     @Operation(summary = "사장님 매장 조회", description = "사장님이 생성한 매장 정보를 조회합니다.")
