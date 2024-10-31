@@ -13,6 +13,7 @@ public enum StatusCode {
     MARKET_CREATE(CREATED,"매장 생성 완료"),
     MARKET_FOUND(OK,"매장 조회 완료"),
     MARKET_UPDATE(OK,"매장 수정 완료"),
+    MARKET_IMAGE_UPDATE(OK,"매장 이미지 리스트 수정 완료"),
     MARKET_DELETE(OK,"매장 삭제 완료"),
 
     // Coupon
