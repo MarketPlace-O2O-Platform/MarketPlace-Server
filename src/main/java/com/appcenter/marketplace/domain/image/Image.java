@@ -24,9 +24,13 @@ public class Image extends BaseEntity {
     @JoinColumn( name = "market_id", nullable = false)
     private Market market;
 
+    @Column(nullable = false)
+    private Integer order;
+
     @Builder
-    public Image(String name, Market market) {
-        this.name=name;
+    public Image(String name, Market market, Integer order) {
+        this.name = name;
         this.market = market;
+        this.order = order;
     }
 }
