@@ -38,7 +38,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
         imageService.createImage(market,multipartFileList);
-        return marketRepository.findMarketResDtoById(market.getId());
+        return getMarket(market.getId());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Market market=findMarketByMarketId(marketId);
         Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
         market.updateMarketInfo(marketUpdateReqDto,category);
-        return marketRepository.findMarketResDtoById(market.getId());
+        return getMarket(market.getId());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     public MarketResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
         Market market=findMarketByMarketId(marketId);
         imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
-        return marketRepository.findMarketResDtoById(market.getId());
+        return getMarket(market.getId());
     }
 
     @Override
