@@ -44,8 +44,8 @@ public class ImageServiceImpl implements ImageService {
             file.transferTo(uploadFile);
 
             Image image = Image.builder()
-                    .name(imageFileName)
                     .order(i + 1)
+                    .name(imageFileName)
                     .market(market)
                     .build();
             imageRepository.save(image);
@@ -97,8 +97,8 @@ public class ImageServiceImpl implements ImageService {
                 file.transferTo(uploadFile);
 
                 Image image = Image.builder()
-                        .name(imageFileName)
                         .order(order)
+                        .name(imageFileName)
                         .market(market)
                         .build();
                 imageRepository.save(image);

@@ -53,7 +53,7 @@ public class MarketOwnerController {
     public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(
             @RequestPart(value = "jsonData") MarketImageUpdateReqDto marketImageUpdateReqDto,
             @RequestPart(value = "images") List<MultipartFile> multipartFileList,
-            @RequestParam Long marketId) throws IOException {
+            @RequestParam(name = "marketId") Long marketId) throws IOException {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_IMAGE_UPDATE.getMessage()
                         ,marketOwnerService.updateMarketImage(marketId, marketImageUpdateReqDto,multipartFileList)));

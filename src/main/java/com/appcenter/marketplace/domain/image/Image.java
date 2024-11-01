@@ -18,20 +18,20 @@ public class Image extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Integer order;
+
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "market_id", nullable = false)
     private Market market;
 
-    @Column(nullable = false)
-    private Integer order;
-
     @Builder
-    public Image(String name, Market market, Integer order) {
+    public Image(Integer order, String name, Market market) {
+        this.order = order;
         this.name = name;
         this.market = market;
-        this.order = order;
     }
 
     public void updateOrder(Integer order){ this.order= order;}
