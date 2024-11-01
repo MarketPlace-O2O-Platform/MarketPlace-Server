@@ -66,6 +66,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     @Override
     @Transactional
     public void deleteMarket(Long marketId) {
+        imageService.deleteAllImages(marketId);
         marketRepository.deleteById(marketId);
     }
 

@@ -13,4 +13,6 @@ public interface ImageService {
 
     void UpdateImage(Market market, MarketImageUpdateReqDto marketImageUpdateReqDto,
                      List<MultipartFile> multipartFileList) throws IOException;
+
+    void deleteAllImages(Long marketId);
 }

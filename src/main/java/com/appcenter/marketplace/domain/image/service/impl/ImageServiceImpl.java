@@ -64,7 +64,7 @@ public class ImageServiceImpl implements ImageService {
 
         // 삭제할 이미지 id 리스트를 순회하며 파일을 삭제하고 이미지 엔티티를 삭제한다.
         for (Long id : marketImageUpdateReqDto.getDeletedImageIds()) {
-            Image image = findByMarketId(id);
+            Image image = findById(id);
 
             File file = new File(uploadFolder + image.getName());
             if (!file.delete())
@@ -78,7 +78,7 @@ public class ImageServiceImpl implements ImageService {
             Long id = entry.getKey();
             Integer order = entry.getValue();
 
-            Image image = findByMarketId(id);
+            Image image = findById(id);
             image.updateOrder(order);
 
             // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
@@ -110,7 +110,23 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    private Image findByMarketId(Long id){
+    @Override
+    @Transactional
+    public void deleteAllImages(Long marketId) {
+        List<Image> images= imageRepository.findAllByMarket_Id(marketId);
+
+        for (Image image: images){
+            File file = new File(uploadFolder + image.getName());
+            if (!file.delete())
+                throw new CustomException(FILE_DELETE_INVALID);
+        }
+
+        // delete 쿼리 한꺼번에 실행
+        imageRepository.deleteAllInBatch(images);
+
+    }
+
+    private Image findById(Long id){
         return imageRepository.findById(id).orElseThrow(() -> new CustomException(IMAGE_NOT_EXIST));
     }
 
