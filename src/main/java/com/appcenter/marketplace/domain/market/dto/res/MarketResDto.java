@@ -1,8 +1,11 @@
 package com.appcenter.marketplace.domain.market.dto.res;
 
-import com.appcenter.marketplace.domain.market.Market;
+import com.appcenter.marketplace.domain.image.dto.res.ImageResDto;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class MarketResDto {
@@ -13,10 +16,11 @@ public class MarketResDto {
     private final String closedDays;
     private final String phoneNumber;
     private final String address;
-    private final String thumbnail;
+    private final List<ImageResDto> imageResDtoList;
 
+    @QueryProjection
     @Builder
-    public MarketResDto(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail) {
+    public MarketResDto(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageResDto> imageResDtoList) {
         this.marketId = marketId;
         this.name = name;
         this.description = description;
@@ -24,19 +28,6 @@ public class MarketResDto {
         this.closedDays = closedDays;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.thumbnail = thumbnail;
-    }
-
-    public static MarketResDto from(Market market){
-        return MarketResDto.builder()
-                .marketId(market.getId())
-                .name(market.getName())
-                .description(market.getDescription())
-                .operationHours(market.getOperationHours())
-                .closedDays(market.getClosedDays())
-                .phoneNumber(market.getPhoneNumber())
-                .address(market.getAddress())
-                .thumbnail(market.getThumbnail())
-                .build();
+        this.imageResDtoList = imageResDtoList;
     }
 }

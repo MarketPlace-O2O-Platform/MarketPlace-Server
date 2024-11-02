@@ -18,6 +18,9 @@ public class Image extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Integer order;
+
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,8 +28,11 @@ public class Image extends BaseEntity {
     private Market market;
 
     @Builder
-    public Image(String name, Market market) {
-        this.name=name;
+    public Image(Integer order, String name, Market market) {
+        this.order = order;
+        this.name = name;
         this.market = market;
     }
+
+    public void updateOrder(Integer order){ this.order= order;}
 }

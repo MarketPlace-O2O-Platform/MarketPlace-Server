@@ -43,9 +43,9 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(IOException.class)  // 특정 예외를 처리
     public ResponseEntity<ErrorResponse> handleIOException(IOException e) {
         ErrorResponse errorResponse=ErrorResponse.builder()
-                .message(FILE_INVALID.getMessage())
+                .message(FILE_SAVE_INVALID.getMessage())
                 .build();
-        return ResponseEntity.status(FILE_INVALID.getStatus())
+        return ResponseEntity.status(FILE_SAVE_INVALID.getStatus())
                 .body(errorResponse);
     }
 

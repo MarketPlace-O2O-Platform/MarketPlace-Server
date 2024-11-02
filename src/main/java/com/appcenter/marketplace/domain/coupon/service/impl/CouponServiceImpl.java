@@ -1,14 +1,14 @@
 package com.appcenter.marketplace.domain.coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.appcenter.marketplace.domain.coupon.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
-import com.appcenter.marketplace.domain.coupon.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.MarketRepository;
+import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

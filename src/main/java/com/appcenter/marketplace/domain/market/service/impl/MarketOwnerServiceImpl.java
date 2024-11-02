@@ -4,8 +4,9 @@ import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.MarketRepository;
+import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
@@ -37,27 +38,35 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
         imageService.createImage(market,multipartFileList);
-        return MarketResDto.from(market);
+        return getMarket(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketResDto updateMarket(MarketUpdateReqDto marketUpdateReqDto, Long marketId) {
+    public MarketResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto) {
         Market market=findMarketByMarketId(marketId);
         Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
         market.updateMarketInfo(marketUpdateReqDto,category);
-        return MarketResDto.from(market);
+        return getMarket(market.getId());
+    }
+
+    @Override
+    @Transactional
+    public MarketResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
+        Market market=findMarketByMarketId(marketId);
+        imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
+        return getMarket(market.getId());
     }
 
     @Override
     public MarketResDto getMarket(Long marketId) {
-        Market market=findMarketByMarketId(marketId);
-        return MarketResDto.from(market);
+        return marketRepository.findMarketResDtoById(marketId);
     }
 
     @Override
     @Transactional
     public void deleteMarket(Long marketId) {
+        imageService.deleteAllImages(marketId);
         marketRepository.deleteById(marketId);
     }
 
