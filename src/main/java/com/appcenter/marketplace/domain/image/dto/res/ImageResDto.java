@@ -5,15 +5,15 @@ import lombok.Getter;
 
 @Getter
 public class ImageResDto {
-    private final Long id;
-    private final Integer order;
+    private final Long imageId;
+    private final Integer sequence;
     private final String name;
 
 
     @QueryProjection
-    public ImageResDto(Long id, Integer order, String name) {
-        this.id = id;
-        this.order = order;
+    public ImageResDto(Long imageId, Integer sequence, String name) {
+        this.imageId = imageId;
+        this.sequence = sequence;
         this.name = name;
     }
 }

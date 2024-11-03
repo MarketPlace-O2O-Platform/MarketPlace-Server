@@ -44,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
             file.transferTo(uploadFile);
 
             Image image = Image.builder()
-                    .order(i + 1)
+                    .sequence(i + 1)
                     .name(imageFileName)
                     .market(market)
                     .build();
@@ -79,7 +79,7 @@ public class ImageServiceImpl implements ImageService {
             Integer order = entry.getValue();
 
             Image image = findById(id);
-            image.updateOrder(order);
+            image.updateSequence(order);
 
             // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
             if(order==1) market.updateThumbnailPath(image.getName());
@@ -97,7 +97,7 @@ public class ImageServiceImpl implements ImageService {
                 file.transferTo(uploadFile);
 
                 Image image = Image.builder()
-                        .order(order)
+                        .sequence(order)
                         .name(imageFileName)
                         .market(market)
                         .build();

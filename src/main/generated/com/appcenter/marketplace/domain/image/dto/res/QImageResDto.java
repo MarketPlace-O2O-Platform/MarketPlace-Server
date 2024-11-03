@@ -13,8 +13,8 @@ public class QImageResDto extends ConstructorExpression<ImageResDto> {
 
     private static final long serialVersionUID = 796700072L;
 
-    public QImageResDto(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<Integer> order, com.querydsl.core.types.Expression<String> name) {
-        super(ImageResDto.class, new Class<?>[]{long.class, int.class, String.class}, id, order, name);
+    public QImageResDto(com.querydsl.core.types.Expression<Long> imageId, com.querydsl.core.types.Expression<Integer> sequence, com.querydsl.core.types.Expression<String> name) {
+        super(ImageResDto.class, new Class<?>[]{long.class, int.class, String.class}, imageId, sequence, name);
     }
 
 }

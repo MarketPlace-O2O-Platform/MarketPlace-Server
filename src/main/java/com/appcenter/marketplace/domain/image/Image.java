@@ -18,7 +18,7 @@ public class Image extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Integer order;
+    private Integer sequence;
 
     @Column(nullable = false)
     private String name;
@@ -28,11 +28,11 @@ public class Image extends BaseEntity {
     private Market market;
 
     @Builder
-    public Image(Integer order, String name, Market market) {
-        this.order = order;
+    public Image(Integer sequence, String name, Market market) {
+        this.sequence = sequence;
         this.name = name;
         this.market = market;
     }
 
-    public void updateOrder(Integer order){ this.order= order;}
+    public void updateSequence(Integer sequence){ this.sequence = sequence;}
 }

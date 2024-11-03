@@ -8,8 +8,8 @@ import com.appcenter.marketplace.global.exception.CustomException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.appcenter.marketplace.domain.image.QImage.image;
+import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.querydsl.core.group.GroupBy.list;
 
 
@@ -28,12 +28,12 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.closedDays,
                         market.phoneNumber,
                         market.address,
-                        list(new QImageResDto(image.id, image.order, image.name)) // 이미지를 DTO에 매핑
+                        list(new QImageResDto(image.id, image.sequence, image.name)) // 이미지를 DTO에 매핑
                 ))
                 .from(market)
                 .leftJoin(image).on(image.market.id.eq(market.id))
                 .where(market.id.eq(marketId)) // 매장 ID로 필터링
-                .orderBy(image.order.asc())
+                .orderBy(image.sequence.asc())
                 .fetchOne();
 
         if(marketResDto==null)
