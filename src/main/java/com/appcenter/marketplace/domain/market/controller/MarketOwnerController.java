@@ -49,10 +49,10 @@ public class MarketOwnerController {
     @Operation(summary = "사장님 매장 이미지 수정", description = "매장의 이미지를 추가,삭제 및 순서 변경을 합니다. <br>" +
             "jsonData는 삭제할 이미지 id 리스트, 순서 변경할 Map<이미지id,순서order>, 추가할 이미지의 순서 리스트입니다. <br>" +
             "images는 추가할 이미지 리스트입니다. 기존 이미지는 안주셔도 됩니다.")
-    @PutMapping("/images")
+    @PutMapping(value = "/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(
             @RequestPart(value = "jsonData") MarketImageUpdateReqDto marketImageUpdateReqDto,
-            @RequestPart(value = "images") List<MultipartFile> multipartFileList,
+            @RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
             @RequestParam(name = "marketId") Long marketId) throws IOException {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_IMAGE_UPDATE.getMessage()

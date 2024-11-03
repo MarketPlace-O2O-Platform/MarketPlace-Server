@@ -39,9 +39,6 @@ public class ImageServiceImpl implements ImageService {
         for (int i = 0; i < multipartFileList.size(); i++) {
             MultipartFile file = multipartFileList.get(i);
             String imageFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File uploadFile = new File(uploadFolder + imageFileName);
-
-            file.transferTo(uploadFile);
 
             Image image = Image.builder()
                     .sequence(i + 1)
@@ -55,6 +52,8 @@ public class ImageServiceImpl implements ImageService {
                 market.updateThumbnailPath(image.getName());
             }
 
+            File uploadFile = new File(uploadFolder + imageFileName);
+            file.transferTo(uploadFile);
         }
     }
 
@@ -66,11 +65,11 @@ public class ImageServiceImpl implements ImageService {
         for (Long id : marketImageUpdateReqDto.getDeletedImageIds()) {
             Image image = findById(id);
 
+            imageRepository.deleteById(id);
+
             File file = new File(uploadFolder + image.getName());
             if (!file.delete())
                 throw new CustomException(FILE_DELETE_INVALID);
-
-            imageRepository.deleteById(id);
         }
 
         // 순서가 변경될 Map 객체를 순회하며 이미지 엔티티의 순서를 변경한다.
@@ -85,26 +84,28 @@ public class ImageServiceImpl implements ImageService {
             if(order==1) market.updateThumbnailPath(image.getName());
         }
 
-        // 추가될 이미지 리스트와 추가될 이미지의 순서 리스트의 길이가 맞지 않으면 안된다.
-        if(multipartFileList.size()==marketImageUpdateReqDto.getAddedImageOrders().size()){
-            // 리스트를 순회하며 이미지를 저장하고 순서를 매겨 엔티티를 생성한다.
-            for (int i = 0; i < multipartFileList.size(); i++) {
-                Integer order= marketImageUpdateReqDto.getAddedImageOrders().get(i);
-                MultipartFile file = multipartFileList.get(i);
-                String imageFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                File uploadFile = new File(uploadFolder + imageFileName);
+        if(multipartFileList != null) {
+            // 추가될 이미지 리스트와 추가될 이미지의 순서 리스트의 길이가 맞지 않으면 안된다.
+            if (multipartFileList.size() == marketImageUpdateReqDto.getAddedImageOrders().size()) {
+                // 리스트를 순회하며 이미지를 저장하고 순서를 매겨 엔티티를 생성한다.
+                for (int i = 0; i < multipartFileList.size(); i++) {
+                    Integer order = marketImageUpdateReqDto.getAddedImageOrders().get(i);
+                    MultipartFile file = multipartFileList.get(i);
+                    String imageFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-                file.transferTo(uploadFile);
+                    Image image = Image.builder()
+                            .sequence(order)
+                            .name(imageFileName)
+                            .market(market)
+                            .build();
+                    imageRepository.save(image);
 
-                Image image = Image.builder()
-                        .sequence(order)
-                        .name(imageFileName)
-                        .market(market)
-                        .build();
-                imageRepository.save(image);
+                    // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
+                    if (order == 1) market.updateThumbnailPath(image.getName());
 
-                // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
-                if(order==1) market.updateThumbnailPath(image.getName());
+                    File uploadFile = new File(uploadFolder + imageFileName);
+                    file.transferTo(uploadFile);
+                }
             }
         }
 
