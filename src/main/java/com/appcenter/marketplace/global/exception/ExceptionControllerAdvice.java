@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.global.exception;
 
 import com.appcenter.marketplace.global.common.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,15 @@ public class ExceptionControllerAdvice {
                 .validationErrors(ErrorResponse.ValidationError.from(e.getBindingResult()))
                 .build();
         return ResponseEntity.status(INPUT_VALUE_INVALID.getStatus())
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e){
+        ErrorResponse errorResponse= ErrorResponse.builder()
+                .message(DATA_INTEGRITY_VIOLATION.getMessage())
+                .build();
+        return ResponseEntity.status(DATA_INTEGRITY_VIOLATION.getStatus())
                 .body(errorResponse);
     }
 
