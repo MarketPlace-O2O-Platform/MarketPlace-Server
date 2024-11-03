@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.member_coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
-import com.appcenter.marketplace.domain.coupon.CouponRepository;
+import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;

@@ -5,8 +5,9 @@ import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponListResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
-import com.appcenter.marketplace.domain.coupon.CouponRepository;
+import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.MarketRepository;
@@ -44,7 +45,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     @Transactional
     public CouponListResDto getCouponList(Long marketId) {
         Market market = findMarketById(marketId);
-        List<CouponResDto> couponList = couponRepository.findAllByMarketId(market.getId()).stream().map(CouponResDto::toDto).toList();
+       List<CouponMemberResDto> couponList = couponRepository.findAllByMarketId(market.getId());
         return CouponListResDto.toDto(couponList);
     }
 
