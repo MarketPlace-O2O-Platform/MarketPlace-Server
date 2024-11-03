@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.global.config;
 
+import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,6 @@ public class QuerydslConfig {
 
     @Bean
     public JPAQueryFactory queryFactory() {
-        return new JPAQueryFactory(entityManager);
+        return new JPAQueryFactory(JPQLTemplates.DEFAULT,entityManager);
     }
 }
