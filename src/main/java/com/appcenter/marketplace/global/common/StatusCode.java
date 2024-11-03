@@ -21,6 +21,7 @@ public enum StatusCode {
     COUPON_FOUND(OK,"쿠폰 조회 완료"),
     COUPON_UPDATE(OK,"쿠폰 수정 완료"),
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
+    COUPON_USED(OK,"쿠폰 사용처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 
     // Member
