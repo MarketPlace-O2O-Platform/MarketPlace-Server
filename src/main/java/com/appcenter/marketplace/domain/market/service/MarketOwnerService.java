@@ -17,9 +17,6 @@ public interface MarketOwnerService {
 
     MarketResDto updateMarketImage (Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto,
                                    List<MultipartFile> multiPartFileList) throws IOException;
-
-    MarketResDto getMarket(Long marketId);
-
     void deleteMarket(Long marketId);
 
 }

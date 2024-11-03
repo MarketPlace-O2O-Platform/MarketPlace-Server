@@ -10,6 +10,7 @@ import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
+import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIS
 public class MarketOwnerServiceImpl implements MarketOwnerService {
     private final MarketRepository marketRepository;
     private final CategoryRepository categoryRepository;
+    private final MarketService marketService;
     private final ImageService imageService;
 
 
@@ -38,7 +40,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
         imageService.createImage(market,multipartFileList);
-        return getMarket(market.getId());
+        return marketService.getMarket(market.getId());
     }
 
     @Override
@@ -47,7 +49,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Market market=findMarketByMarketId(marketId);
         Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
         market.updateMarketInfo(marketUpdateReqDto,category);
-        return getMarket(market.getId());
+        return marketService.getMarket(market.getId());
     }
 
     @Override
@@ -55,13 +57,9 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     public MarketResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
         Market market=findMarketByMarketId(marketId);
         imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
-        return getMarket(market.getId());
+        return marketService.getMarket(market.getId());
     }
 
-    @Override
-    public MarketResDto getMarket(Long marketId) {
-        return marketRepository.findMarketResDtoById(marketId);
-    }
 
     @Override
     @Transactional
