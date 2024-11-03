@@ -59,13 +59,6 @@ public class MarketOwnerController {
                         ,marketOwnerService.updateMarketImage(marketId, marketImageUpdateReqDto,multipartFileList)));
     }
 
-    @Operation(summary = "사장님 매장 조회", description = "사장님이 생성한 매장 정보를 조회합니다.")
-    @GetMapping("/{marketId}")
-    public ResponseEntity<CommonResponse<MarketResDto>> getMarket(@PathVariable Long marketId){
-        return ResponseEntity
-                .ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketOwnerService.getMarket(marketId)));
-    }
-
     @Operation(summary = "사장님 매장 삭제", description = "사장님이 생성한 매장을 삭제합니다. ")
     @DeleteMapping("/{marketId}")
     public ResponseEntity<CommonResponse<Object>> deleteMarket(@PathVariable Long marketId){
