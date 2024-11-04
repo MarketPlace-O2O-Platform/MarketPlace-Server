@@ -21,7 +21,7 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    @Operation(summary = "유표 쿠폰 조회 리스트", description = "사장님이 공개처리 & 만료되지 않은 쿠폰 리스트가 조회됩니다." +
+    @Operation(summary = "유효 쿠폰 조회 리스트", description = "사장님이 공개처리 & 만료되지 않은 쿠폰 리스트가 조회됩니다." +
                                                        "<br> 매장 상세 정보에서 조회가 이루어집니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<CouponListResDto>> getCouponList(Long marketId) {
