@@ -30,6 +30,7 @@ public enum StatusCode {
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
     INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
     MULTI_PART_FILE_INVALID(BAD_REQUEST,"MultiPartFile이 존재하지 않습니다"),
+    MULTI_PART_FILE_SEQUENCE_INVALID(BAD_REQUEST,"MultipartFile과 순서 리스트의 개수가 맞지 않습니다."),
     FILE_SAVE_INVALID(BAD_REQUEST,"파일 저장 중 오류가 발생했습니다."),
     FILE_DELETE_INVALID(BAD_REQUEST,"파일 삭제 중 오류가 발생했습니다."),
     DATA_INTEGRITY_VIOLATION(BAD_REQUEST,"이미 존재하는 값이거나 필수 필드에 null이 있습니다."),

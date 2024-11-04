@@ -48,7 +48,8 @@ public class MarketOwnerController {
 
     @Operation(summary = "사장님 매장 이미지 수정", description = "매장의 이미지를 추가,삭제 및 순서 변경을 합니다. <br>" +
             "jsonData는 삭제할 이미지 id 리스트, 순서 변경할 Map<이미지id,순서order>, 추가할 이미지의 순서 리스트입니다. <br>" +
-            "images는 추가할 이미지 리스트입니다. 기존 이미지는 안주셔도 됩니다.")
+            "images는 추가할 이미지 리스트입니다. 기존 이미지는 안주셔도 됩니다. <br>" +
+            "예시) 추가할 이미지의 순서 리스트가 [2,4] 이면, 이미지 파일은 2개여야하고, 첫번 째 사진은 순서 2가 부여됩니다. 두번 째 사진은 4가 부여됩니다.")
     @PutMapping(value = "/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(
             @RequestPart(value = "jsonData") MarketImageUpdateReqDto marketImageUpdateReqDto,
