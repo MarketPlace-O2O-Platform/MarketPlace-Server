@@ -2,7 +2,6 @@ package com.appcenter.marketplace.domain.market.dto.res;
 
 import com.appcenter.marketplace.domain.image.dto.res.ImageResDto;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class MarketResDto {
     private final List<ImageResDto> imageResDtoList;
 
     @QueryProjection
-    @Builder
     public MarketResDto(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageResDto> imageResDtoList) {
         this.marketId = marketId;
         this.name = name;
