@@ -6,10 +6,8 @@ import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedMemberCouponResDto;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.MemberCouponListResDto;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.MemberCouponUpdateResDto;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.MemberCouponResDto;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
-
 @Service
 @RequiredArgsConstructor
 public class MemberCouponServiceImpl implements MemberCouponService {
@@ -31,39 +28,38 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     @Override
     @Transactional
-    public MemberCouponResDto issuedCoupon(Long memberId, Long couponId) {
-        // 해당 memberId롤 member 조회하는 로직은 -> 토큰 사용을 하면 수정할 예정입니다.
+    public void issuedCoupon(Long memberId, Long couponId) {
         Member member = findMemberById(memberId);
         Coupon coupon = findCouponById(couponId);
 
-        if(!memberCouponRepository.existCouponByMemberId(member.getId(), coupon.getId())) {
-
+        if (!memberCouponRepository.existCouponByMemberId(member.getId(), coupon.getId())) {
             MemberCoupon memberCoupon = memberCouponRepository.save(MemberCoupon.builder()
                     .member(member)
                     .coupon(coupon)
                     .isUsed(false)
                     .build());
-            coupon.updateStock();
-            return MemberCouponResDto.toDto(memberCoupon);
+            coupon.reduce();
+
+        } else {
+            throw new CustomException(COUPON_ALREADY_ISSUED);
         }
-        else throw new CustomException(COUPON_ALREADY_ISSUED);
     }
 
     @Override
     @Transactional
-    public MemberCouponListResDto getMemberCouponList(Long memberId) {
-      return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponsByMemberId);
+    public List<IssuedMemberCouponResDto> getMemberCouponList(Long memberId) {
+        return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponsByMemberId);
     }
 
     @Override
     @Transactional
-    public MemberCouponListResDto getExpiredMemberCouponList(Long memberId) {
-       return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponsByMemberId);
+    public List<IssuedMemberCouponResDto> getExpiredMemberCouponList(Long memberId) {
+        return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponsByMemberId);
     }
 
     @Override
     @Transactional
-    public MemberCouponListResDto getUsedMemberCouponList(Long memberId) {
+    public List<IssuedMemberCouponResDto> getUsedMemberCouponList(Long memberId) {
         return getMemberCouponList(memberId, memberCouponRepository::findUsedCouponsByMemberId);
     }
 
@@ -71,7 +67,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     @Transactional
     public MemberCouponUpdateResDto updateCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
-        memberCoupon.updateIsUsed();
+        memberCoupon.toggle();
         return MemberCouponUpdateResDto.toDto(memberCoupon);
     }
 
@@ -81,11 +77,9 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return IssuedMemberCouponResDto.toDto(memberCoupon);
     }
 
-
-    private MemberCouponListResDto getMemberCouponList(Long memberId, Function<Long, List<IssuedMemberCouponResDto>> findCoupons){
+    private List<IssuedMemberCouponResDto> getMemberCouponList(Long memberId, Function<Long, List<IssuedMemberCouponResDto>> findCoupons) {
         Member member = findMemberById(memberId);
-        List<IssuedMemberCouponResDto> memberCouponList = findCoupons.apply(member.getId());
-        return MemberCouponListResDto.toDto(memberCouponList);
+        return findCoupons.apply(member.getId());
     }
 
     private Member findMemberById(Long memberId) {
@@ -95,13 +89,12 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     private Coupon findCouponById(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
 
-        if(!coupon.getIsDeleted())
+        if (!coupon.getIsDeleted())
             return coupon;
         else throw new CustomException(COUPON_IS_DELETED);
     }
 
-    private MemberCoupon findMemberCouponById(Long memberCouponId){
+    private MemberCoupon findMemberCouponById(Long memberCouponId) {
         return memberCouponRepository.findById(memberCouponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
     }
-
 }
