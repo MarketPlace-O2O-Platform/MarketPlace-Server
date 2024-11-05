@@ -7,6 +7,7 @@ import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INVALID;
-import static com.appcenter.marketplace.global.common.StatusCode.IMAGE_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
@@ -72,41 +73,63 @@ public class ImageServiceImpl implements ImageService {
                 throw new CustomException(FILE_DELETE_INVALID);
         }
 
-        // 순서가 변경될 Map 객체를 순회하며 이미지 엔티티의 순서를 변경한다.
-        for (Map.Entry<Long, Integer> entry : marketImageUpdateReqDto.getChangedOrders().entrySet()) {
-            Long id = entry.getKey();
-            Integer order = entry.getValue();
+        if(!marketImageUpdateReqDto.getChangedSequences().isEmpty()){
+            // 변경할 이미지의 순서는 unique하기 때문에 10000을 더해 중복될 가능성을 없앤다.
+            List<Image> imageList=imageRepository.findAllByMarket_Id(market.getId());
+            for(Image image: imageList){
+                image.updateSequence(image.getSequence()+10000);
+            }
+            // 변경된 내용이 즉시 DB에 반영됨
+            imageRepository.saveAllAndFlush(imageList);
 
-            Image image = findById(id);
-            image.updateSequence(order);
+            // 순서가 변경될 Map 객체를 순회하며 이미지 엔티티의 순서를 변경한다.
+            for (Map.Entry<Long, Integer> entry : marketImageUpdateReqDto.getChangedSequences().entrySet()) {
+                Long id = entry.getKey();
+                Integer sequence = entry.getValue();
 
-            // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
-            if(order==1) market.updateThumbnailPath(image.getName());
+                Image image = findById(id);
+                image.updateSequence(sequence);
+
+                imageRepository.saveAndFlush(image); // 변경된 내용이 즉시 DB에 반영됨
+
+                // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
+                if(sequence==1) market.updateThumbnailPath(image.getName());
+            }
+
+            // 순서가 변경되지 않는 이미지는 순서값이 10000이 넘기 때문에 다시 원래대로 변경한다.
+            for(Image image: imageList){
+                image.updateSequence(image.getSequence()%10000);
+            }
+            // 변경된 내용이 즉시 DB에 반영됨
+            imageRepository.saveAllAndFlush(imageList);
         }
 
+
+        // 추가할 이미지가 없으면 패스한다.
         if(multipartFileList != null) {
             // 추가될 이미지 리스트와 추가될 이미지의 순서 리스트의 길이가 맞지 않으면 안된다.
-            if (multipartFileList.size() == marketImageUpdateReqDto.getAddedImageOrders().size()) {
+            if (multipartFileList.size() == marketImageUpdateReqDto.getAddedImageSequences().size()) {
                 // 리스트를 순회하며 이미지를 저장하고 순서를 매겨 엔티티를 생성한다.
                 for (int i = 0; i < multipartFileList.size(); i++) {
-                    Integer order = marketImageUpdateReqDto.getAddedImageOrders().get(i);
+                    Integer sequence = marketImageUpdateReqDto.getAddedImageSequences().get(i);
                     MultipartFile file = multipartFileList.get(i);
                     String imageFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
                     Image image = Image.builder()
-                            .sequence(order)
+                            .sequence(sequence)
                             .name(imageFileName)
                             .market(market)
                             .build();
                     imageRepository.save(image);
 
                     // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
-                    if (order == 1) market.updateThumbnailPath(image.getName());
+                    if (sequence == 1) market.updateThumbnailPath(image.getName());
 
                     File uploadFile = new File(uploadFolder + imageFileName);
                     file.transferTo(uploadFile);
                 }
             }
+            else throw new CustomException(MULTI_PART_FILE_SEQUENCE_INVALID);
         }
 
     }
@@ -116,14 +139,14 @@ public class ImageServiceImpl implements ImageService {
     public void deleteAllImages(Long marketId) {
         List<Image> images= imageRepository.findAllByMarket_Id(marketId);
 
+        // delete 쿼리 한꺼번에 실행
+        imageRepository.deleteAllInBatch(images);
+
         for (Image image: images){
             File file = new File(uploadFolder + image.getName());
             if (!file.delete())
                 throw new CustomException(FILE_DELETE_INVALID);
         }
-
-        // delete 쿼리 한꺼번에 실행
-        imageRepository.deleteAllInBatch(images);
 
     }
 
