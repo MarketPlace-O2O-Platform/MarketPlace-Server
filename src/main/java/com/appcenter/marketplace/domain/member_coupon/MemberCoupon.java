@@ -37,7 +37,7 @@ public class MemberCoupon extends BaseEntity {
         this.isUsed = isUsed;
     }
 
-    public void updateIsUsed() {
+    public void usedToggle() {
         this.isUsed = !this.isUsed;
     }
 

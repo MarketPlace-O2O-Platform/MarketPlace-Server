@@ -67,7 +67,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     @Transactional
     public MemberCouponUpdateResDto updateCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
-        memberCoupon.toggle();
+        memberCoupon.usedToggle();
         return MemberCouponUpdateResDto.toDto(memberCoupon);
     }
 
