@@ -23,8 +23,12 @@ public enum StatusCode {
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 
+    // Favorite
+    FAVORITE_CREATE(CREATED,"찜 생성(취소) 완료"),
+
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
+
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
