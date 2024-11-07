@@ -35,6 +35,6 @@ public class MarketController {
             @RequestParam(required = false, name = "lastMarketId") Long marketId, @RequestParam(defaultValue = "5") Integer size){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,marketService.getMarketResPage(marketId,size)));
+                        ,marketService.getMarketPage(marketId,size)));
     }
 }
