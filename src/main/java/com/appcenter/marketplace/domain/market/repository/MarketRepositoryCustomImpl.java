@@ -1,18 +1,12 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.image.dto.res.QImageResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
-import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.QMarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 
@@ -55,27 +49,27 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     }
 
     @Override
-    public Slice<MarketResDto> findPaginatedMarketResDto(Long marketId, Pageable pageable) {
-        // marketId 보다 작은 값으로부터 page.size+1까지의 데이터를 가져온다.
+    public MarketPageResDto findMarketPageResDto(Long marketId, Integer size) {
+        // marketId 보다 작은 값으로부터 size+1까지의 데이터를 가져온다.
         // 내림차순으로 조회하는 이유는 보통 최신순으로 보여주기 때문이다.
-        // page.size보다 1개 더 가져오는 이유는 다음 페이지가 존재하는지 확인하는 용도이다.
+        // size보다 1개 더 가져오는 이유는 다음 페이지가 존재하는지 확인하는 용도이다.
         List<MarketResDto> results= jpaQueryFactory
                 .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
                 .from(market)
                 .where(ltMarketId(marketId))
                 .orderBy(market.id.desc())
-                .limit(pageable.getPageSize()+1)
+                .limit(size + 1)
                 .fetch();
 
         boolean hasNext=false;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이다.
-        if(results.size()>pageable.getPageSize()){
+        if(results.size()>size){
             hasNext=true;
-            results.remove(pageable.getPageSize());
+            results.remove(size.intValue());
         }
 
-        return new SliceImpl<>(results,pageable,hasNext);
+        return new MarketPageResDto(results,hasNext);
     }
 
     // BooleanExpression은 QueryDSL에서 조건을 표현하는 객체로, 조건이 참이면 해당 조건이 쿼리의 WHERE 절에 적용된다.
