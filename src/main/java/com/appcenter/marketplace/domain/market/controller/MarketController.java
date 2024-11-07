@@ -2,15 +2,15 @@ package com.appcenter.marketplace.domain.market.controller;
 
 
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 
@@ -20,10 +20,21 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 public class MarketController {
     private final MarketService marketService;
 
-    @Operation(summary = "매장 조회", description = "매장 정보 및 이미지 리스트를 조회합니다.")
+    @Operation(summary = "상세 매장 조회", description = "상세 매장 정보 및 이미지 리스트를 조회합니다.")
     @GetMapping("/{marketId}")
     public ResponseEntity<CommonResponse<MarketDetailsResDto>> getMarket(@PathVariable Long marketId){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketService.getMarketDetails(marketId)));
+    }
+
+    @Operation(summary = "전체 매장 리스트 조회", description = "간단한 매장 정보 리스트를 반환합니다. <br>" +
+            "무한 스크롤 방식으로 구현되어, 반환된 데이터의 마지막 marketId와 반환할 데이터의 size를 보내주면 됩니다. <br>" +
+            "처음 요청 시엔 size만 보내주면 됩니다.")
+    @GetMapping
+    public ResponseEntity<CommonResponse<Slice<MarketResDto>>> getMarket(
+            @RequestParam(required = false, name = "lastMarketId") Long marketId, Pageable pageable){
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage()
+                        ,marketService.getPagenatedMarketList(marketId,pageable)));
     }
 }
