@@ -16,6 +16,6 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public MarketDetailResDto getMarket(Long marketId) {
-        return marketRepository.findMarketResDtoById(marketId);
+        return marketRepository.findMarketDetailResDtoById(marketId);
     }
 }
