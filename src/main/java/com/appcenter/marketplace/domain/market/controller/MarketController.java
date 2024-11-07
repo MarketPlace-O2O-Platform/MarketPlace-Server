@@ -33,7 +33,7 @@ public class MarketController {
             "지금은 최신순으로 보여줍니다. 또한 pageSize의 기본값은 5입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<MarketPageResDto>> getMarket(
-            @RequestParam(required = false, name = "lastpageIndex") Long marketId,
+            @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
