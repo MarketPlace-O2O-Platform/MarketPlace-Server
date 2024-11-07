@@ -1,6 +1,6 @@
 package com.appcenter.marketplace.domain.market.service.impl;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
 
     @Override
-    public MarketResDto getMarket(Long marketId) {
+    public MarketDetailResDto getMarket(Long marketId) {
         return marketRepository.findMarketResDtoById(marketId);
     }
 }

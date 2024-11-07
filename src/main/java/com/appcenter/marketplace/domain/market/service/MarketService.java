@@ -1,8 +1,8 @@
 package com.appcenter.marketplace.domain.market.service;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
 
 public interface MarketService {
 
-    MarketResDto getMarket(Long marketId);
+    MarketDetailResDto getMarket(Long marketId);
 }

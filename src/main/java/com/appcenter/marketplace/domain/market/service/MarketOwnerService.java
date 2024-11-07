@@ -3,7 +3,7 @@ package com.appcenter.marketplace.domain.market.service;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.util.List;
 
 public interface MarketOwnerService {
 
-    MarketResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multiPartFileList) throws IOException;
+    MarketDetailResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multiPartFileList) throws IOException;
 
-    MarketResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto);
+    MarketDetailResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto);
 
-    MarketResDto updateMarketImage (Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto,
-                                   List<MultipartFile> multiPartFileList) throws IOException;
+    MarketDetailResDto updateMarketImage (Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto,
+                                          List<MultipartFile> multiPartFileList) throws IOException;
     void deleteMarket(Long marketId);
 
 }

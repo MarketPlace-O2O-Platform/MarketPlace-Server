@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.market.repository;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
 
 public interface MarketRepositoryCustom {
-    public MarketResDto findMarketResDtoById(Long marketId);
+    public MarketDetailResDto findMarketResDtoById(Long marketId);
 }
