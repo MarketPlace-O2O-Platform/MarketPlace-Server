@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class MarketDetailResDto {
+public class MarketDetailsResDto {
     private final Long marketId;
     private final String name;
     private final String description;
@@ -18,7 +18,7 @@ public class MarketDetailResDto {
     private final List<ImageResDto> imageResDtoList;
 
     @QueryProjection
-    public MarketDetailResDto(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageResDto> imageResDtoList) {
+    public MarketDetailsResDto(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageResDto> imageResDtoList) {
         this.marketId = marketId;
         this.name = name;
         this.description = description;

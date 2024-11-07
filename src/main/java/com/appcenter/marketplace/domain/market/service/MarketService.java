@@ -1,8 +1,13 @@
 package com.appcenter.marketplace.domain.market.service;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface MarketService {
 
-    MarketDetailResDto getMarket(Long marketId);
+    MarketDetailsResDto getMarketDetails(Long marketId);
+
+    Slice<MarketResDto> getPagenatedMarketList(Long marketId, Pageable pageable);
 }

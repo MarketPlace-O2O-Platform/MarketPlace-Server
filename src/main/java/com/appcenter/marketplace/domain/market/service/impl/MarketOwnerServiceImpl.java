@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
@@ -36,28 +36,28 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
+    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
         imageService.createImage(market,multipartFileList);
-        return marketService.getMarket(market.getId());
+        return marketService.getMarketDetails(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketDetailResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto) {
+    public MarketDetailsResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto) {
         Market market=findMarketByMarketId(marketId);
         Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
         market.updateMarketInfo(marketUpdateReqDto,category);
-        return marketService.getMarket(market.getId());
+        return marketService.getMarketDetails(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketDetailResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
+    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
         Market market=findMarketByMarketId(marketId);
         imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
-        return marketService.getMarket(market.getId());
+        return marketService.getMarketDetails(market.getId());
     }
 
 

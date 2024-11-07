@@ -1,9 +1,9 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.image.dto.res.QImageResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
-import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailResDto;
+import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.dto.res.QMarketResDto;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -27,9 +27,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public MarketDetailResDto findMarketDetailResDtoById(Long marketId) {
+    public MarketDetailsResDto findMarketDetailResDtoById(Long marketId) {
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
-        List<MarketDetailResDto> marketDetailResDtoList = jpaQueryFactory
+        List<MarketDetailsResDto> marketDetailsResDtoList = jpaQueryFactory
                 .from(market)
                 .leftJoin(image).on(image.market.id.eq(market.id))
                 .where(market.id.eq(marketId)) // 매장 ID로 필터링
@@ -37,7 +37,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 // transfrom을 통해 쿼리 결과를 원하는 형태로 변환한다.
                 // groupBy(sql의 groupBy가 아니다)를 통해 마켓id를 기준으로 그룹화해 마켓 DTO List로 만든다.
                 // 그룹화를 함으로 써 이미지 DTO 리스트를 list()로 받을 수 있게된다.
-                .transform(groupBy(market.id).list(new QMarketDetailResDto(
+                .transform(groupBy(market.id).list(new QMarketDetailsResDto(
                                 market.id,
                                 market.name,
                                 market.description,
@@ -48,14 +48,14 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 list(new QImageResDto(image.id, image.sequence, image.name)
                         ))));
 
-        if(marketDetailResDtoList.isEmpty())
+        if(marketDetailsResDtoList.isEmpty())
             throw new CustomException(StatusCode.MARKET_NOT_EXIST);
 
-        return marketDetailResDtoList.get(0);
+        return marketDetailsResDtoList.get(0);
     }
 
     @Override
-    public Slice<MarketResDto> pagingMarketResDtoList(Long marketId, Pageable pageable) {
+    public Slice<MarketResDto> findPaginatedMarketResDto(Long marketId, Pageable pageable) {
         // marketId 보다 작은 값으로부터 page.size+1까지의 데이터를 가져온다.
         // 내림차순으로 조회하는 이유는 보통 최신순으로 보여주기 때문이다.
         // page.size보다 1개 더 가져오는 이유는 다음 페이지가 존재하는지 확인하는 용도이다.

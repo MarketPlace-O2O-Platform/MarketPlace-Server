@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.market.controller;
 
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,8 +22,8 @@ public class MarketController {
 
     @Operation(summary = "매장 조회", description = "매장 정보 및 이미지 리스트를 조회합니다.")
     @GetMapping("/{marketId}")
-    public ResponseEntity<CommonResponse<MarketDetailResDto>> getMarket(@PathVariable Long marketId){
+    public ResponseEntity<CommonResponse<MarketDetailsResDto>> getMarket(@PathVariable Long marketId){
         return ResponseEntity
-                .ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketService.getMarket(marketId)));
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketService.getMarketDetails(marketId)));
     }
 }
