@@ -23,8 +23,12 @@ public enum StatusCode {
     COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 
+    // Favorite
+    FAVORITE_CREATE(CREATED,"찜 생성(취소) 완료"),
+
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
+
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
@@ -41,6 +45,7 @@ public enum StatusCode {
     /* 403 FORBIDDEN : 권한 없음 */
 
     /* 404 NOT_FOUND : 존재하지 않는 리소스 */
+    MEMBER_NOT_EXIST(NOT_FOUND,"존재하지 않는 멤버입니다."),
     CATEGORY_NOT_EXIST(NOT_FOUND,"존재하지 않는 카테고리입니다."),
     MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),
     COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
