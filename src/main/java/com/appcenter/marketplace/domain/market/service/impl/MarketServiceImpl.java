@@ -25,7 +25,7 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public MarketDetailsResDto getMarketDetails(Long marketId) {
-        List<MarketDetailsResDto> marketDetailsResDtoList= marketRepository.findMarketDetailResDtoListById(marketId);
+        List<MarketDetailsResDto> marketDetailsResDtoList= marketRepository.findMarketDetailsResDtoListById(marketId);
 
         if(marketDetailsResDtoList.isEmpty())
             throw new CustomException(StatusCode.MARKET_NOT_EXIST);

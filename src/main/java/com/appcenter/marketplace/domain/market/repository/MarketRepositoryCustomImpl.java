@@ -23,7 +23,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<MarketDetailsResDto> findMarketDetailResDtoListById(Long marketId) {
+    public List<MarketDetailsResDto> findMarketDetailsResDtoListById(Long marketId) {
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
         return  jpaQueryFactory
                 .from(market)

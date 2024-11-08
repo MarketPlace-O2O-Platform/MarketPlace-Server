@@ -6,7 +6,7 @@ import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import java.util.List;
 
 public interface MarketRepositoryCustom {
-    public List<MarketDetailsResDto> findMarketDetailResDtoListById(Long marketId);
+    public List<MarketDetailsResDto> findMarketDetailsResDtoListById(Long marketId);
 
     public List<MarketResDto> findMarketResDtoList(Long marketId, Integer size);
 
