@@ -7,5 +7,5 @@ public interface MarketService {
 
     MarketDetailsResDto getMarketDetails(Long marketId);
 
-    MarketPageResDto getMarketPage(Long marketId, Integer size);
+    MarketPageResDto getMarketPage(Long marketId, Integer size, String major);
 }

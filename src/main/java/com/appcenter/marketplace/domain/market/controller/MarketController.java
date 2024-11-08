@@ -27,16 +27,18 @@ public class MarketController {
 
     // size가 null로 들어올 시 기본 값을 지정해주기 위해 integer로 값을 받아온다.
     @Operation(summary = "전체 매장 리스트 조회",
-            description = "간단한 매장 정보 리스트를 반환합니다. 무한 스크롤 방식으로 구현됐습니다. <br>" +
+            description = "간단한 매장 정보 리스트를 반환합니다. 무한 스크롤 방식으로 구현하였고, " +
                     "처음 요청 시엔 pageSize만 보내주면 됩니다. <br>" +
-            "그 이후론 매장 정보 리스트에서 마지막 요소의 marketId를 추가해주세요. <br>" +
-            "지금은 최신순으로 보여줍니다. 또한 pageSize의 기본값은 5입니다.")
+                    "그 이후론 매장 정보 리스트에서 마지막 요소의 marketId를 lastPageIndex에 추가해주세요. <br>" +
+                    "카테고리 별 매장을 조회하시려면 category도 보내주세요 <br>" +
+                    "최신순으로 보여줍니다. 또한 pageSize의 기본값은 5입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<MarketPageResDto>> getMarket(
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
-            @RequestParam(defaultValue = "5", name = "pageSize") Integer size){
+            @RequestParam(defaultValue = "5", name = "pageSize") Integer size,
+            @RequestParam(required = false, name = "category") String major){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,marketService.getMarketPage(marketId,size)));
+                        ,marketService.getMarketPage(marketId,size,major)));
     }
 }
