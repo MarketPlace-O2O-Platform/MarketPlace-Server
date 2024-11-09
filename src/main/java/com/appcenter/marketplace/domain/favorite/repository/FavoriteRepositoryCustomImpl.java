@@ -21,7 +21,7 @@ public class FavoriteRepositoryCustomImpl implements FavoriteRepositoryCustom{
                 .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
                 .from(market)
                 .innerJoin(favorite).on(market.eq(favorite.market))
-                .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)))
+                .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)).and(favorite.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
