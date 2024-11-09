@@ -6,7 +6,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "category")
+@Table(name = "category",
+        indexes = {
+                @Index(name = "idx_category_major", columnList = "major") // major 컬럼에 인덱스 추가
+        })
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
