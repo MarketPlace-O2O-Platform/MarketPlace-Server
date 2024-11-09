@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.favorite.service.impl;
 
 import com.appcenter.marketplace.domain.favorite.Favorite;
-import com.appcenter.marketplace.domain.favorite.FavoriteRepository;
+import com.appcenter.marketplace.domain.favorite.repository.FavoriteRepository;
 import com.appcenter.marketplace.domain.favorite.service.FavoriteService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
