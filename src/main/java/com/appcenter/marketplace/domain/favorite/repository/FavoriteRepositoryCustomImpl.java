@@ -16,7 +16,7 @@ public class FavoriteRepositoryCustomImpl implements FavoriteRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<MarketResDto> findMarketResDtoByFavorite(Long memberId, Long marketId, Integer size) {
+    public List<MarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
                 .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
                 .from(market)

@@ -47,8 +47,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public MarketPageResDto getFavoriteMarketPage(Long memberId, Long marketId, Integer size) {
-        List<MarketResDto> marketResDtoList=favoriteRepository.findMarketResDtoByFavorite(memberId,marketId,size);
+    public MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size) {
+        List<MarketResDto> marketResDtoList=favoriteRepository.findFavoriteMarketResDtoByMemberId(memberId,marketId,size);
 
         return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
     }

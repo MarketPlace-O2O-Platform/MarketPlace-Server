@@ -33,13 +33,13 @@ public class FavoriteController {
                     "JWT 구현 전 까지는 memberId를 추가해야합니다. <br>" +
                     "최신순으로 보여줍니다. 또한 pageSize의 기본값은 5입니다.")
     @GetMapping("/markets")
-    public ResponseEntity<CommonResponse<MarketPageResDto>> getFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageResDto>> getMemberFavoriteMarketList(
             @RequestParam Long memberId,
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,favoriteService.getFavoriteMarketPage(memberId,marketId,size)));
+                        ,favoriteService.getMemberFavoriteMarketPage(memberId,marketId,size)));
     }
 
     @Operation(summary = "찜 수가 가장 많은 매장 리스트 조회",
@@ -48,7 +48,7 @@ public class FavoriteController {
                     "그 이후론 매장 정보 리스트에서 마지막 요소의 marketId를 lastPageIndex에 추가해주세요. <br>" +
                     "찜 수가 가장 많은 순으로 보여줍니다. 또한 pageSize의 기본값은 5입니다.")
     @GetMapping("/top-favorite-markets")
-    public ResponseEntity<CommonResponse<MarketPageResDto>> getFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageResDto>> getTopFavoriteMarketList(
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
         return ResponseEntity

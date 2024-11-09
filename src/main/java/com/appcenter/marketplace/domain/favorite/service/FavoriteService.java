@@ -6,7 +6,7 @@ public interface FavoriteService {
 
     void createOrDeleteFavorite(Long memberId, Long marketId);
 
-    MarketPageResDto getFavoriteMarketPage(Long memberId, Long marketId, Integer size);
+    MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size);
 
     MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size);
 }
