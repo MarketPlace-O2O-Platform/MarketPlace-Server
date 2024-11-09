@@ -22,7 +22,7 @@ public class FavoriteRepositoryCustomImpl implements FavoriteRepositoryCustom{
                 .from(market)
                 .innerJoin(favorite).on(market.eq(favorite.market))
                 .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)).and(favorite.isDeleted.eq(false)))
-                .orderBy(market.id.desc())
+                .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();
     }
