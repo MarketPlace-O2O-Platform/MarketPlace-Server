@@ -53,6 +53,13 @@ public class FavoriteServiceImpl implements FavoriteService {
         return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
     }
 
+    @Override
+    public MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size) {
+        List<MarketResDto> marketResDtoList=favoriteRepository.findTopFavoriteMarketResDto(marketId,size);
+
+        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+    }
+
     private MarketPageResDto checkHasNextPageAndReturnPageDto(List<MarketResDto> marketResDtoList, Integer size){
         boolean hasNext=false;
 
