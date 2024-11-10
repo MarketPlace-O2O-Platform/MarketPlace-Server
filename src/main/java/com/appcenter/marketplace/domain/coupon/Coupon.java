@@ -65,6 +65,10 @@ public class Coupon extends BaseEntity {
         this.isHidden = !this.isHidden;
     }
 
+    public void reduce() {
+        this.stock--;
+    }
+
     public void deleteCoupon(){
         this.isDeleted = true;
         this.isHidden = true;

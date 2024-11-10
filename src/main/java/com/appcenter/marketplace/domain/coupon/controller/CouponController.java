@@ -1,60 +1,30 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponListResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.appcenter.marketplace.global.common.StatusCode.*;
+import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 
-
+@Tag(name="coupon-controller", description = "[회원] 1개의 매장의 유효한 쿠폰리스트를 조회합니다.")
 @RestController
-@RequestMapping("/api/owners")
 @RequiredArgsConstructor
+@RequestMapping("/api/coupons")
 public class CouponController {
 
     private final CouponService couponService;
 
-    @Operation(summary = "사장님 쿠폰 생성", description = "사장님이 1개의 쿠폰을 생성합니다.")
-    @PostMapping("/coupons")
-    public ResponseEntity<CommonResponse<CouponResDto>> createCoupon(@RequestParam(name = "marketId")Long id,
-                                                                     @RequestBody @Valid CouponReqDto couponReqDto) {
-
-        return ResponseEntity.status(COUPON_CREATE.getStatus()).body(CommonResponse.from(COUPON_CREATE.getMessage(),couponService.createCoupon(couponReqDto, id)));
-    }
-
-    @Operation(summary = "사장님 쿠폰 단일 조회", description = "사장님이 생성한 1개의 쿠폰을 조회합니다.")
-    @GetMapping("/coupons/{couponId}")
-    public ResponseEntity<CommonResponse<CouponResDto>> getCoupon(@PathVariable Long couponId) {
-        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCoupon(couponId)));
-    }
-
-    @Operation(summary = "사장님 쿠폰 내용 수정", description = "사장님이 생성한 쿠폰의 내용을 수정합니다. " +
-                                                  "<br> '숨김처리'를 제외한 내용을 수정할 수 있습니다. ")
-    @PutMapping("/coupons/{couponId}")
-    public ResponseEntity<CommonResponse<CouponResDto>> updateCoupon(@RequestBody @Valid CouponUpdateReqDto couponUpdateReqDto,
-                                                        @PathVariable Long couponId ){
-        return ResponseEntity.status(COUPON_UPDATE.getStatus()).body(CommonResponse.from(COUPON_UPDATE.getMessage(),couponService.updateCoupon(couponUpdateReqDto, couponId)));
-    }
-
-    @Operation(summary = "숨김/공개 처리 기능", description = "사장님은 생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.")
-    @PutMapping("/coupons/hidden/{couponId}")
-    public ResponseEntity<CommonResponse<CouponHiddenResDto>> hiddenCoupon(@PathVariable Long couponId) {
-        return ResponseEntity.status(COUPON_HIDDEN.getStatus()).body(CommonResponse.from(COUPON_HIDDEN.getMessage(),couponService.updateCouponHidden(couponId)));
-    }
-
-    @Operation(summary = "사장님 쿠폰 삭제", description = "사장님은 쿠폰을 삭제할 수 있습니다. " +
-                                        "<br> 삭제는 소프트 딜리트로 구현됩니다.")
-    @DeleteMapping("/coupons/{couponId}")
-    public ResponseEntity<CommonResponse<Object>> deleteCoupon(@PathVariable Long couponId) {
-        couponService.deleteCoupon(couponId);
-        return ResponseEntity.status(COUPON_DELETE.getStatus()).body(CommonResponse.from(COUPON_DELETE.getMessage()));
+    @Operation(summary = "유효 쿠폰 조회 리스트", description = "사장님이 공개처리 & 만료되지 않은 쿠폰 리스트가 조회됩니다." +
+                                                       "<br> 매장 상세 정보에서 조회가 이루어집니다.")
+    @GetMapping
+    public ResponseEntity<CommonResponse<CouponListResDto>> getCouponList(Long marketId) {
+        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(marketId)));
     }
 }
