@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.global.exception;
 
 import com.appcenter.marketplace.global.common.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,15 @@ public class ExceptionControllerAdvice {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e){
+        ErrorResponse errorResponse= ErrorResponse.builder()
+                .message(DATA_INTEGRITY_VIOLATION.getMessage())
+                .build();
+        return ResponseEntity.status(DATA_INTEGRITY_VIOLATION.getStatus())
+                .body(errorResponse);
+    }
+
     // requestPart로 받은 multiPartFile이 null이면 발생하는 예외
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
@@ -43,9 +53,9 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(IOException.class)  // 특정 예외를 처리
     public ResponseEntity<ErrorResponse> handleIOException(IOException e) {
         ErrorResponse errorResponse=ErrorResponse.builder()
-                .message(FILE_INVALID.getMessage())
+                .message(FILE_SAVE_INVALID.getMessage())
                 .build();
-        return ResponseEntity.status(FILE_INVALID.getStatus())
+        return ResponseEntity.status(FILE_SAVE_INVALID.getStatus())
                 .body(errorResponse);
     }
 

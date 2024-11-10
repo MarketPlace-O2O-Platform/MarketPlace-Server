@@ -36,6 +36,8 @@ public class QImage extends EntityPathBase<Image> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> sequence = createNumber("sequence", Integer.class);
+
     public QImage(String variable) {
         this(Image.class, forVariable(variable), INITS);
     }

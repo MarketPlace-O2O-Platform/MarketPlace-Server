@@ -5,6 +5,7 @@ import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,13 @@ public class Favorite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id", nullable = false)
     private Market market;
+
+    @Builder
+    public Favorite(Boolean isDeleted, Member member, Market market) {
+        this.isDeleted = isDeleted;
+        this.member = member;
+        this.market = market;
+    }
+
+    public void toggleIsDeleted(){ this.isDeleted= !isDeleted; }
 }

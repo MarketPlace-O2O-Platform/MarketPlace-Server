@@ -17,6 +17,9 @@ public class Image extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private Integer sequence;
+
     @Column(nullable = false)
     private String name;
 
@@ -25,8 +28,11 @@ public class Image extends BaseEntity {
     private Market market;
 
     @Builder
-    public Image(String name, Market market) {
-        this.name=name;
+    public Image(Integer sequence, String name, Market market) {
+        this.sequence = sequence;
+        this.name = name;
         this.market = market;
     }
+
+    public void updateSequence(Integer sequence){ this.sequence = sequence;}
 }
