@@ -3,7 +3,7 @@ package com.appcenter.marketplace.domain.market.controller;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +28,7 @@ public class MarketOwnerController {
     @Operation(summary = "사장님 매장 생성", description = "사장님이 1개의 매장을 생성합니다. <br>" +
             "이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse<MarketResDto>> createMarket(
+    public ResponseEntity<CommonResponse<MarketDetailsResDto>> createMarket(
             @RequestPart(value = "jsonData") @Valid MarketCreateReqDto marketCreateReqDto,
             @RequestPart(value = "images") List<MultipartFile> multipartFileList) throws IOException {
         return ResponseEntity
@@ -39,7 +39,7 @@ public class MarketOwnerController {
 
     @Operation(summary = "사장님 매장 정보 수정", description = "사장님이 생성한 매장 정보를 수정합니다.")
     @PutMapping("/{marketId}")
-    public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(
+    public ResponseEntity<CommonResponse<MarketDetailsResDto>> updateMarket(
             @RequestBody @Valid MarketUpdateReqDto marketUpdateReqDto, @PathVariable Long marketId) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_UPDATE.getMessage()
@@ -51,7 +51,7 @@ public class MarketOwnerController {
             "images는 추가할 이미지 리스트입니다. 기존 이미지는 안주셔도 됩니다. <br>" +
             "예시) 추가할 이미지의 순서 리스트가 [2,4] 이면, 이미지 파일은 2개여야하고, 첫번 째 사진은 순서 2가 부여됩니다. 두번 째 사진은 4가 부여됩니다.")
     @PutMapping(value = "/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse<MarketResDto>> updateMarket(
+    public ResponseEntity<CommonResponse<MarketDetailsResDto>> updateMarket(
             @RequestPart(value = "jsonData") MarketImageUpdateReqDto marketImageUpdateReqDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
             @RequestParam(name = "marketId") Long marketId) throws IOException {

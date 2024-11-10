@@ -13,8 +13,8 @@ public class QMarketResDto extends ConstructorExpression<MarketResDto> {
 
     private static final long serialVersionUID = -832137944L;
 
-    public QMarketResDto(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<String> operationHours, com.querydsl.core.types.Expression<String> closedDays, com.querydsl.core.types.Expression<String> phoneNumber, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<? extends java.util.List<com.appcenter.marketplace.domain.image.dto.res.ImageResDto>> imageResDtoList) {
-        super(MarketResDto.class, new Class<?>[]{long.class, String.class, String.class, String.class, String.class, String.class, String.class, java.util.List.class}, marketId, name, description, operationHours, closedDays, phoneNumber, address, imageResDtoList);
+    public QMarketResDto(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<String> thumbnail) {
+        super(MarketResDto.class, new Class<?>[]{long.class, String.class, String.class, String.class}, marketId, name, description, thumbnail);
     }
 
 }
