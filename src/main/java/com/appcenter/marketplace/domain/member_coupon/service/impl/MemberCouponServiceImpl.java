@@ -48,19 +48,19 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     @Override
     @Transactional
     public List<IssuedMemberCouponResDto> getMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponsByMemberId);
+        return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponResDtoByMemberId);
     }
 
     @Override
     @Transactional
     public List<IssuedMemberCouponResDto> getExpiredMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponsByMemberId);
+        return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponResDtoByMemberId);
     }
 
     @Override
     @Transactional
     public List<IssuedMemberCouponResDto> getUsedMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findUsedCouponsByMemberId);
+        return getMemberCouponList(memberId, memberCouponRepository::findUsedMemberCouponResDtoByMemberId);
     }
 
     @Override

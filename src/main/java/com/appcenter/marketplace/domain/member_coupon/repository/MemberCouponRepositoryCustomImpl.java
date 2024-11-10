@@ -27,19 +27,19 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findIssuedCouponsByMemberId(Long memberId) {
+    public List<IssuedMemberCouponResDto> findIssuedCouponResDtoByMemberId(Long memberId) {
         // 만료되기 전의 쿠폰만 조회가 가능합니다.
         return findCouponsByMemberId(memberId, false);
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findExpiredCouponsByMemberId(Long memberId) {
+    public List<IssuedMemberCouponResDto> findExpiredCouponResDtoByMemberId(Long memberId) {
         // 발급 받은 쿠폰 중, 기간이 만료된 쿠폰만 조회합니다.
         return findCouponsByMemberId(memberId, true);
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findUsedCouponsByMemberId(Long memberId) {
+    public List<IssuedMemberCouponResDto> findUsedMemberCouponResDtoByMemberId(Long memberId) {
         return jpaQueryFactory.select(new QIssuedMemberCouponResDto(memberCoupon.id,
                         coupon.id,
                         coupon.name,
