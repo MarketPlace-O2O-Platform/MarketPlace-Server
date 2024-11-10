@@ -29,6 +29,13 @@ public class MemberServiceImpl implements MemberService {
         return MemberLoginResDto.toDto(member);
     }
 
+    @Override
+    @Transactional
+    public MemberLoginResDto getMember(Long studentId) {
+        Member member = findMemberByMemberId(studentId);
+        return MemberLoginResDto.toDto(member);
+    }
+
     // 학번 로그인 검증 및 형변환
     private Long validateAndParseStudentId(MemberLoginReqDto memberLoginReqDto) {
         // 로그인 검증
@@ -36,5 +43,9 @@ public class MemberServiceImpl implements MemberService {
             return Long.valueOf(memberLoginReqDto.getStudentId());
         else throw new CustomException(UNAUTHORIZED_LOGIN_ERROR);
 
+    }
+
+    private Member findMemberByMemberId(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(INVALID_STUDENT_ID));
     }
 }
