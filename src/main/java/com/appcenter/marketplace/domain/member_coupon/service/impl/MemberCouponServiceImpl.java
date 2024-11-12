@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class MemberCouponServiceImpl implements MemberCouponService {

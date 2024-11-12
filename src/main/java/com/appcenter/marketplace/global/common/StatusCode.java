@@ -30,6 +30,7 @@ public enum StatusCode {
 
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
+    MEMBER_FOUND(OK, "회원 조회 완료"),
 
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
@@ -52,7 +53,7 @@ public enum StatusCode {
     MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),
     COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
     COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다."),
-    IMAGE_NOT_EXIST(NOT_FOUND,"존재하지 않는 이미지입니다.");
+    IMAGE_NOT_EXIST(NOT_FOUND,"존재하지 않는 이미지입니다."),
 
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다.");

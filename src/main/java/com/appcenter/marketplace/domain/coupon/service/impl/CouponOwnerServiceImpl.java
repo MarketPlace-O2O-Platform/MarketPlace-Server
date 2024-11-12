@@ -10,7 +10,7 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.MarketRepository;
+import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
