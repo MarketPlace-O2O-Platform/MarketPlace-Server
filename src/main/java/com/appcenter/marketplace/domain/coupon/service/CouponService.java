@@ -1,7 +1,9 @@
 package com.appcenter.marketplace.domain.coupon.service;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponListResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
+
+import java.util.List;
 
 public interface CouponService {
-   CouponListResDto getCouponList(Long marketId);
+   List<CouponMemberResDto> getCouponList(Long marketId);
 }
