@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.market;
 
 
 import com.appcenter.marketplace.domain.category.Category;
+import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -46,8 +47,12 @@ public class Market extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "local_government_id", nullable = false)
+    private Local local;
+
     @Builder
-    public Market(String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail, Category category) {
+    public Market(String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail, Category category, Local local) {
         this.name = name;
         this.description = description;
         this.operationHours = operationHours;
@@ -56,6 +61,7 @@ public class Market extends BaseEntity {
         this.address = address;
         this.thumbnail = thumbnail;
         this.category = category;
+        this.local=local;
     }
 
     public void updateMarketInfo(MarketUpdateReqDto marketUpdateReqDto, Category category){
