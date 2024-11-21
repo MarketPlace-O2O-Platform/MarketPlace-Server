@@ -23,6 +23,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EX
 public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
 
+
     @Override
     public MarketDetailsResDto getMarketDetails(Long marketId) {
         List<MarketDetailsResDto> marketDetailsResDtoList= marketRepository.findMarketDetailsResDtoListById(marketId);
@@ -43,6 +44,20 @@ public class MarketServiceImpl implements MarketService {
             marketResDtoList= marketRepository.findMarketResDtoListByCategory(marketId,size,major);
         }
         else throw new CustomException(CATEGORY_NOT_EXIST);
+
+        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+    }
+
+    @Override
+    public MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size) {
+        List<MarketResDto> marketResDtoList=marketRepository.findFavoriteMarketResDtoByMemberId(memberId,marketId,size);
+
+        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+    }
+
+    @Override
+    public MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size) {
+        List<MarketResDto> marketResDtoList=marketRepository.findTopFavoriteMarketResDto(marketId,size);
 
         return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
     }
