@@ -130,7 +130,6 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .innerJoin(subCoupon.market, market)
                 .where(subCoupon.isDeleted.eq(false)
                         .and(subCoupon.isHidden.eq(false))
-                        .and(subCoupon.isDeleted.eq(false))
                         .and(subCoupon.stock.gt(0))
                         .and(subCoupon.deadLine.after(LocalDateTime.now())))
                 .groupBy(subCoupon.market.id)
