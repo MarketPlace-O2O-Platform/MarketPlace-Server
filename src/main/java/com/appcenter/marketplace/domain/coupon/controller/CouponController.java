@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponClosingTopResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponLatestTopResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketPageResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
@@ -65,4 +66,12 @@ public class CouponController {
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         couponService.getLatestCouponList(lastModifiedAt, couponId, size)));
     }
+
+    @GetMapping("/closing")
+    public ResponseEntity<CommonResponse<List<CouponClosingTopResDto>>> getClosingTopCouponList(
+            @RequestParam(defaultValue = "5", name="count") Integer size){
+        return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
+                couponService.getCouponClosingTop(size)));
+    }
+
 }

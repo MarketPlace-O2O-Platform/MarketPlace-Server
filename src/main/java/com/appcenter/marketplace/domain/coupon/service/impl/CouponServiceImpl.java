@@ -1,14 +1,9 @@
 package com.appcenter.marketplace.domain.coupon.service.impl;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponLatestTopResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketPageResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.res.MarketPageResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +45,11 @@ public class CouponServiceImpl implements CouponService {
         return checkHasNextPageAndReturnPageDto(resDtoList,size);
     }
 
+    @Override
+    public List<CouponClosingTopResDto> getCouponClosingTop(Integer size) {
+        return couponRepository.findClosingTopCouponDtoList(size);
+    }
+
     private CouponMarketPageResDto checkHasNextPageAndReturnPageDto(List<CouponMarketResDto> marketResDtoList, Integer size){
         boolean hasNext=false;
 
@@ -61,7 +61,6 @@ public class CouponServiceImpl implements CouponService {
 
         return new CouponMarketPageResDto(marketResDtoList,hasNext);
     }
-
 
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));

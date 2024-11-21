@@ -13,6 +13,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ISourceContext;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -108,6 +109,42 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .where(whereClause)
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
+                .fetch();
+    }
+
+    @Override
+    public List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size) {
+
+        QCoupon subCoupon = new QCoupon("subCoupon");
+
+        // 서브쿼리: 각 market_id 그룹별 가장 가까운 deadLine을 구함
+        JPQLQuery<Tuple> subQuery = JPAExpressions
+                .select(subCoupon.market.id, subCoupon.deadLine.min())
+                .from(subCoupon)
+                .innerJoin(subCoupon.market, market)
+                .where(subCoupon.isDeleted.isFalse(),
+                        subCoupon.isHidden.isFalse(),
+                        subCoupon.deadLine.after(LocalDateTime.now()),
+                        subCoupon.stock.goe(1))
+                .groupBy(subCoupon.market.id)
+                .limit(1);
+
+        return jpaQueryFactory.select(new QCouponClosingTopResDto(
+                    market.id,
+                    coupon.id,
+                    market.name,
+                    coupon.name,
+                    coupon.deadLine,
+                    market.thumbnail))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .where(Expressions.list(coupon.market.id, coupon.deadLine).in(subQuery),
+                        coupon.isDeleted.isFalse(),
+                        coupon.isHidden.isFalse(),
+                        coupon.deadLine.after(LocalDateTime.now()),
+                        coupon.stock.goe(1))
+                .orderBy(coupon.deadLine.asc(), coupon.id.desc())
+                .limit(size)
                 .fetch();
     }
 
