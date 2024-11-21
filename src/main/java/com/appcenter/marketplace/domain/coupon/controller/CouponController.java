@@ -67,6 +67,10 @@ public class CouponController {
                         couponService.getLatestCouponList(lastModifiedAt, couponId, size)));
     }
 
+    @Operation(summary = "마감 임박 쿠폰 TOP 5 조회",
+    description = "매장별 마감 임박학 쿠폰 1개를 조회하여 보여줍니다. <br>" +
+            "이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
+            "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/closing")
     public ResponseEntity<CommonResponse<List<CouponClosingTopResDto>>> getClosingTopCouponList(
             @RequestParam(defaultValue = "5", name="count") Integer size){
