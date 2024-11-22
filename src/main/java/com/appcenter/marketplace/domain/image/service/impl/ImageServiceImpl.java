@@ -74,14 +74,6 @@ public class ImageServiceImpl implements ImageService {
         }
 
         if(!marketImageUpdateReqDto.getChangedSequences().isEmpty()){
-            // 변경할 이미지의 순서는 unique하기 때문에 10000을 더해 중복될 가능성을 없앤다.
-            List<Image> imageList=imageRepository.findAllByMarket_Id(market.getId());
-            for(Image image: imageList){
-                image.updateSequence(image.getSequence()+10000);
-            }
-            // 변경된 내용이 즉시 DB에 반영됨
-            imageRepository.saveAllAndFlush(imageList);
-
             // 순서가 변경될 Map 객체를 순회하며 이미지 엔티티의 순서를 변경한다.
             for (Map.Entry<Long, Integer> entry : marketImageUpdateReqDto.getChangedSequences().entrySet()) {
                 Long id = entry.getKey();
@@ -90,18 +82,11 @@ public class ImageServiceImpl implements ImageService {
                 Image image = findById(id);
                 image.updateSequence(sequence);
 
-                imageRepository.saveAndFlush(image); // 변경된 내용이 즉시 DB에 반영됨
+                imageRepository.save(image); // 변경된 내용이 즉시 DB에 반영됨
 
                 // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
                 if(sequence==1) market.updateThumbnailPath(image.getName());
             }
-
-            // 순서가 변경되지 않는 이미지는 순서값이 10000이 넘기 때문에 다시 원래대로 변경한다.
-            for(Image image: imageList){
-                image.updateSequence(image.getSequence()%10000);
-            }
-            // 변경된 내용이 즉시 DB에 반영됨
-            imageRepository.saveAllAndFlush(imageList);
         }
 
 
