@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,8 +17,9 @@ public class CouponResDto {
     private final int stock;
     private final boolean isHidden;
 
+    @QueryProjection
     @Builder
-    private CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
+    public CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.description = description;
