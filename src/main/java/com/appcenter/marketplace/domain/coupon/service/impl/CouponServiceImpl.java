@@ -4,6 +4,8 @@ import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
+import com.appcenter.marketplace.domain.market.dto.res.MarketPageResDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +62,21 @@ public class CouponServiceImpl implements CouponService {
         }
 
         return new CouponMarketPageResDto(marketResDtoList,hasNext);
+
     }
+
+    private CouponMarketPageResDto checkHasNextPageAndReturnPageDto(List<CouponMarketResDto> marketResDtoList, Integer size){
+        boolean hasNext=false;
+
+        // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
+        if(marketResDtoList.size()>size){
+            hasNext=true;
+            marketResDtoList.remove(size.intValue());
+        }
+
+        return new CouponMarketPageResDto(marketResDtoList,hasNext);
+    }
+
 
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));

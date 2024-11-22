@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.service;
 
+
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponClosingTopResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponLatestTopResDto;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketPageResDto;
@@ -13,4 +14,5 @@ public interface CouponService {
    List<CouponLatestTopResDto> getCouponLatestTop(Integer size);
    CouponMarketPageResDto getLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
    List<CouponClosingTopResDto> getCouponClosingTop(Integer size);
+
 }
