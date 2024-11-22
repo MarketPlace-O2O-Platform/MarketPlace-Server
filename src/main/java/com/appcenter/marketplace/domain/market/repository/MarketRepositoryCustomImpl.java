@@ -58,7 +58,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         return jpaQueryFactory
                 .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
-                .innerJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId))
@@ -73,7 +73,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
                 .innerJoin(category).on(market.category.eq(category))
-                .innerJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
@@ -88,7 +88,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
                 .innerJoin(favorite).on(market.eq(favorite.market))
-                .innerJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)).and(favorite.isDeleted.eq(false)))
@@ -103,11 +103,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market))
-                .innerJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(favorite.isDeleted.eq(false))) // 삭제되지 않은 찜만 필터링
-                .groupBy(market.id) // 매장별로 그룹화
+                .groupBy(market.id, coupon.id, coupon.name, metro.name, local.name, market.thumbnail) // 매장별로 그룹화
                 .orderBy(favorite.member.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .limit(size+1) // 반환할 리스트 크기 제한
                 .fetch(); // 결과 반환
