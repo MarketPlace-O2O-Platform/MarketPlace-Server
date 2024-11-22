@@ -33,6 +33,12 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         Member member = findMemberById(memberId);
         Coupon coupon = findCouponById(couponId);
 
+        // 쿠폰의 잔여 갯수가 0개일 경우
+        if (coupon.getStock() == 0 ){
+            throw new CustomException(COUPON_SOLD_OUT);
+        }
+
+        // 회원이 이미 해당 쿠폰을 발급받았는지 확인
         if (!memberCouponRepository.existCouponByMemberId(member.getId(), coupon.getId())) {
             MemberCoupon memberCoupon = memberCouponRepository.save(MemberCoupon.builder()
                     .member(member)

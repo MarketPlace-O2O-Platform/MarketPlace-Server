@@ -118,6 +118,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
+
     @Override
     public List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size) {
 
