@@ -65,18 +65,6 @@ public class CouponServiceImpl implements CouponService {
 
     }
 
-    private CouponMarketPageResDto checkHasNextPageAndReturnPageDto(List<CouponMarketResDto> marketResDtoList, Integer size){
-        boolean hasNext=false;
-
-        // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
-        if(marketResDtoList.size()>size){
-            hasNext=true;
-            marketResDtoList.remove(size.intValue());
-        }
-
-        return new CouponMarketPageResDto(marketResDtoList,hasNext);
-    }
-
 
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));

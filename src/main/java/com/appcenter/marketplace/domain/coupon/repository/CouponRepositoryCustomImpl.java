@@ -13,8 +13,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ISourceContext;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
