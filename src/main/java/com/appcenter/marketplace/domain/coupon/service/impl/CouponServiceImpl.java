@@ -1,9 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.service.impl;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponLatestTopResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketPageResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMarketResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
+import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
@@ -48,6 +45,24 @@ public class CouponServiceImpl implements CouponService {
             throw new CustomException(MARKET_NOT_EXIST);
 
         return checkHasNextPageAndReturnPageDto(resDtoList,size);
+    }
+
+    @Override
+    public List<CouponClosingTopResDto> getCouponClosingTop(Integer size) {
+        return couponRepository.findClosingTopCouponDtoList(size);
+    }
+
+    private CouponMarketPageResDto checkHasNextPageAndReturnPageDto(List<CouponMarketResDto> marketResDtoList, Integer size){
+        boolean hasNext=false;
+
+        // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
+        if(marketResDtoList.size()>size){
+            hasNext=true;
+            marketResDtoList.remove(size.intValue());
+        }
+
+        return new CouponMarketPageResDto(marketResDtoList,hasNext);
+
     }
 
     private CouponMarketPageResDto checkHasNextPageAndReturnPageDto(List<CouponMarketResDto> marketResDtoList, Integer size){

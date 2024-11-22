@@ -56,7 +56,8 @@ public enum StatusCode {
     IMAGE_NOT_EXIST(NOT_FOUND,"존재하지 않는 이미지입니다."),
 
     /* 409 CONFLICT : 리소스 충돌 */
-    COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다.");
+    COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
+    COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다.");
 
 
     private final HttpStatus status;

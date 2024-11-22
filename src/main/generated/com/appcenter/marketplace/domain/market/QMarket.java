@@ -37,6 +37,8 @@ public class QMarket extends EntityPathBase<Market> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.appcenter.marketplace.domain.local.QLocal local;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
@@ -67,6 +69,7 @@ public class QMarket extends EntityPathBase<Market> {
     public QMarket(Class<? extends Market> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.appcenter.marketplace.domain.category.QCategory(forProperty("category")) : null;
+        this.local = inits.isInitialized("local") ? new com.appcenter.marketplace.domain.local.QLocal(forProperty("local"), inits.get("local")) : null;
     }
 
 }

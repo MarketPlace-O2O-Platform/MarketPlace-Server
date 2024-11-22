@@ -13,6 +13,8 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ISourceContext;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -73,7 +75,10 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
-                .where(whereClause)
+                .where(whereClause
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))))
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size)
                 .fetch();
@@ -91,7 +96,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
             LocalDateTime truncatedTime = lastModifiedAt.truncatedTo(ChronoUnit.MILLIS);
 
             // 시간 정렬로 하였을 때, 더 이른 시간을 보여줌.
-            whereClause.and(coupon.modifiedAt.loe(truncatedTime));
+            whereClause.and(coupon.modifiedAt.loe(truncatedTime))
+                    .and(coupon.isDeleted.eq(false))
+                    .and(coupon.isHidden.eq(false));
         }
 
         return jpaQueryFactory
@@ -111,6 +118,43 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
+
+    @Override
+    public List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size) {
+
+        QCoupon subCoupon = new QCoupon("subCoupon");
+
+        // 서브쿼리: 각 market_id 그룹별 가장 가까운 deadLine을 구함
+        JPQLQuery<Tuple> subQuery = JPAExpressions
+                .select(subCoupon.market.id, subCoupon.deadLine.min())
+                .from(subCoupon)
+                .innerJoin(subCoupon.market, market)
+                .where(subCoupon.isDeleted.eq(false)
+                        .and(subCoupon.isHidden.eq(false))
+                        .and(subCoupon.stock.gt(0))
+                        .and(subCoupon.deadLine.after(LocalDateTime.now())))
+                .groupBy(subCoupon.market.id)
+                .limit(1);
+
+        return jpaQueryFactory.select(new QCouponClosingTopResDto(
+                    market.id,
+                    coupon.id,
+                    market.name,
+                    coupon.name,
+                    coupon.deadLine,
+                    market.thumbnail))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .where(Expressions.list(coupon.market.id, coupon.deadLine).in(subQuery)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.stock.gt(0))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
+                .orderBy(coupon.deadLine.asc(), coupon.id.desc())
+                .limit(size)
+                .fetch();
+    }
+
     private BooleanBuilder booleanBuilderSubQuery() {
         BooleanBuilder whereClause = new BooleanBuilder();
         // 기본 조건
@@ -127,9 +171,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .select(subCoupon.market.id, subCoupon.modifiedAt.max())
                 .from(subCoupon)
                 .innerJoin(subCoupon.market, market)
-                .where(subCoupon.isDeleted.isFalse(),
-                        subCoupon.isHidden.isFalse(),
-                        subCoupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)))
+                .where(subCoupon.isDeleted.eq(false)
+                        .and(subCoupon.isHidden.eq(false)))
                 .groupBy(subCoupon.market.id);
 
         return subQuery;
