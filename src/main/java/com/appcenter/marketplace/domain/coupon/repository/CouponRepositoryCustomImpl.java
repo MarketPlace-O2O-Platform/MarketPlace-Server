@@ -13,8 +13,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ISourceContext;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -117,6 +115,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
                 .fetch();
     }
+
 
     @Override
     public List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size) {

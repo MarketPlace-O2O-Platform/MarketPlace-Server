@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.dto.req;
 
 import com.appcenter.marketplace.domain.category.Category;
+import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.market.Market;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -38,7 +39,7 @@ public class MarketCreateReqDto {
         this.address = address;
     }
 
-    public Market toEntity(Category category){
+    public Market toEntity(Category category, Local local){
         return Market.builder()
                 .name(marketName)
                 .description(description)
@@ -47,6 +48,7 @@ public class MarketCreateReqDto {
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .category(category)
+                .local(local)
                 .build();
     }
 }

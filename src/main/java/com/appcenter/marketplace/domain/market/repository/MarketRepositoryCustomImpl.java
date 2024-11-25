@@ -15,6 +15,9 @@ import static com.appcenter.marketplace.domain.category.QCategory.category;
 import static com.appcenter.marketplace.domain.favorite.QFavorite.favorite;
 import static com.appcenter.marketplace.domain.image.QImage.image;
 import static com.appcenter.marketplace.domain.market.QMarket.market;
+import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
+import static com.appcenter.marketplace.domain.local.QLocal.local;
+import static com.appcenter.marketplace.domain.metro.QMetro.metro;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
@@ -53,8 +56,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketResDto> findMarketResDtoList(Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
+                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
+                .leftJoin(coupon).on(market.eq(coupon.market))
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
@@ -64,9 +70,12 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketResDto> findMarketResDtoListByCategory(Long marketId, Integer size, String major) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
+                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
                 .innerJoin(category).on(market.category.eq(category))
+                .leftJoin(coupon).on(market.eq(coupon.market))
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
@@ -76,9 +85,12 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
+                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
                 .innerJoin(favorite).on(market.eq(favorite.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)).and(favorite.isDeleted.eq(false)))
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
@@ -88,11 +100,14 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketResDto> findTopFavoriteMarketResDto(Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, market.thumbnail))
+                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
                 .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)) // market과 favorite를 조인
+                .leftJoin(favorite).on(market.eq(favorite.market))
+                .leftJoin(coupon).on(market.eq(coupon.market))
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(favorite.isDeleted.eq(false))) // 삭제되지 않은 찜만 필터링
-                .groupBy(market.id) // 매장별로 그룹화
+                .groupBy(market.id, coupon.id, coupon.name, metro.name, local.name, market.thumbnail) // 매장별로 그룹화
                 .orderBy(favorite.member.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .limit(size+1) // 반환할 리스트 크기 제한
                 .fetch(); // 결과 반환

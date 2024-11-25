@@ -77,5 +77,5 @@ public class CouponController {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 couponService.getCouponClosingTop(size)));
     }
-
+  
 }

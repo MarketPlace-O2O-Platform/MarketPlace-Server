@@ -33,6 +33,7 @@ public enum StatusCode {
     MEMBER_FOUND(OK, "회원 조회 완료"),
 
 
+
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
     INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
@@ -54,9 +55,11 @@ public enum StatusCode {
     COUPON_NOT_EXIST(NOT_FOUND, "존재하지 않는 쿠폰입니다."),
     COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다."),
     IMAGE_NOT_EXIST(NOT_FOUND,"존재하지 않는 이미지입니다."),
+    ADDRESS_NOT_EXIST(NOT_FOUND,"존재하지 않는 주소입니다."),
 
     /* 409 CONFLICT : 리소스 충돌 */
-    COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다.");
+    COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
+    COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다.");
 
 
     private final HttpStatus status;
