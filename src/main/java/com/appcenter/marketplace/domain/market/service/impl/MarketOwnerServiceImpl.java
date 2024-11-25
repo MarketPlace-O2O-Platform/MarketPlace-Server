@@ -23,8 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -43,6 +42,12 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
 
         StringTokenizer st= new StringTokenizer(marketCreateReqDto.getAddress());
+
+        // 두 개 이상의 단어가 있을 경우만 처리
+        if (st.countTokens() < 2) {
+            throw new CustomException(ADDRESS_INVALID);
+        }
+
         Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
 
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category,local));
