@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class MarketPageResDto {
-    private final List<MarketResDto> marketResDtos;
+public class MarketPageResDto<T> {
+    private final List<T> marketResDtos;
     private final boolean hasNext;
 
-    public MarketPageResDto(List<MarketResDto> marketResDtos, boolean hasNext) {
+    public MarketPageResDto(List<T> marketResDtos, boolean hasNext) {
         this.marketResDtos = marketResDtos;
         this.hasNext = hasNext;
     }
