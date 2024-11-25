@@ -16,6 +16,7 @@ import java.util.List;
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/markets")

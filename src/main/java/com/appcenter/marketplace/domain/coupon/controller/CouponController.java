@@ -2,25 +2,19 @@ package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
-import com.appcenter.marketplace.domain.market.dto.res.CouponClosingTopResDto;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 
-@Tag(name="[회원-쿠폰]", description = "[회원] 1개의 매장의 유효한 쿠폰리스트를 조회합니다.")
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/coupons")

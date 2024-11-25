@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
-import com.appcenter.marketplace.domain.coupon.QCoupon;
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
 
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
