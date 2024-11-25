@@ -1,4 +1,4 @@
-package com.appcenter.marketplace.domain.coupon.dto.res;
+package com.appcenter.marketplace.domain.market.dto.res;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
