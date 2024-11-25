@@ -11,15 +11,17 @@ public class MarketCouponResDto {
     private final Long couponId;
     private final String marketName;
     private final String marketDescription;
+    private final String address;
     private final String thumbnail;
     private final LocalDateTime modifiedAt;
 
     @QueryProjection
-    public MarketCouponResDto(Long marketId, Long couponId, String marketName, String marketDescription, String thumbnail, LocalDateTime modifiedAt) {
+    public MarketCouponResDto(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, LocalDateTime modifiedAt) {
         this.marketId = marketId;
         this.couponId = couponId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
+        this.address = address;
         this.thumbnail = thumbnail;
         this.modifiedAt = modifiedAt;
     }

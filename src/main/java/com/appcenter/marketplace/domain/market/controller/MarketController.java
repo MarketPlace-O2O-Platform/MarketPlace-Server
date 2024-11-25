@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.market.controller;
 
-
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
