@@ -3,12 +3,14 @@ package com.appcenter.marketplace.domain.market.service.impl;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.image.service.ImageService;
+import com.appcenter.marketplace.domain.local.Local;
+import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
 import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
+import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.Major;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
@@ -30,6 +33,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIS
 public class MarketOwnerServiceImpl implements MarketOwnerService {
     private final MarketRepository marketRepository;
     private final CategoryRepository categoryRepository;
+    private final LocalRepository localRepository;
     private final MarketService marketService;
     private final ImageService imageService;
 
@@ -38,7 +42,11 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     @Transactional
     public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
-        Market market=marketRepository.save(marketCreateReqDto.toEntity(category));
+
+        StringTokenizer st= new StringTokenizer(marketCreateReqDto.getAddress());
+        Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
+
+        Market market=marketRepository.save(marketCreateReqDto.toEntity(category,local));
         imageService.createImage(market,multipartFileList);
         return marketService.getMarketDetails(market.getId());
     }
