@@ -1,8 +1,8 @@
 package com.appcenter.marketplace.domain.market.repository;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MarketRepositoryCustom {
@@ -15,4 +15,10 @@ public interface MarketRepositoryCustom {
     public List<MarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, Long marketId, Integer size);
 
     public List<MarketResDto> findTopFavoriteMarketResDto(Long marketId, Integer size);
+
+    List<CouponLatestTopResDto> findLatestTopCouponDtoListByMarket(Integer size);
+
+    List<MarketCouponResDto> findLatestCouponMarketResDtoListByMarket(LocalDateTime modifiedAt, Long couponId, Integer size);
+
+    List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size);
 }
