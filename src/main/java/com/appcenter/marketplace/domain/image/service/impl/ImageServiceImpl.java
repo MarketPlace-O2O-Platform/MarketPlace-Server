@@ -34,7 +34,7 @@ public class ImageServiceImpl implements ImageService {
     // 이미지 리스트의 첫번째 요소를 썸네일로 설정
     @Override
     @Transactional
-    public void createImage(Market market, List<MultipartFile> multipartFileList) throws IOException {
+    public void createImage(Market market, List<MultipartFile> multipartFileList){
 
         // 이미지 리스트를 순회하며 저장하고 순서를 1부터 매겨 이미지 엔티티를 생성한다.
         for (int i = 0; i < multipartFileList.size(); i++) {
@@ -53,14 +53,20 @@ public class ImageServiceImpl implements ImageService {
                 market.updateThumbnailPath(image.getName());
             }
 
-            File uploadFile = new File(uploadFolder + imageFileName);
-            file.transferTo(uploadFile);
+            try{
+                File uploadFile = new File(uploadFolder + imageFileName);
+                file.transferTo(uploadFile);
+            }
+            catch(IOException e){
+                throw new CustomException(FILE_SAVE_INVALID);
+            }
+
         }
     }
 
     @Override
     @Transactional
-    public void UpdateImage(Market market, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multipartFileList) throws IOException {
+    public void UpdateImage(Market market, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multipartFileList){
 
         // 삭제할 이미지 id 리스트를 순회하며 파일을 삭제하고 이미지 엔티티를 삭제한다.
         for (Long id : marketImageUpdateReqDto.getDeletedImageIds()) {
@@ -110,8 +116,13 @@ public class ImageServiceImpl implements ImageService {
                     // 순서가 1인 엔티티는 마켓의 썸네일로 선정한다.
                     if (sequence == 1) market.updateThumbnailPath(image.getName());
 
-                    File uploadFile = new File(uploadFolder + imageFileName);
-                    file.transferTo(uploadFile);
+                    try{
+                        File uploadFile = new File(uploadFolder + imageFileName);
+                        file.transferTo(uploadFile);
+                    }
+                    catch(IOException e){
+                        throw new CustomException(FILE_SAVE_INVALID);
+                    }
                 }
             }
             else throw new CustomException(MULTI_PART_FILE_SEQUENCE_INVALID);

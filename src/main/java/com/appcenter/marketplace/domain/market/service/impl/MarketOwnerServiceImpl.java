@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -40,7 +39,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
+    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList){
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
 
         StringTokenizer st= new StringTokenizer(marketCreateReqDto.getAddress());
@@ -62,7 +61,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
+    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) {
         Market market=findMarketByMarketId(marketId);
         imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
         return marketService.getMarketDetails(market.getId());
