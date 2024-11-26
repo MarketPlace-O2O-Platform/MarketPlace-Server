@@ -26,7 +26,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 public class MarketController {
     private final MarketService marketService;
 
-    @Operation(summary = "상세 매장 조회", description = "상세 매장 정보 및 이미지 리스트를 조회합니다.")
+    @Operation(summary = "매장 상세 조회", description = "상세 매장 정보 및 이미지 리스트를 조회합니다.")
     @GetMapping("/{marketId}")
     public ResponseEntity<CommonResponse<MarketDetailsResDto>> getMarket(@PathVariable Long marketId){
         return ResponseEntity
@@ -34,7 +34,7 @@ public class MarketController {
     }
 
     // size가 null로 들어올 시 기본 값을 지정해주기 위해 integer로 값을 받아온다.
-    @Operation(summary = "전체 매장 리스트 조회",
+    @Operation(summary = "전체 매장 조회",
             description = "처음 요청 시, pageSize만 필요합니다. 기본값은 5입니다. <br>" +
                     "카테고리 별 매장을 조회하시려면 category도 필요합니다. <br>" +
                     "최신순으로 보여줍니다.")
@@ -51,7 +51,7 @@ public class MarketController {
                         ,marketService.getMarketPage(memberId, marketId,size,major)));
     }
 
-    @Operation(summary = "자신이 찜한 매장 리스트 조회",
+    @Operation(summary = "자신이 찜한 매장 조회",
             description = "자신이 찜한 매장 정보 리스트를 반환합니다. <br>" +
                     "처음 요청 시엔 pageSize만 필요합니다.기본값은 5입니다. <br>" +
                     "JWT 구현 전 까지는 memberId를 추가해야합니다. <br>" +
@@ -82,7 +82,7 @@ public class MarketController {
                         ,marketService.getFavoriteMarketPage(memberId,count,size)));
     }
 
-    @Operation(summary = "찜 수가 가장 많은 매장 Top 조회",
+    @Operation(summary = "찜 수가 가장 많은 매장 TOP 조회",
             description = "사용자들이 가장 많이 찜한 매장 Top을 반환합니다. <br>" +
                     "size의 기본값은 5입니다.")
     @GetMapping("/top-favorite")
@@ -93,7 +93,7 @@ public class MarketController {
                         ,marketService.getTopFavoriteMarkets(size)));
     }
 
-    @Operation(summary = "최신 등록 쿠폰 TOP 5 조회",
+    @Operation(summary = "최신 등록 쿠폰 TOP 조회",
             description = "매장별 최신 등록한 쿠폰을 조회합니다. 이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
                     "'최신 등록'이란, 수정포함입니다.<br>" +
                     " 즉, 사장님이 쿠폰 내용을 수정하거나, 숨김/보기 처리를 하게 되면, 최신 등록 집계에 포함이 됩니다.")
@@ -104,7 +104,7 @@ public class MarketController {
                 marketService.getTopLatestCoupons(size)));
     }
 
-    @Operation(summary = "최신 등록 쿠폰의 매장 전체 리스트 조회",
+    @Operation(summary = "최신 등록 쿠폰의 매장 더보기 조회",
             description = "조회 기준은 다음과 같습니다. <br>" +
                     "- 각 매장별 최근에 등록된 쿠폰을 시간순으로 정렬 <br>" +
                     "즉, 가장 최근에 등록된 쿠폰의 매장 순으로 리스트가 조회됩니다. <br> <br>" +
@@ -123,7 +123,7 @@ public class MarketController {
                         marketService.getLatestCouponPage(lastModifiedAt, couponId, size)));
     }
 
-    @Operation(summary = "마감 임박 쿠폰 TOP 5 조회",
+    @Operation(summary = "마감 임박 쿠폰 TOP 조회",
             description = "매장별 마감 임박학 쿠폰 1개를 조회하여 보여줍니다. <br>" +
                     "이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
