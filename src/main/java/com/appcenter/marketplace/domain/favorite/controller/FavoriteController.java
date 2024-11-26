@@ -4,6 +4,7 @@ package com.appcenter.marketplace.domain.favorite.controller;
 import com.appcenter.marketplace.domain.favorite.service.FavoriteService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.appcenter.marketplace.global.common.StatusCode.FAVORITE_CREATE;
 
+@Tag(name = "[찜]", description = "[찜] 매장 찜하기")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/favorites")

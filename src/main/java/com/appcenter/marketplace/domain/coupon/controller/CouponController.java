@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 
-
+@Tag(name = "[쿠폰]", description = "[사장님,회원] 매장 별 쿠폰 조회")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/coupons")

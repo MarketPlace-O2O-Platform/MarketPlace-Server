@@ -1,19 +1,21 @@
 package com.appcenter.marketplace.domain.member.controller;
 
 
-import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReqDto;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginResDto;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.global.common.StatusCode.*;
+import static com.appcenter.marketplace.global.common.StatusCode.MEMBER_FOUND;
+import static com.appcenter.marketplace.global.common.StatusCode.MEMBER_LOGIN_SUCCESS;
 
+@Tag(name = "[회원]", description = "[회원] 로그인 및 학번 조회")
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor

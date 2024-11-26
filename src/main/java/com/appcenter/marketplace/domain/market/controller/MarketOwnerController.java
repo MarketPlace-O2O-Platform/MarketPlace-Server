@@ -7,6 +7,7 @@ import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -14,11 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
+@Tag(name = "[사장님 매장]", description = "[사장님] 사장님 매장 관리")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/owners/markets")

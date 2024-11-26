@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
-@Tag(name = "member-coupon-controller", description = "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인이 가능합니다.")
+@Tag(name = "[회원 쿠폰]", description = "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인")
 @RestController
 @RequestMapping("/api/members/coupons")
 @RequiredArgsConstructor
