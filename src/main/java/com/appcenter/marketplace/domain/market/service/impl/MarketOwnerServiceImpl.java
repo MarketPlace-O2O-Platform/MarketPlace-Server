@@ -20,12 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -40,10 +38,16 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList) throws IOException {
+    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList){
         Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
 
         StringTokenizer st= new StringTokenizer(marketCreateReqDto.getAddress());
+
+        // 두 개 이상의 단어가 있을 경우만 처리
+        if (st.countTokens() < 2) {
+            throw new CustomException(ADDRESS_INVALID);
+        }
+
         Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
 
         Market market=marketRepository.save(marketCreateReqDto.toEntity(category,local));
@@ -62,7 +66,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) throws IOException {
+    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) {
         Market market=findMarketByMarketId(marketId);
         imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
         return marketService.getMarketDetails(market.getId());

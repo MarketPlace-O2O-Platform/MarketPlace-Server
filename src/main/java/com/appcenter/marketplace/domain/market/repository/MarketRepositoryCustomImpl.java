@@ -19,9 +19,8 @@ import static com.appcenter.marketplace.domain.category.QCategory.category;
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
 import static com.appcenter.marketplace.domain.favorite.QFavorite.favorite;
 import static com.appcenter.marketplace.domain.image.QImage.image;
-import static com.appcenter.marketplace.domain.market.QMarket.market;
-import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
 import static com.appcenter.marketplace.domain.local.QLocal.local;
+import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.appcenter.marketplace.domain.metro.QMetro.metro;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
@@ -31,6 +30,7 @@ import static com.querydsl.core.group.GroupBy.list;
 public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
+    // 상세 매장 정보 조회
     @Override
     public List<MarketDetailsResDto> findMarketDetailsResDtoListById(Long marketId) {
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
@@ -55,15 +55,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     }
 
 
-    // marketId 보다 작은 값으로부터 size+1까지의 데이터를 가져온다.
-    // 내림차순으로 조회하는 이유는 보통 최신순으로 보여주기 때문이다.
-    // size보다 1개 더 가져오는 이유는 다음 페이지가 존재하는지 확인하는 용도이다.
+    // 전체 매장 페이징 조회
     @Override
-    public List<MarketResDto> findMarketResDtoList(Long marketId, Integer size) {
+    public List<MarketResDto> findMarketResDtoList(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
+                .select(new QMarketResDto(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull()))
                 .from(market)
-                .leftJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId))
@@ -72,13 +78,22 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 카테고리 필터 매장 페이징 조회
     @Override
-    public List<MarketResDto> findMarketResDtoListByCategory(Long marketId, Integer size, String major) {
+    public List<MarketResDto> findMarketResDtoListByCategory(Long memberId, Long marketId, Integer size, String major) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
+                .select(new QMarketResDto(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull()))
                 .from(market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(category).on(market.category.eq(category))
-                .leftJoin(coupon).on(market.eq(coupon.market))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
@@ -87,36 +102,71 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 회원이 찜한 매장 페이징 조회
     @Override
-    public List<MarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, Long marketId, Integer size) {
+    public List<MyFavoriteMarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
+                .select(new QMyFavoriteMarketResDto(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull(),
+                        favorite.modifiedAt))
                 .from(market)
-                .innerJoin(favorite).on(market.eq(favorite.market))
-                .leftJoin(coupon).on(market.eq(coupon.market))
+                .innerJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId).and(favorite.member.id.eq(memberId)).and(favorite.isDeleted.eq(false)))
+                .where(ltFavoriteModifiedAt(lastModifiedAt))
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();
     }
 
+    // 찜 수가 가장 많은 매장 페이징 조회
     @Override
-    public List<MarketResDto> findTopFavoriteMarketResDto(Long marketId, Integer size) {
+    public List<FavoriteMarketResDto> findFavoriteMarketResDto(Long memberId, Long count, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(market.id, market.name, market.description, coupon.id,coupon.name,  metro.name.concat(" ").concat(local.name), market.thumbnail))
+                .select(new QFavoriteMarketResDto(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull(),
+                        favorite.member.id.count()))
                 .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market))
-                .leftJoin(coupon).on(market.eq(coupon.market))
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId).and(favorite.isDeleted.eq(false))) // 삭제되지 않은 찜만 필터링
-                .groupBy(market.id, coupon.id, coupon.name, metro.name, local.name, market.thumbnail) // 매장별로 그룹화
-                .orderBy(favorite.member.id.count().desc()) // 찜 수가 많은 순으로 정렬
+                .where(loeFavoriteCount(count)) // 삭제되지 않은 찜만 필터링
+                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favorite.id)
+                .orderBy(favorite.member.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
                 .limit(size+1) // 반환할 리스트 크기 제한
                 .fetch(); // 결과 반환
     }
+
+    // 찜 수가 가장 많은 매장 Top 조회
+    @Override
+    public List<TopFavoriteMarketResDto> findTopFavoriteMarketResDto(Integer size) {
+        return jpaQueryFactory
+                .select(new QTopFavoriteMarketResDto(
+                        market.id,
+                        market.name,
+                        coupon.id,
+                        coupon.name,
+                        market.thumbnail))
+                .from(market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                                .and(favorite.isDeleted.eq(false)))
+                .leftJoin(coupon).on(market.eq(coupon.market))
+                .groupBy(market.id, market.name, coupon.id, coupon.name, market.thumbnail)
+                .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
 
     @Override
     public List<CouponLatestTopResDto> findLatestTopCouponDtoListByMarket(Integer size) {
@@ -212,18 +262,39 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.stock.gt(0))
                         .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.deadLine.asc(), coupon.id.desc())
+
                 .limit(size)
                 .fetch();
     }
 
-    // BooleanBuilder은 QueryDSL에서 조건을 표현하는 객체이다. 빈 객체를 반환하면 아무런 조건없이 실행된다.
+
+    // BooleanExpression을 반환 시 where의 첫 조건에서 null 예외가 뜰 수 있다.
     // lt= less than = <(~보다 작은)
     private BooleanBuilder ltMarketId(Long marketId){
         BooleanBuilder builder = new BooleanBuilder();  // 조건을 담을 BooleanBuilder 생성
         if (marketId != null) {
             builder.and(market.id.lt(marketId));  // marketId가 존재하면 lt 조건을 추가
         }
-        return builder;  // 항상 유효한 BooleanExpression을 반환
+        return builder;
+
+    }
+
+    // loe= less or equal = <=(~보다 작거나 같은)
+    private BooleanBuilder loeFavoriteCount(Long count){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (count != null) {
+            builder.and(favorite.member.id.count().loe(count));
+        }
+        return builder;
+
+    }
+
+    private BooleanBuilder ltFavoriteModifiedAt(LocalDateTime modifiedAt){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (modifiedAt != null) {
+            builder.and(favorite.modifiedAt.lt(modifiedAt));
+        }
+        return builder;
 
     }
 

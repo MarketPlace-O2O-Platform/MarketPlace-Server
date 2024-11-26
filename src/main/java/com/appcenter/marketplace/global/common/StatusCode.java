@@ -37,6 +37,7 @@ public enum StatusCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
     INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
+    ADDRESS_INVALID(BAD_REQUEST,"유효하지 않은 주소입니다."),
     MULTI_PART_FILE_INVALID(BAD_REQUEST,"MultiPartFile이 존재하지 않습니다"),
     MULTI_PART_FILE_SEQUENCE_INVALID(BAD_REQUEST,"MultipartFile과 순서 리스트의 개수가 맞지 않습니다."),
     FILE_SAVE_INVALID(BAD_REQUEST,"파일 저장 중 오류가 발생했습니다."),

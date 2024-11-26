@@ -30,7 +30,7 @@ public class MarketOwnerController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketDetailsResDto>> createMarket(
             @RequestPart(value = "jsonData") @Valid MarketCreateReqDto marketCreateReqDto,
-            @RequestPart(value = "images") List<MultipartFile> multipartFileList) throws IOException {
+            @RequestPart(value = "images") List<MultipartFile> multipartFileList){
         return ResponseEntity
                 .status(MARKET_CREATE.getStatus())
                 .body(CommonResponse.from(MARKET_CREATE.getMessage()
@@ -54,7 +54,7 @@ public class MarketOwnerController {
     public ResponseEntity<CommonResponse<MarketDetailsResDto>> updateMarket(
             @RequestPart(value = "jsonData") MarketImageUpdateReqDto marketImageUpdateReqDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
-            @RequestParam(name = "marketId") Long marketId) throws IOException {
+            @RequestParam(name = "marketId") Long marketId){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_IMAGE_UPDATE.getMessage()
                         ,marketOwnerService.updateMarketImage(marketId, marketImageUpdateReqDto,multipartFileList)));
@@ -67,5 +67,4 @@ public class MarketOwnerController {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_DELETE.getMessage()));
     }
-
 }
