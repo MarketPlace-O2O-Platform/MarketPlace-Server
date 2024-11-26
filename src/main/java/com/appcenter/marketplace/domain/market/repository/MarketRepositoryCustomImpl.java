@@ -166,11 +166,14 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         coupon.id,
                         market.name,
                         market.description,
+                        metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         coupon.modifiedAt
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .where(whereClause)
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
