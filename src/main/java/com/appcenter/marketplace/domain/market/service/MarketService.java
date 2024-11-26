@@ -1,7 +1,9 @@
 package com.appcenter.marketplace.domain.market.service;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketPageResDto;
+import com.appcenter.marketplace.domain.market.dto.res.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface MarketService {
 
@@ -12,4 +14,11 @@ public interface MarketService {
     MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size);
 
     MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size);
+
+    List<CouponLatestTopResDto> getCouponLatestTop(Integer size);
+
+    MarketCouponPageResDto getLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
+
+    List<CouponClosingTopResDto> getCouponClosingTop(Integer size);
+
 }
