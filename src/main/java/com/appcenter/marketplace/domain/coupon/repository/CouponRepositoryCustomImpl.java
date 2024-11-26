@@ -1,14 +1,16 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.*;
-
-import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
-import static com.appcenter.marketplace.domain.market.QMarket.market;
-
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.QCouponMemberRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.QCouponRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
+import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
+import static com.appcenter.marketplace.domain.market.QMarket.market;
 
 @RequiredArgsConstructor
 public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
@@ -19,7 +21,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     @Override
     public List<CouponRes> findOwnerCouponResDtoByMarketId(Long marketId) {
 
-        return jpaQueryFactory.select(new QCouponResDto(coupon.id,
+        return jpaQueryFactory.select(new QCouponRes(coupon.id,
                         coupon.market.id,
                         coupon.name,
                         coupon.description,
@@ -37,7 +39,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     @Override
     public List<CouponMemberRes> findMemberCouponResDtoByMarketId(Long marketId) {
 
-        return jpaQueryFactory.select(new QCouponMemberResDto(coupon.id,
+        return jpaQueryFactory.select(new QCouponMemberRes(coupon.id,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine))

@@ -7,16 +7,12 @@ import lombok.Getter;
 public class TopFavoriteMarketRes {
     private final Long marketId;
     private final String marketName;
-    private final Long couponId;
-    private final String couponName;
     private final String thumbnail;
 
     @QueryProjection
-    public TopFavoriteMarketRes(Long marketId, String marketName, Long couponId, String couponName, String thumbnail) {
+    public TopFavoriteMarketRes(Long marketId, String marketName, String thumbnail) {
         this.marketId = marketId;
         this.marketName = marketName;
-        this.couponId = couponId;
-        this.couponName = couponName;
         this.thumbnail = thumbnail;
     }
 }

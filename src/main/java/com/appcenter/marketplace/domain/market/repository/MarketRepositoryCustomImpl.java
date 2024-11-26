@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.coupon.QCoupon;
-import com.appcenter.marketplace.domain.image.dto.res.QImageResDto;
+import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -36,13 +36,13 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
         return  jpaQueryFactory
                 .from(market)
-                .innerJoin(image).on(market.eq(image.market))
+                .innerJoin(image.market,market)
                 .where(market.id.eq(marketId)) // 매장 ID로 필터링
                 .orderBy(image.sequence.asc())
                 // transfrom을 통해 쿼리 결과를 원하는 형태로 변환한다.
                 // groupBy(sql의 groupBy가 아니다)를 통해 마켓id를 기준으로 그룹화해 마켓 DTO List로 만든다.
                 // 그룹화를 함으로 써 이미지 DTO 리스트를 list()로 받을 수 있게된다.
-                .transform(groupBy(market.id).list(new QMarketDetailsResDto(
+                .transform(groupBy(market.id).list(new QMarketDetailsRes(
                                 market.id,
                                 market.name,
                                 market.description,
@@ -50,7 +50,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 market.closedDays,
                                 market.phoneNumber,
                                 market.address,
-                                list(new QImageResDto(image.id, image.sequence, image.name)
+                                list(new QImageRes(image.id, image.sequence, image.name)
                         ))));
     }
 
@@ -59,7 +59,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketResDto(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -67,11 +67,10 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         favorite.id.isNotNull()))
                 .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.member.id.eq(memberId)
-                                .and(favorite.isDeleted.eq(false))))
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
+                .leftJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false)))
+                .innerJoin(market.local,local)
+                .innerJoin(local.metro,metro)
                 .where(ltMarketId(marketId))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
@@ -82,7 +81,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major) {
         return jpaQueryFactory
-                .select(new QMarketResDto(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -90,12 +89,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         favorite.id.isNotNull()))
                 .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.member.id.eq(memberId)
-                                .and(favorite.isDeleted.eq(false))))
-                .innerJoin(category).on(market.category.eq(category))
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
+                .leftJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
+                        .and(favorite.isDeleted.eq(false)))
+                .innerJoin(market.category,category)
+                .innerJoin(market.local,local)
+                .innerJoin(local.metro,metro)
                 .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
@@ -106,7 +104,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
         return jpaQueryFactory
-                .select(new QMyFavoriteMarketResDto(
+                .select(new QMyFavoriteMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -115,12 +113,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         favorite.id.isNotNull(),
                         favorite.modifiedAt))
                 .from(market)
-                .innerJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.member.id.eq(memberId)
-                                .and(favorite.isDeleted.eq(false))))
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltFavoriteModifiedAt(lastModifiedAt))
+                .innerJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
+                        .and(favorite.isDeleted.eq(false)))
+                .innerJoin(market.local,local)
+                .innerJoin(local.metro,metro)
+                .where(ltFavoriteModifiedAt(lastModifiedAt)) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();
@@ -130,7 +127,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size) {
         return jpaQueryFactory
-                .select(new QFavoriteMarketResDto(
+                .select(new QFavoriteMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -155,17 +152,13 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size) {
         return jpaQueryFactory
-                .select(new QTopFavoriteMarketResDto(
+                .select(new QTopFavoriteMarketRes(
                         market.id,
                         market.name,
-                        coupon.id,
-                        coupon.name,
                         market.thumbnail))
                 .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)))
-                .leftJoin(coupon).on(market.eq(coupon.market))
-                .groupBy(market.id, market.name, coupon.id, coupon.name, market.thumbnail)
+                .leftJoin(favorite.market,market).on(favorite.isDeleted.eq(false))
+                .groupBy(market.id, market.name, market.thumbnail)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();
     }
@@ -177,7 +170,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
         return  jpaQueryFactory
-                .select(new QCouponLatestTopResDto(
+                .select(new QTopLatestCouponRes(
                         market.id,
                         coupon.id,
                         market.name,
@@ -215,7 +208,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         }
 
         return jpaQueryFactory
-                .select(new QMarketCouponResDto(
+                .select(new QLatestCouponRes(
                         market.id,
                         coupon.id,
                         market.name,
@@ -226,8 +219,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
+                .innerJoin(market.local,local)
+                .innerJoin(local.metro,metro)
                 .where(whereClause)
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
@@ -252,7 +245,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .groupBy(subCoupon.market.id)
                 .limit(1);
 
-        return jpaQueryFactory.select(new QCouponClosingTopResDto(
+        return jpaQueryFactory.select(new QTopClosingCouponRes(
                         market.id,
                         coupon.id,
                         market.name,

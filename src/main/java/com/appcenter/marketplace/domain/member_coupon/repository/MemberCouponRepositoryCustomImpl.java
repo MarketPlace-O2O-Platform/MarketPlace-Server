@@ -1,15 +1,15 @@
 package com.appcenter.marketplace.domain.member_coupon.repository;
 
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedMemberCouponResDto;
+import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
+import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 
 @RequiredArgsConstructor
 public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryCustom {
@@ -40,7 +40,7 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
 
     @Override
     public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId) {
-        return jpaQueryFactory.select(new QIssuedMemberCouponResDto(memberCoupon.id,
+        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
                         coupon.name,
                         coupon.description,
@@ -54,7 +54,7 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     private List<IssuedCouponRes> findCouponsByMemberId(Long memberId, boolean isExpired) {
-        return jpaQueryFactory.select(new QIssuedMemberCouponResDto(memberCoupon.id,
+        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
                         coupon.name,
                         coupon.description,
