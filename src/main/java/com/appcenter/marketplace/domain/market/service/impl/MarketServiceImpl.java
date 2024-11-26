@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
 
 
 @Transactional(readOnly = true)
@@ -68,6 +69,40 @@ public class MarketServiceImpl implements MarketService {
     }
 
     private <T> MarketPageResDto<T> checkHasNextPageAndReturnPageDto(List<T> marketResDtoList, Integer size){
+
+    public List<CouponLatestTopResDto> getCouponLatestTop(Integer size) {
+        return marketRepository.findLatestTopCouponDtoListByMarket(size);
+    }
+
+    @Override
+    public MarketCouponPageResDto getLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+        List<MarketCouponResDto> resDtoList = marketRepository.findLatestCouponMarketResDtoListByMarket(lastModifiedAt, lastCouponId,size);
+
+        if(resDtoList.isEmpty())
+            throw new CustomException(MARKET_NOT_EXIST);
+
+        return checkHasNextPageAndReturnDto(resDtoList,size);
+    }
+
+    @Override
+    public List<CouponClosingTopResDto> getCouponClosingTop(Integer size) {
+        return marketRepository.findClosingTopCouponDtoList(size);
+    }
+
+    private MarketCouponPageResDto checkHasNextPageAndReturnDto(List<MarketCouponResDto> marketResDtoList, Integer size){
+        boolean hasNext=false;
+
+        // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
+        if(marketResDtoList.size()>size){
+            hasNext=true;
+            marketResDtoList.remove(size.intValue());
+        }
+
+        return new MarketCouponPageResDto(marketResDtoList,hasNext);
+
+    }
+    private MarketPageResDto checkHasNextPageAndReturnPageDto(List<MarketResDto> marketResDtoList, Integer size){
+
         boolean hasNext=false;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
