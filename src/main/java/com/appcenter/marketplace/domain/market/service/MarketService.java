@@ -11,17 +11,16 @@ public interface MarketService {
 
     MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major);
 
-    MarketPageResDto<MyFavoriteMarketResDto> getMemberFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
-
+    MarketPageResDto<MyFavoriteMarketResDto> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
     MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size);
     List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size);
 
-    List<CouponLatestTopResDto> getCouponLatestTop(Integer size);
+    List<CouponLatestTopResDto> getTopLatestCoupons(Integer size);
 
-    MarketCouponPageResDto getLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
+    MarketCouponPageResDto getLatestCouponPage(LocalDateTime modifiedAt, Long couponId, Integer size);
 
-    List<CouponClosingTopResDto> getCouponClosingTop(Integer size);
+    List<CouponClosingTopResDto> getTopClosingCoupons(Integer size);
 
 
 }

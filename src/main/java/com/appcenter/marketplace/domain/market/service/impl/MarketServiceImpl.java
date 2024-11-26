@@ -24,9 +24,10 @@ public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
 
 
+    // 매장 상세 정보 조회
     @Override
     public MarketDetailsResDto getMarketDetails(Long marketId) {
-        List<MarketDetailsResDto> marketDetailsResDtoList = marketRepository.findMarketDetailsResDtoListById(marketId);
+        List<MarketDetailsResDto> marketDetailsResDtoList = marketRepository.findMarketDetailList(marketId);
 
         if (marketDetailsResDtoList.isEmpty())
             throw new CustomException(StatusCode.MARKET_NOT_EXIST);
@@ -34,46 +35,52 @@ public class MarketServiceImpl implements MarketService {
         return marketDetailsResDtoList.get(0);
     }
 
+    // 매장 페이지 조회
     @Override
     public MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major) {
         List<MarketResDto> marketResDtoList;
         if (major == null) {
-            marketResDtoList = marketRepository.findMarketResDtoList(memberId, marketId, size);
+            marketResDtoList = marketRepository.findMarketList(memberId, marketId, size);
         } else if (Major.exists(major)) {
-            marketResDtoList = marketRepository.findMarketResDtoListByCategory(memberId, marketId, size, major);
+            marketResDtoList = marketRepository.findMarketListByCategory(memberId, marketId, size, major);
         } else throw new CustomException(CATEGORY_NOT_EXIST);
 
         return checkHasNextPageAndReturnPageDto(marketResDtoList, size);
     }
 
+    // 자신이 찜한 매장 리스트 조회
     @Override
-    public MarketPageResDto<MyFavoriteMarketResDto> getMemberFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
-        List<MyFavoriteMarketResDto> marketResDtoList = marketRepository.findFavoriteMarketResDtoByMemberId(memberId, lastModifiedAt, size);
+    public MarketPageResDto<MyFavoriteMarketResDto> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+        List<MyFavoriteMarketResDto> marketResDtoList = marketRepository.findMyFavoriteMarketList(memberId, lastModifiedAt, size);
 
         return checkHasNextPageAndReturnPageDto(marketResDtoList, size);
     }
 
-
+    // 찜 수가 가장 많은 매장 더보기 조회
     @Override
     public MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size) {
-        List<FavoriteMarketResDto> favoriteMarketResDtoList = marketRepository.findFavoriteMarketResDto(memberId, count, size);
+        List<FavoriteMarketResDto> favoriteMarketResDtoList = marketRepository.findFavoriteMarketList(memberId, count, size);
 
         return checkHasNextPageAndReturnPageDto(favoriteMarketResDtoList, size);
     }
 
+    // 찜 수가 가장 많은 매장 TOP 조회
     @Override
     public List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size) {
-        return marketRepository.findTopFavoriteMarketResDto(size);
+        return marketRepository.findTopFavoriteMarkets(size);
     }
 
 
-    public List<CouponLatestTopResDto> getCouponLatestTop(Integer size) {
-        return marketRepository.findLatestTopCouponDtoListByMarket(size);
-    }
-
+    // 최신 등록 쿠폰 TOP 조회
     @Override
-    public MarketCouponPageResDto getLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
-        List<MarketCouponResDto> resDtoList = marketRepository.findLatestCouponMarketResDtoListByMarket(lastModifiedAt, lastCouponId, size);
+    public List<CouponLatestTopResDto> getTopLatestCoupons(Integer size) {
+        return marketRepository.findTopLatestCoupons(size);
+    }
+
+    // 최신 등록 쿠폰의 매장 더보기 조회
+    @Override
+    public MarketCouponPageResDto getLatestCouponPage(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+        List<MarketCouponResDto> resDtoList = marketRepository.findLatestCouponList(lastModifiedAt, lastCouponId, size);
 
         if (resDtoList.isEmpty())
             throw new CustomException(MARKET_NOT_EXIST);
@@ -81,9 +88,10 @@ public class MarketServiceImpl implements MarketService {
         return checkHasNextPageAndReturnDto(resDtoList, size);
     }
 
+    // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<CouponClosingTopResDto> getCouponClosingTop(Integer size) {
-        return marketRepository.findClosingTopCouponDtoList(size);
+    public List<CouponClosingTopResDto> getTopClosingCoupons(Integer size) {
+        return marketRepository.findTopClosingCoupons(size);
     }
 
     private MarketCouponPageResDto checkHasNextPageAndReturnDto

@@ -64,7 +64,7 @@ public class MarketController {
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,marketService.getMemberFavoriteMarketPage(memberId,lastModifiedAt,size)));
+                        ,marketService.getMyFavoriteMarketPage(memberId,lastModifiedAt,size)));
     }
 
     @Operation(summary = "찜 수가 가장 많은 매장 더보기 조회",
@@ -101,7 +101,7 @@ public class MarketController {
     public ResponseEntity<CommonResponse<List<CouponLatestTopResDto>>> getLatestTopCouponList(
             @RequestParam(defaultValue = "5", name = "count") Integer size) {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                marketService.getCouponLatestTop(size)));
+                marketService.getTopLatestCoupons(size)));
     }
 
     @Operation(summary = "최신 등록 쿠폰의 매장 전체 리스트 조회",
@@ -120,7 +120,7 @@ public class MarketController {
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        marketService.getLatestCouponList(lastModifiedAt, couponId, size)));
+                        marketService.getLatestCouponPage(lastModifiedAt, couponId, size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 TOP 5 조회",
@@ -131,6 +131,6 @@ public class MarketController {
     public ResponseEntity<CommonResponse<List<CouponClosingTopResDto>>> getClosingTopCouponList(
             @RequestParam(defaultValue = "5", name="count") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                marketService.getCouponClosingTop(size)));
+                marketService.getTopClosingCoupons(size)));
     }
 }
