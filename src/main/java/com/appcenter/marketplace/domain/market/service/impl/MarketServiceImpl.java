@@ -1,8 +1,6 @@
 package com.appcenter.marketplace.domain.market.service.impl;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketPageResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketResDto;
+import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.Major;
@@ -12,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
@@ -35,13 +34,13 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public MarketPageResDto getMarketPage(Long marketId, Integer size, String major) {
+    public MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major) {
         List<MarketResDto> marketResDtoList;
         if(major==null){
-            marketResDtoList= marketRepository.findMarketResDtoList(marketId,size);
+            marketResDtoList= marketRepository.findMarketResDtoList(memberId,marketId,size);
         }
         else if(Major.exists(major)){
-            marketResDtoList= marketRepository.findMarketResDtoListByCategory(marketId,size,major);
+            marketResDtoList= marketRepository.findMarketResDtoListByCategory(memberId,marketId,size,major);
         }
         else throw new CustomException(CATEGORY_NOT_EXIST);
 
@@ -49,21 +48,26 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size) {
-        List<MarketResDto> marketResDtoList=marketRepository.findFavoriteMarketResDtoByMemberId(memberId,marketId,size);
+    public MarketPageResDto<MyFavoriteMarketResDto> getMemberFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+        List<MyFavoriteMarketResDto> marketResDtoList=marketRepository.findFavoriteMarketResDtoByMemberId(memberId,lastModifiedAt,size);
 
         return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+    }
+
+
+    @Override
+    public MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size) {
+        List<FavoriteMarketResDto> favoriteMarketResDtoList=marketRepository.findFavoriteMarketResDto(memberId, count,size);
+
+        return checkHasNextPageAndReturnPageDto(favoriteMarketResDtoList,size);
     }
 
     @Override
-    public MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size) {
-        List<MarketResDto> marketResDtoList=marketRepository.findTopFavoriteMarketResDto(marketId,size);
-
-        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+    public List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size) {
+        return marketRepository.findTopFavoriteMarketResDto(size);
     }
 
-
-    private MarketPageResDto checkHasNextPageAndReturnPageDto(List<MarketResDto> marketResDtoList, Integer size){
+    private <T> MarketPageResDto<T> checkHasNextPageAndReturnPageDto(List<T> marketResDtoList, Integer size){
         boolean hasNext=false;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
@@ -72,6 +76,6 @@ public class MarketServiceImpl implements MarketService {
             marketResDtoList.remove(size.intValue());
         }
 
-        return new MarketPageResDto(marketResDtoList,hasNext);
+        return new MarketPageResDto<>(marketResDtoList,hasNext);
     }
 }

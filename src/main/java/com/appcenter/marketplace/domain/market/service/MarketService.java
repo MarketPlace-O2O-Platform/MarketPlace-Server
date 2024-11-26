@@ -1,15 +1,18 @@
 package com.appcenter.marketplace.domain.market.service;
 
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketPageResDto;
+import com.appcenter.marketplace.domain.market.dto.res.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface MarketService {
 
     MarketDetailsResDto getMarketDetails(Long marketId);
 
-    MarketPageResDto getMarketPage(Long marketId, Integer size, String major);
+    MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major);
 
-    MarketPageResDto getMemberFavoriteMarketPage(Long memberId, Long marketId, Integer size);
+    MarketPageResDto<MyFavoriteMarketResDto> getMemberFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size);
+    MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size);
+    List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size);
 }
