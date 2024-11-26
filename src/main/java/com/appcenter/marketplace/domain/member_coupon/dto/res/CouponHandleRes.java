@@ -5,18 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberCouponUpdateResDto {
+public class CouponHandleRes {
     private final Long couponId;
     private final Boolean isUsed;
 
     @Builder
-    private MemberCouponUpdateResDto(Long couponId, Boolean isUsed) {
+    private CouponHandleRes(Long couponId, Boolean isUsed) {
         this.couponId = couponId;
         this.isUsed = isUsed;
     }
 
-    public static MemberCouponUpdateResDto toDto(MemberCoupon memberCoupon) {
-        return MemberCouponUpdateResDto.builder()
+    public static CouponHandleRes toDto(MemberCoupon memberCoupon) {
+        return CouponHandleRes.builder()
                 .couponId(memberCoupon.getId())
                 .isUsed(memberCoupon.getIsUsed())
                 .build();

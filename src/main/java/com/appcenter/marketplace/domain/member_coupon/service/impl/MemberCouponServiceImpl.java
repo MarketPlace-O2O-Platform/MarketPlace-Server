@@ -5,8 +5,8 @@ import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedMemberCouponResDto;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.MemberCouponUpdateResDto;
+import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
+import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -54,37 +54,37 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     @Override
     @Transactional
-    public List<IssuedMemberCouponResDto> getMemberCouponList(Long memberId) {
+    public List<IssuedCouponRes> getMemberCouponList(Long memberId) {
         return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponResDtoByMemberId);
     }
 
     @Override
     @Transactional
-    public List<IssuedMemberCouponResDto> getExpiredMemberCouponList(Long memberId) {
+    public List<IssuedCouponRes> getExpiredMemberCouponList(Long memberId) {
         return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponResDtoByMemberId);
     }
 
     @Override
     @Transactional
-    public List<IssuedMemberCouponResDto> getUsedMemberCouponList(Long memberId) {
+    public List<IssuedCouponRes> getUsedMemberCouponList(Long memberId) {
         return getMemberCouponList(memberId, memberCouponRepository::findUsedMemberCouponResDtoByMemberId);
     }
 
     @Override
     @Transactional
-    public MemberCouponUpdateResDto updateCoupon(Long memberCouponId) {
+    public CouponHandleRes updateCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
         memberCoupon.usedToggle();
-        return MemberCouponUpdateResDto.toDto(memberCoupon);
+        return CouponHandleRes.toDto(memberCoupon);
     }
 
     @Override
-    public IssuedMemberCouponResDto getMemberCoupon(Long memberCouponId) {
+    public IssuedCouponRes getMemberCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
-        return IssuedMemberCouponResDto.toDto(memberCoupon);
+        return IssuedCouponRes.toDto(memberCoupon);
     }
 
-    private List<IssuedMemberCouponResDto> getMemberCouponList(Long memberId, Function<Long, List<IssuedMemberCouponResDto>> findCoupons) {
+    private List<IssuedCouponRes> getMemberCouponList(Long memberId, Function<Long, List<IssuedCouponRes>> findCoupons) {
         Member member = findMemberById(memberId);
         return findCoupons.apply(member.getId());
     }

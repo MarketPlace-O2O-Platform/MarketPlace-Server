@@ -6,16 +6,16 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberLoginResDto {
+public class MemberLoginRes {
     private final Long studentId;
 
     @Builder
-    public MemberLoginResDto(Long studentId) {
+    public MemberLoginRes(Long studentId) {
         this.studentId = studentId;
     }
 
-    public static MemberLoginResDto toDto(Member member) {
-        return MemberLoginResDto.builder()
+    public static MemberLoginRes toDto(Member member) {
+        return MemberLoginRes.builder()
                 .studentId(member.getId())
                 .build();
     }

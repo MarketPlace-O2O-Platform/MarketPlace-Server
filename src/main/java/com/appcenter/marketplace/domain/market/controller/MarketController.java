@@ -28,7 +28,7 @@ public class MarketController {
 
     @Operation(summary = "매장 상세 조회", description = "상세 매장 정보 및 이미지 리스트를 조회합니다.")
     @GetMapping("/{marketId}")
-    public ResponseEntity<CommonResponse<MarketDetailsResDto>> getMarket(@PathVariable Long marketId){
+    public ResponseEntity<CommonResponse<MarketDetailsRes>> getMarket(@PathVariable Long marketId){
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),marketService.getMarketDetails(marketId)));
     }
@@ -39,7 +39,7 @@ public class MarketController {
                     "카테고리 별 매장을 조회하시려면 category도 필요합니다. <br>" +
                     "최신순으로 보여줍니다.")
     @GetMapping
-    public ResponseEntity<CommonResponse<MarketPageResDto<MarketResDto>>> getMarket(
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
@@ -57,7 +57,7 @@ public class MarketController {
                     "JWT 구현 전 까지는 memberId를 추가해야합니다. <br>" +
                     "최신 찜 순으로 보여줍니다.")
     @GetMapping("/my-favorite")
-    public ResponseEntity<CommonResponse<MarketPageResDto<MyFavoriteMarketResDto>>> getMemberFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageRes<MyFavoriteMarketRes>>> getMemberFavoriteMarketList(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 favoriteModifiedAt (e.g. 2024-11-25 11:19:26.378948 )")
             @RequestParam(required = false, name = "lastModifiedAt") LocalDateTime lastModifiedAt,
@@ -72,7 +72,7 @@ public class MarketController {
                     "처음 요청 시엔 pageSize만 필요합니다. 기본값은 5입니다. <br>" +
                     "찜 수가 가장 많은 순으로 보여줍니다.")
     @GetMapping("/favorite")
-    public ResponseEntity<CommonResponse<MarketPageResDto<FavoriteMarketResDto>>> getTopFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageRes<FavoriteMarketRes>>> getTopFavoriteMarketList(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 favoriteCount")
             @RequestParam(required = false, name = "lastFavoriteCount") Long count,
@@ -86,7 +86,7 @@ public class MarketController {
             description = "사용자들이 가장 많이 찜한 매장 Top을 반환합니다. <br>" +
                     "size의 기본값은 5입니다.")
     @GetMapping("/top-favorite")
-    public ResponseEntity<CommonResponse<List<TopFavoriteMarketResDto>>> getTopFavoriteMarketList(
+    public ResponseEntity<CommonResponse<List<TopFavoriteMarketRes>>> getTopFavoriteMarketList(
             @RequestParam(defaultValue = "5", name = "size") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
@@ -98,7 +98,7 @@ public class MarketController {
                     "'최신 등록'이란, 수정포함입니다.<br>" +
                     " 즉, 사장님이 쿠폰 내용을 수정하거나, 숨김/보기 처리를 하게 되면, 최신 등록 집계에 포함이 됩니다.")
     @GetMapping("/top-latest-coupon")
-    public ResponseEntity<CommonResponse<List<CouponLatestTopResDto>>> getLatestTopCouponList(
+    public ResponseEntity<CommonResponse<List<TopLatestCouponRes>>> getLatestTopCouponList(
             @RequestParam(defaultValue = "5", name = "count") Integer size) {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopLatestCoupons(size)));
@@ -112,7 +112,7 @@ public class MarketController {
                     "hasNext가 true일 시, 다음 페이지가 존재합니다.<br>"
     )
     @GetMapping("/latest-coupon")
-    public ResponseEntity<CommonResponse<MarketCouponPageResDto>> getLatestMarketByCoupon(
+    public ResponseEntity<CommonResponse<MarketPageRes<LatestCouponRes>>> getLatestMarketByCoupon(
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastPageIndex") Long couponId,
             @Parameter(description = "위에 작성한 couponId의 modifiedAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
@@ -128,7 +128,7 @@ public class MarketController {
                     "이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/top-closing-coupon")
-    public ResponseEntity<CommonResponse<List<CouponClosingTopResDto>>> getClosingTopCouponList(
+    public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
             @RequestParam(defaultValue = "5", name="count") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopClosingCoupons(size)));

@@ -7,20 +7,20 @@ import java.util.List;
 
 public interface MarketService {
 
-    MarketDetailsResDto getMarketDetails(Long marketId);
+    MarketDetailsRes getMarketDetails(Long marketId);
 
-    MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major);
+    MarketPageRes<MarketRes> getMarketPage(Long memberId, Long marketId, Integer size, String major);
 
-    MarketPageResDto<MyFavoriteMarketResDto> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+    MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size);
-    List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size);
+    MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long count, Integer size);
+    List<TopFavoriteMarketRes> getTopFavoriteMarkets(Integer size);
 
-    List<CouponLatestTopResDto> getTopLatestCoupons(Integer size);
+    List<TopLatestCouponRes> getTopLatestCoupons(Integer size);
 
-    MarketCouponPageResDto getLatestCouponPage(LocalDateTime modifiedAt, Long couponId, Integer size);
+    MarketPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime modifiedAt, Long couponId, Integer size);
 
-    List<CouponClosingTopResDto> getTopClosingCoupons(Integer size);
+    List<TopClosingCouponRes> getTopClosingCoupons(Integer size);
 
 
 }

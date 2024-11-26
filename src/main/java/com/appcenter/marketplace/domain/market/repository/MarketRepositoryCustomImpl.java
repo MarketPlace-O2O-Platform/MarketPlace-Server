@@ -32,7 +32,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 매장 상세 정보 조회
     @Override
-    public List<MarketDetailsResDto> findMarketDetailList(Long marketId) {
+    public List<MarketDetailsRes> findMarketDetailList(Long marketId) {
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
         return  jpaQueryFactory
                 .from(market)
@@ -57,7 +57,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 매장 페이징 조회
     @Override
-    public List<MarketResDto> findMarketList(Long memberId, Long marketId, Integer size) {
+    public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
                 .select(new QMarketResDto(
                         market.id,
@@ -80,7 +80,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 카테고리 별 매장 페이징 조회
     @Override
-    public List<MarketResDto> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major) {
+    public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major) {
         return jpaQueryFactory
                 .select(new QMarketResDto(
                         market.id,
@@ -104,7 +104,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 회원이 찜한 매장 페이징 조회
     @Override
-    public List<MyFavoriteMarketResDto> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+    public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
         return jpaQueryFactory
                 .select(new QMyFavoriteMarketResDto(
                         market.id,
@@ -128,7 +128,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 페이징 조회
     @Override
-    public List<FavoriteMarketResDto> findFavoriteMarketList(Long memberId, Long count, Integer size) {
+    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size) {
         return jpaQueryFactory
                 .select(new QFavoriteMarketResDto(
                         market.id,
@@ -153,7 +153,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 Top 조회
     @Override
-    public List<TopFavoriteMarketResDto> findTopFavoriteMarkets(Integer size) {
+    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size) {
         return jpaQueryFactory
                 .select(new QTopFavoriteMarketResDto(
                         market.id,
@@ -172,7 +172,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
-    public List<CouponLatestTopResDto> findTopLatestCoupons(Integer size) {
+    public List<TopLatestCouponRes> findTopLatestCoupons(Integer size) {
 
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
@@ -197,7 +197,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 최신 등록 쿠폰 페이징 조회
     @Override
-    public List<MarketCouponResDto> findLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+    public List<LatestCouponRes> findLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
         // lastModifiedAt 조건 추가
@@ -236,7 +236,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<CouponClosingTopResDto> findTopClosingCoupons(Integer size) {
+    public List<TopClosingCouponRes> findTopClosingCoupons(Integer size) {
 
         QCoupon subCoupon = new QCoupon("subCoupon");
 

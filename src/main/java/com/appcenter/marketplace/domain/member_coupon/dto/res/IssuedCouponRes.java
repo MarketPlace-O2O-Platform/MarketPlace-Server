@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class IssuedMemberCouponResDto {
+public class IssuedCouponRes {
     private final Long memberCouponId;
     private final Long couponId;
     private final String couponName;
@@ -18,7 +18,7 @@ public class IssuedMemberCouponResDto {
 
     @QueryProjection
     @Builder
-    public IssuedMemberCouponResDto(Long memberCouponId, Long couponId, String couponName, String description, LocalDateTime deadLine, Boolean used) {
+    public IssuedCouponRes(Long memberCouponId, Long couponId, String couponName, String description, LocalDateTime deadLine, Boolean used) {
         this.memberCouponId = memberCouponId;
         this.couponId = couponId;
         this.couponName = couponName;
@@ -27,8 +27,8 @@ public class IssuedMemberCouponResDto {
         this.used = used;
     }
 
-    public static IssuedMemberCouponResDto toDto(MemberCoupon memberCoupon){
-        return IssuedMemberCouponResDto.builder()
+    public static IssuedCouponRes toDto(MemberCoupon memberCoupon){
+        return IssuedCouponRes.builder()
                 .memberCouponId(memberCoupon.getId())
                 .couponId(memberCoupon.getId())
                 .couponName(memberCoupon.getCoupon().getName())

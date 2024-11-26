@@ -1,21 +1,21 @@
 package com.appcenter.marketplace.domain.market.service;
 
-import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
-import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface MarketOwnerService {
 
-    MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multiPartFileList);
+    MarketDetailsRes createMarket(MarketCreateReq marketCreateReq, List<MultipartFile> multiPartFileList);
 
-    MarketDetailsResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto);
+    MarketDetailsRes updateMarket(Long marketId, MarketUpdateReq marketUpdateReq);
 
-    MarketDetailsResDto updateMarketImage (Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto,
-                                           List<MultipartFile> multiPartFileList);
+    MarketDetailsRes updateMarketImage (Long marketId, MarketImageUpdateReq marketImageUpdateReq,
+                                        List<MultipartFile> multiPartFileList);
     void deleteMarket(Long marketId);
 
 }

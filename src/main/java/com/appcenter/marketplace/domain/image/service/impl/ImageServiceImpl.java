@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.image.Image;
 import com.appcenter.marketplace.domain.image.ImageRepository;
 import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -66,10 +66,10 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void UpdateImage(Market market, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multipartFileList){
+    public void UpdateImage(Market market, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multipartFileList){
 
         // 삭제할 이미지 id 리스트를 순회하며 파일을 삭제하고 이미지 엔티티를 삭제한다.
-        for (Long id : marketImageUpdateReqDto.getDeletedImageIds()) {
+        for (Long id : marketImageUpdateReq.getDeletedImageIds()) {
             Image image = findById(id);
 
             imageRepository.deleteById(id);
@@ -79,9 +79,9 @@ public class ImageServiceImpl implements ImageService {
                 throw new CustomException(FILE_DELETE_INVALID);
         }
 
-        if(!marketImageUpdateReqDto.getChangedSequences().isEmpty()){
+        if(!marketImageUpdateReq.getChangedSequences().isEmpty()){
             // 순서가 변경될 Map 객체를 순회하며 이미지 엔티티의 순서를 변경한다.
-            for (Map.Entry<Long, Integer> entry : marketImageUpdateReqDto.getChangedSequences().entrySet()) {
+            for (Map.Entry<Long, Integer> entry : marketImageUpdateReq.getChangedSequences().entrySet()) {
                 Long id = entry.getKey();
                 Integer sequence = entry.getValue();
 
@@ -99,10 +99,10 @@ public class ImageServiceImpl implements ImageService {
         // 추가할 이미지가 없으면 패스한다.
         if(multipartFileList != null) {
             // 추가될 이미지 리스트와 추가될 이미지의 순서 리스트의 길이가 맞지 않으면 안된다.
-            if (multipartFileList.size() == marketImageUpdateReqDto.getAddedImageSequences().size()) {
+            if (multipartFileList.size() == marketImageUpdateReq.getAddedImageSequences().size()) {
                 // 리스트를 순회하며 이미지를 저장하고 순서를 매겨 엔티티를 생성한다.
                 for (int i = 0; i < multipartFileList.size(); i++) {
-                    Integer sequence = marketImageUpdateReqDto.getAddedImageSequences().get(i);
+                    Integer sequence = marketImageUpdateReq.getAddedImageSequences().get(i);
                     MultipartFile file = multipartFileList.get(i);
                     String imageFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 

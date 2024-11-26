@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CouponRepositoryCustom {
 
-    List<CouponResDto> findOwnerCouponResDtoByMarketId(Long marketId);
+    List<CouponRes> findOwnerCouponResDtoByMarketId(Long marketId);
 
-    List<CouponMemberResDto> findMemberCouponResDtoByMarketId(Long marketId);
+    List<CouponMemberRes> findMemberCouponResDtoByMarketId(Long marketId);
 }

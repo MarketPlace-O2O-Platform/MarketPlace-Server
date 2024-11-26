@@ -1,6 +1,6 @@
 package com.appcenter.marketplace.domain.member_coupon.repository;
 
-import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedMemberCouponResDto;
+import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedMemberCouponResDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +27,19 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findIssuedCouponResDtoByMemberId(Long memberId) {
+    public List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId) {
         // 만료되기 전의 쿠폰만 조회가 가능합니다.
         return findCouponsByMemberId(memberId, false);
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findExpiredCouponResDtoByMemberId(Long memberId) {
+    public List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId) {
         // 발급 받은 쿠폰 중, 기간이 만료된 쿠폰만 조회합니다.
         return findCouponsByMemberId(memberId, true);
     }
 
     @Override
-    public List<IssuedMemberCouponResDto> findUsedMemberCouponResDtoByMemberId(Long memberId) {
+    public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId) {
         return jpaQueryFactory.select(new QIssuedMemberCouponResDto(memberCoupon.id,
                         coupon.id,
                         coupon.name,
@@ -53,7 +53,7 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
                 .fetch();
     }
 
-    private List<IssuedMemberCouponResDto> findCouponsByMemberId(Long memberId, boolean isExpired) {
+    private List<IssuedCouponRes> findCouponsByMemberId(Long memberId, boolean isExpired) {
         return jpaQueryFactory.select(new QIssuedMemberCouponResDto(memberCoupon.id,
                         coupon.id,
                         coupon.name,

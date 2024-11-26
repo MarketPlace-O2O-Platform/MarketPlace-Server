@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MarketCreateReqDto {
+public class MarketCreateReq {
     @NotBlank(message = "매장명은 필수입력값입니다.")
     private String marketName;
 
@@ -30,7 +30,7 @@ public class MarketCreateReqDto {
     private String major;
 
     @Builder
-    public MarketCreateReqDto(String marketName, String description, String operationHours, String closedDays, String phoneNumber, String address) {
+    public MarketCreateReq(String marketName, String description, String operationHours, String closedDays, String phoneNumber, String address) {
         this.marketName = marketName;
         this.description = description;
         this.operationHours = operationHours;

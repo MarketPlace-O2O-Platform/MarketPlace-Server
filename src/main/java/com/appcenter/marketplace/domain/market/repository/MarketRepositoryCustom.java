@@ -6,22 +6,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MarketRepositoryCustom {
-    public List<MarketDetailsResDto> findMarketDetailList(Long marketId);
+    public List<MarketDetailsRes> findMarketDetailList(Long marketId);
 
-    public List<MarketResDto> findMarketList(Long memberId, Long marketId, Integer size);
+    public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size);
 
-    public List<MarketResDto> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major);
+    public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major);
 
-    public List<MyFavoriteMarketResDto> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+    public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    public List<FavoriteMarketResDto> findFavoriteMarketList(Long memberId, Long count, Integer size);
+    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size);
 
-    public List<TopFavoriteMarketResDto> findTopFavoriteMarkets(Integer size);
+    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size);
 
-    List<CouponLatestTopResDto> findTopLatestCoupons(Integer size);
+    List<TopLatestCouponRes> findTopLatestCoupons(Integer size);
 
-    List<MarketCouponResDto> findLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
+    List<LatestCouponRes> findLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
 
-    List<CouponClosingTopResDto> findTopClosingCoupons(Integer size);
+    List<TopClosingCouponRes> findTopClosingCoupons(Integer size);
 }
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CouponResDto {
+public class CouponRes {
     private final Long couponId;
     private final Long marketId;
     private final String couponName;
@@ -19,7 +19,7 @@ public class CouponResDto {
 
     @QueryProjection
     @Builder
-    public CouponResDto(Long couponId, Long marketId,String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
+    public CouponRes(Long couponId, Long marketId, String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.description = description;
@@ -29,8 +29,8 @@ public class CouponResDto {
         this.marketId = marketId;
     }
 
-    public static CouponResDto toDto(Coupon coupon){
-        return CouponResDto.builder()
+    public static CouponRes toDto(Coupon coupon){
+        return CouponRes.builder()
                 .couponId(coupon.getId())
                 .couponName(coupon.getName())
                 .description(coupon.getDescription())

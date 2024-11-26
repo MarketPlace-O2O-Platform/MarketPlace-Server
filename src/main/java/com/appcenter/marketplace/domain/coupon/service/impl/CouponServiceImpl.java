@@ -23,9 +23,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
-    public List<CouponMemberResDto> getCouponList(Long marketId) {
+    public List<CouponMemberRes> getCouponList(Long marketId) {
         Market market = findMarketById(marketId);
-        List<CouponMemberResDto> couponList = couponRepository.findMemberCouponResDtoByMarketId(marketId);
+        List<CouponMemberRes> couponList = couponRepository.findMemberCouponResDtoByMarketId(marketId);
         return couponList;
     }
 

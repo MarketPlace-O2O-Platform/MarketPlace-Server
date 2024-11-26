@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class MarketCouponResDto {
+public class LatestCouponRes {
     private final Long marketId;
     private final Long couponId;
     private final String marketName;
@@ -16,7 +16,7 @@ public class MarketCouponResDto {
     private final LocalDateTime modifiedAt;
 
     @QueryProjection
-    public MarketCouponResDto(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, LocalDateTime modifiedAt) {
+    public LatestCouponRes(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, LocalDateTime modifiedAt) {
         this.marketId = marketId;
         this.couponId = couponId;
         this.marketName = marketName;

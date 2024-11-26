@@ -4,18 +4,18 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 @Getter
-public class TopFavoriteMarketResDto {
+public class TopLatestCouponRes {
     private final Long marketId;
-    private final String marketName;
     private final Long couponId;
+    private final String marketName;
     private final String couponName;
     private final String thumbnail;
 
     @QueryProjection
-    public TopFavoriteMarketResDto(Long marketId, String marketName, Long couponId, String couponName, String thumbnail) {
+    public TopLatestCouponRes(Long marketId, Long couponId, String marketName, String couponName, String thumbnail) {
         this.marketId = marketId;
-        this.marketName = marketName;
         this.couponId = couponId;
+        this.marketName = marketName;
         this.couponName = couponName;
         this.thumbnail = thumbnail;
     }

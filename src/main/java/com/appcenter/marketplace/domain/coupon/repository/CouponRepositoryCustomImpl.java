@@ -17,7 +17,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 사장님) '숨김처리'에 관계없이 발행한 모든 쿠폰을 확인할 수 있습니다.
     @Override
-    public List<CouponResDto> findOwnerCouponResDtoByMarketId(Long marketId) {
+    public List<CouponRes> findOwnerCouponResDtoByMarketId(Long marketId) {
 
         return jpaQueryFactory.select(new QCouponResDto(coupon.id,
                         coupon.market.id,
@@ -35,7 +35,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 유저) 사장님이 발행한 쿠폰 중 '공개처리'가 된 쿠폰들만 유저는 리스트에서 확인 가능합니다.
     @Override
-    public List<CouponMemberResDto> findMemberCouponResDtoByMarketId(Long marketId) {
+    public List<CouponMemberRes> findMemberCouponResDtoByMarketId(Long marketId) {
 
         return jpaQueryFactory.select(new QCouponMemberResDto(coupon.id,
                         coupon.name,

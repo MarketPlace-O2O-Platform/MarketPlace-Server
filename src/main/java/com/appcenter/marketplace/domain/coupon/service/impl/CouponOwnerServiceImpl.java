@@ -1,11 +1,10 @@
 package com.appcenter.marketplace.domain.coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReqDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberResDto;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponResDto;
+import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
+import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReq;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
@@ -28,39 +27,39 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    public CouponResDto createCoupon(CouponReqDto couponReqDto, Long marketId) {
+    public CouponRes createCoupon(CouponReq couponReq, Long marketId) {
         Market market = findMarketById(marketId);
-        Coupon coupon = couponRepository.save(couponReqDto.ofCreate(market));
-        return CouponResDto.toDto(coupon);
+        Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
+        return CouponRes.toDto(coupon);
     }
 
     @Override
     @Transactional
-    public CouponResDto getCoupon(Long couponId) {
-        return CouponResDto.toDto(findCouponById(couponId));
+    public CouponRes getCoupon(Long couponId) {
+        return CouponRes.toDto(findCouponById(couponId));
     }
 
     @Override
     @Transactional
-    public List<CouponResDto> getCouponList(Long marketId) {
+    public List<CouponRes> getCouponList(Long marketId) {
         Market market = findMarketById(marketId);
         return couponRepository.findOwnerCouponResDtoByMarketId(market.getId());
     }
 
     @Override
     @Transactional
-    public CouponResDto updateCoupon(CouponUpdateReqDto couponUpdateReqDto, Long couponId) {
+    public CouponRes updateCoupon(CouponUpdateReq couponUpdateReq, Long couponId) {
         Coupon coupon = findCouponById(couponId);
-        coupon.update(couponUpdateReqDto);
-        return CouponResDto.toDto(coupon);
+        coupon.update(couponUpdateReq);
+        return CouponRes.toDto(coupon);
     }
 
     @Override
     @Transactional
-    public CouponHiddenResDto updateCouponHidden(Long couponId) {
+    public CouponHiddenRes updateCouponHidden(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.updateHidden();
-        return CouponHiddenResDto.toDto(coupon);
+        return CouponHiddenRes.toDto(coupon);
     }
 
     @Override

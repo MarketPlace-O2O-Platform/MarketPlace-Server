@@ -6,10 +6,10 @@ import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReqDto;
-import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReqDto;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsResDto;
+import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.domain.market.service.MarketService;
@@ -38,10 +38,10 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsResDto createMarket(MarketCreateReqDto marketCreateReqDto, List<MultipartFile> multipartFileList){
-        Category category=findCategoryByMajor(marketCreateReqDto.getMajor());
+    public MarketDetailsRes createMarket(MarketCreateReq marketCreateReq, List<MultipartFile> multipartFileList){
+        Category category=findCategoryByMajor(marketCreateReq.getMajor());
 
-        StringTokenizer st= new StringTokenizer(marketCreateReqDto.getAddress());
+        StringTokenizer st= new StringTokenizer(marketCreateReq.getAddress());
 
         // 두 개 이상의 단어가 있을 경우만 처리
         if (st.countTokens() < 2) {
@@ -50,25 +50,25 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
         Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
 
-        Market market=marketRepository.save(marketCreateReqDto.toEntity(category,local));
+        Market market=marketRepository.save(marketCreateReq.toEntity(category,local));
         imageService.createImage(market,multipartFileList);
         return marketService.getMarketDetails(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketDetailsResDto updateMarket(Long marketId, MarketUpdateReqDto marketUpdateReqDto) {
+    public MarketDetailsRes updateMarket(Long marketId, MarketUpdateReq marketUpdateReq) {
         Market market=findMarketByMarketId(marketId);
-        Category category=findCategoryByMajor(marketUpdateReqDto.getMajor());
-        market.updateMarketInfo(marketUpdateReqDto,category);
+        Category category=findCategoryByMajor(marketUpdateReq.getMajor());
+        market.updateMarketInfo(marketUpdateReq,category);
         return marketService.getMarketDetails(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketDetailsResDto updateMarketImage(Long marketId, MarketImageUpdateReqDto marketImageUpdateReqDto, List<MultipartFile> multiPartFileList) {
+    public MarketDetailsRes updateMarketImage(Long marketId, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multiPartFileList) {
         Market market=findMarketByMarketId(marketId);
-        imageService.UpdateImage(market,marketImageUpdateReqDto,multiPartFileList);
+        imageService.UpdateImage(market, marketImageUpdateReq,multiPartFileList);
         return marketService.getMarketDetails(market.getId());
     }
 

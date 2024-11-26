@@ -2,8 +2,8 @@ package com.appcenter.marketplace.domain.member.service.impl;
 
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.MemberRepository;
-import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReqDto;
-import com.appcenter.marketplace.domain.member.dto.res.MemberLoginResDto;
+import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
+import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
@@ -23,24 +23,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberLoginResDto login(MemberLoginReqDto memberLoginReqDto) {
-        Long studentId = validateAndParseStudentId(memberLoginReqDto);
-        Member member = memberRepository.save(memberLoginReqDto.toEntity(studentId));
-        return MemberLoginResDto.toDto(member);
+    public MemberLoginRes login(MemberLoginReq memberLoginReq) {
+        Long studentId = validateAndParseStudentId(memberLoginReq);
+        Member member = memberRepository.save(memberLoginReq.toEntity(studentId));
+        return MemberLoginRes.toDto(member);
     }
 
     @Override
     @Transactional
-    public MemberLoginResDto getMember(Long studentId) {
+    public MemberLoginRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
-        return MemberLoginResDto.toDto(member);
+        return MemberLoginRes.toDto(member);
     }
 
     // 학번 로그인 검증 및 형변환
-    private Long validateAndParseStudentId(MemberLoginReqDto memberLoginReqDto) {
+    private Long validateAndParseStudentId(MemberLoginReq memberLoginReq) {
         // 로그인 검증
-        if(inuLoginRepository.loginCheck(memberLoginReqDto.getStudentId(), memberLoginReqDto.getPassword()))
-            return Long.valueOf(memberLoginReqDto.getStudentId());
+        if(inuLoginRepository.loginCheck(memberLoginReq.getStudentId(), memberLoginReq.getPassword()))
+            return Long.valueOf(memberLoginReq.getStudentId());
         else throw new CustomException(UNAUTHORIZED_LOGIN_ERROR);
 
     }
