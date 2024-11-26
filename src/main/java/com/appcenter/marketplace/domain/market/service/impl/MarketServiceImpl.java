@@ -26,9 +26,9 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public MarketDetailsResDto getMarketDetails(Long marketId) {
-        List<MarketDetailsResDto> marketDetailsResDtoList= marketRepository.findMarketDetailsResDtoListById(marketId);
+        List<MarketDetailsResDto> marketDetailsResDtoList = marketRepository.findMarketDetailsResDtoListById(marketId);
 
-        if(marketDetailsResDtoList.isEmpty())
+        if (marketDetailsResDtoList.isEmpty())
             throw new CustomException(StatusCode.MARKET_NOT_EXIST);
 
         return marketDetailsResDtoList.get(0);
@@ -37,30 +37,28 @@ public class MarketServiceImpl implements MarketService {
     @Override
     public MarketPageResDto<MarketResDto> getMarketPage(Long memberId, Long marketId, Integer size, String major) {
         List<MarketResDto> marketResDtoList;
-        if(major==null){
-            marketResDtoList= marketRepository.findMarketResDtoList(memberId,marketId,size);
-        }
-        else if(Major.exists(major)){
-            marketResDtoList= marketRepository.findMarketResDtoListByCategory(memberId,marketId,size,major);
-        }
-        else throw new CustomException(CATEGORY_NOT_EXIST);
+        if (major == null) {
+            marketResDtoList = marketRepository.findMarketResDtoList(memberId, marketId, size);
+        } else if (Major.exists(major)) {
+            marketResDtoList = marketRepository.findMarketResDtoListByCategory(memberId, marketId, size, major);
+        } else throw new CustomException(CATEGORY_NOT_EXIST);
 
-        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+        return checkHasNextPageAndReturnPageDto(marketResDtoList, size);
     }
 
     @Override
     public MarketPageResDto<MyFavoriteMarketResDto> getMemberFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
-        List<MyFavoriteMarketResDto> marketResDtoList=marketRepository.findFavoriteMarketResDtoByMemberId(memberId,lastModifiedAt,size);
+        List<MyFavoriteMarketResDto> marketResDtoList = marketRepository.findFavoriteMarketResDtoByMemberId(memberId, lastModifiedAt, size);
 
-        return checkHasNextPageAndReturnPageDto(marketResDtoList,size);
+        return checkHasNextPageAndReturnPageDto(marketResDtoList, size);
     }
 
 
     @Override
     public MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size) {
-        List<FavoriteMarketResDto> favoriteMarketResDtoList=marketRepository.findFavoriteMarketResDto(memberId, count,size);
+        List<FavoriteMarketResDto> favoriteMarketResDtoList = marketRepository.findFavoriteMarketResDto(memberId, count, size);
 
-        return checkHasNextPageAndReturnPageDto(favoriteMarketResDtoList,size);
+        return checkHasNextPageAndReturnPageDto(favoriteMarketResDtoList, size);
     }
 
     @Override
@@ -68,7 +66,6 @@ public class MarketServiceImpl implements MarketService {
         return marketRepository.findTopFavoriteMarketResDto(size);
     }
 
-    private <T> MarketPageResDto<T> checkHasNextPageAndReturnPageDto(List<T> marketResDtoList, Integer size){
 
     public List<CouponLatestTopResDto> getCouponLatestTop(Integer size) {
         return marketRepository.findLatestTopCouponDtoListByMarket(size);
@@ -76,12 +73,12 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public MarketCouponPageResDto getLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
-        List<MarketCouponResDto> resDtoList = marketRepository.findLatestCouponMarketResDtoListByMarket(lastModifiedAt, lastCouponId,size);
+        List<MarketCouponResDto> resDtoList = marketRepository.findLatestCouponMarketResDtoListByMarket(lastModifiedAt, lastCouponId, size);
 
-        if(resDtoList.isEmpty())
+        if (resDtoList.isEmpty())
             throw new CustomException(MARKET_NOT_EXIST);
 
-        return checkHasNextPageAndReturnDto(resDtoList,size);
+        return checkHasNextPageAndReturnDto(resDtoList, size);
     }
 
     @Override
@@ -89,28 +86,30 @@ public class MarketServiceImpl implements MarketService {
         return marketRepository.findClosingTopCouponDtoList(size);
     }
 
-    private MarketCouponPageResDto checkHasNextPageAndReturnDto(List<MarketCouponResDto> marketResDtoList, Integer size){
-        boolean hasNext=false;
+    private MarketCouponPageResDto checkHasNextPageAndReturnDto
+            (List<MarketCouponResDto> marketResDtoList, Integer size) {
+        boolean hasNext = false;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
-        if(marketResDtoList.size()>size){
-            hasNext=true;
+        if (marketResDtoList.size() > size) {
+            hasNext = true;
             marketResDtoList.remove(size.intValue());
         }
 
-        return new MarketCouponPageResDto(marketResDtoList,hasNext);
+        return new MarketCouponPageResDto(marketResDtoList, hasNext);
 
     }
-    private MarketPageResDto checkHasNextPageAndReturnPageDto(List<MarketResDto> marketResDtoList, Integer size){
 
-        boolean hasNext=false;
+    private <T> MarketPageResDto<T> checkHasNextPageAndReturnPageDto(List<T> marketResDtoList, Integer size) {
+        boolean hasNext = false;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
-        if(marketResDtoList.size()>size){
-            hasNext=true;
+        if (marketResDtoList.size() > size) {
+            hasNext = true;
             marketResDtoList.remove(size.intValue());
         }
 
-        return new MarketPageResDto<>(marketResDtoList,hasNext);
+        return new MarketPageResDto<>(marketResDtoList, hasNext);
     }
+
 }

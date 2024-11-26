@@ -16,8 +16,6 @@ public interface MarketService {
 
     MarketPageResDto<FavoriteMarketResDto> getFavoriteMarketPage(Long memberId, Long count, Integer size);
     List<TopFavoriteMarketResDto> getTopFavoriteMarkets(Integer size);
-  
-    MarketPageResDto getTopFavoriteMarketPage(Long marketId, Integer size);
 
     List<CouponLatestTopResDto> getCouponLatestTop(Integer size);
 

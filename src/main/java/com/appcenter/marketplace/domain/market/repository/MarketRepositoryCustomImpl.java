@@ -163,10 +163,12 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
-                                .and(favorite.isDeleted.eq(false)))
+                        .and(favorite.isDeleted.eq(false)))
                 .leftJoin(coupon).on(market.eq(coupon.market))
                 .groupBy(market.id, market.name, coupon.id, coupon.name, market.thumbnail)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
+                .fetch();
+    }
 
     @Override
     public List<CouponLatestTopResDto> findLatestTopCouponDtoListByMarket(Integer size) {

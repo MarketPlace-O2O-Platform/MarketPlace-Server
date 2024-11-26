@@ -14,15 +14,14 @@ public interface MarketRepositoryCustom {
 
     public List<MyFavoriteMarketResDto> findFavoriteMarketResDtoByMemberId(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-
     public List<FavoriteMarketResDto> findFavoriteMarketResDto(Long memberId, Long count, Integer size);
-    public List<TopFavoriteMarketResDto> findTopFavoriteMarketResDto(Integer size);
 
-    public List<MarketResDto> findTopFavoriteMarketResDto(Long marketId, Integer size);
+    public List<TopFavoriteMarketResDto> findTopFavoriteMarketResDto(Integer size);
 
     List<CouponLatestTopResDto> findLatestTopCouponDtoListByMarket(Integer size);
 
     List<MarketCouponResDto> findLatestCouponMarketResDtoListByMarket(LocalDateTime modifiedAt, Long couponId, Integer size);
 
     List<CouponClosingTopResDto> findClosingTopCouponDtoList(Integer size);
+}
 
