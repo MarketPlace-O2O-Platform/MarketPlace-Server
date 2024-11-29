@@ -129,7 +129,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 페이징 조회
     @Override
-    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size) {
+    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
 
         return jpaQueryFactory
@@ -151,8 +151,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 .and(favoriteMember.isDeleted.eq(false))))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(loeFavoriteCount(count)) // 삭제되지 않은 찜만 필터링
                 .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id)
+                .having(loeFavoriteCountAndLtMarketId(count,marketId))
                 .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
                 .limit(size+1) // 반환할 리스트 크기 제한
                 .fetch(); // 결과 반환
@@ -289,10 +289,16 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     }
 
     // loe= less or equal = <=(~보다 작거나 같은)
-    private BooleanBuilder loeFavoriteCount(Long count){
+    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
         BooleanBuilder builder = new BooleanBuilder();
-        if (count != null) {
-            builder.and(favorite.member.id.count().loe(count));
+        if (count != null && marketId!=null) {
+            builder.and(favorite.id.count().loe(count));
+
+            // A or B 여서 둘중 하나의 조건만 만족하면 true
+            // count보다 작으면. A가 true이기 때문에 B는 실행되지않음
+            // A가 false이면 market.id 필터링한 행들만 true
+            // 따라서 favorite.id.count()가 count와 같을 때만 market.id 필터링
+            builder.and(favorite.id.count().lt(count).or(market.id.lt(marketId)));
         }
         return builder;
 

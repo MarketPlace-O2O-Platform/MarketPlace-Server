@@ -74,12 +74,14 @@ public class MarketController {
     @GetMapping("/favorite")
     public ResponseEntity<CommonResponse<MarketPageRes<FavoriteMarketRes>>> getTopFavoriteMarketList(
             @RequestParam Long memberId,
+            @Parameter(description = "페이지의 마지막 marketId")
+            @RequestParam(required = false, name = "lastMarketId") Long marketId,
             @Parameter(description = "페이지의 마지막 favoriteCount")
             @RequestParam(required = false, name = "lastFavoriteCount") Long count,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,marketService.getFavoriteMarketPage(memberId,count,size)));
+                        ,marketService.getFavoriteMarketPage(memberId,marketId,count,size)));
     }
 
     @Operation(summary = "찜 수가 가장 많은 매장 TOP 조회",
