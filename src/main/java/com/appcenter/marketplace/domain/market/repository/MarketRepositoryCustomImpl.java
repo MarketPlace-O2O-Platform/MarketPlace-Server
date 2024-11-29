@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.coupon.QCoupon;
+import com.appcenter.marketplace.domain.favorite.QFavorite;
 import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
@@ -36,7 +37,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         // market과 image를 조인 하여 매장 정보와 순서에 오름차순인 이미지 리스트를 dto에 매핑한다.
         return  jpaQueryFactory
                 .from(market)
-                .innerJoin(image.market,market)
+                .innerJoin(image).on(image.market.eq(market))
                 .where(market.id.eq(marketId)) // 매장 ID로 필터링
                 .orderBy(image.sequence.asc())
                 // transfrom을 통해 쿼리 결과를 원하는 형태로 변환한다.
@@ -67,8 +68,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         favorite.id.isNotNull()))
                 .from(market)
-                .leftJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
-                                .and(favorite.isDeleted.eq(false)))
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                        .and(favorite.isDeleted.eq(false))))
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
                 .where(ltMarketId(marketId))
@@ -89,8 +91,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         favorite.id.isNotNull()))
                 .from(market)
-                .leftJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
-                        .and(favorite.isDeleted.eq(false)))
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(market.category,category)
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
@@ -113,8 +116,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         favorite.id.isNotNull(),
                         favorite.modifiedAt))
                 .from(market)
-                .innerJoin(favorite.market,market).on(favorite.member.id.eq(memberId)
-                        .and(favorite.isDeleted.eq(false)))
+                .innerJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.member.id.eq(memberId)
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
                 .where(ltFavoriteModifiedAt(lastModifiedAt)) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
@@ -126,6 +130,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     // 찜 수가 가장 많은 매장 페이징 조회
     @Override
     public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size) {
+        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+
         return jpaQueryFactory
                 .select(new QFavoriteMarketRes(
                         market.id,
@@ -133,17 +139,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
-                        favorite.id.isNotNull(),
-                        favorite.member.id.count()))
+                        favoriteMember.id.isNotNull(),
+                        favorite.id.count()))
                 .from(market)
+                // 모든 사용자 기준 찜 데이터 JOIN
                 .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.member.id.eq(memberId)
-                                .and(favorite.isDeleted.eq(false))))
+                                .and(favorite.isDeleted.eq(false)))
+                // 특정 사용자의 찜 여부 확인을 위한 JOIN
+                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+                        .and(favoriteMember.member.id.eq(memberId)
+                                .and(favoriteMember.isDeleted.eq(false))))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(loeFavoriteCount(count)) // 삭제되지 않은 찜만 필터링
-                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favorite.id)
-                .orderBy(favorite.member.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
+                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id)
+                .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
                 .limit(size+1) // 반환할 리스트 크기 제한
                 .fetch(); // 결과 반환
     }
@@ -157,7 +167,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.name,
                         market.thumbnail))
                 .from(market)
-                .leftJoin(favorite.market,market).on(favorite.isDeleted.eq(false))
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                                .and(favorite.isDeleted.eq(false)))
                 .groupBy(market.id, market.name, market.thumbnail)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();
