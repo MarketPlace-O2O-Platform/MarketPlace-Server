@@ -58,8 +58,8 @@ public class MarketServiceImpl implements MarketService {
 
     // 찜 수가 가장 많은 매장 더보기 조회
     @Override
-    public MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long count, Integer size) {
-        List<FavoriteMarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, count, size);
+    public MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
+        List<FavoriteMarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
 
         return checkNextPageAndReturn(favoriteMarketResList, size);
     }

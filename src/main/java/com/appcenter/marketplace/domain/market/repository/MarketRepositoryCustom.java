@@ -14,7 +14,7 @@ public interface MarketRepositoryCustom {
 
     public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId, Long count, Integer size);
+    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
 
     public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size);
 

@@ -13,7 +13,7 @@ public interface MarketService {
 
     MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long count, Integer size);
+    MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
     List<TopFavoriteMarketRes> getTopFavoriteMarkets(Integer size);
 
     List<TopLatestCouponRes> getTopLatestCoupons(Integer size);
