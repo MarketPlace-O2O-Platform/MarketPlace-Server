@@ -96,7 +96,7 @@ public class MarketController {
     }
 
     @Operation(summary = "최신 등록 쿠폰 TOP 조회",
-            description = "매장별 최신 등록한 쿠폰을 조회합니다. 이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
+            description = "매장별 최신 등록한 쿠폰을 조회합니다. 기본값은 10개 입니다. 이때, TOP 20으로 변동해야 할 시, count를 20으로 넣어주시면 됩니다. <br>" +
                     "'최신 등록'이란, 수정포함입니다.<br>" +
                     " 즉, 사장님이 쿠폰 내용을 수정하거나, 숨김/보기 처리를 하게 되면, 최신 등록 집계에 포함이 됩니다.")
     @GetMapping("/top-latest-coupon")
