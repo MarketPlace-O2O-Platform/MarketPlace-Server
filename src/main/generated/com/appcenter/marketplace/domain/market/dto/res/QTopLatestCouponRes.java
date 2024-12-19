@@ -13,8 +13,8 @@ public class QTopLatestCouponRes extends ConstructorExpression<TopLatestCouponRe
 
     private static final long serialVersionUID = -577080405L;
 
-    public QTopLatestCouponRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<String> thumbnail) {
-        super(TopLatestCouponRes.class, new Class<?>[]{long.class, long.class, String.class, String.class, String.class}, marketId, couponId, marketName, couponName, thumbnail);
+    public QTopLatestCouponRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<Boolean> isFavorite) {
+        super(TopLatestCouponRes.class, new Class<?>[]{long.class, long.class, String.class, String.class, String.class, boolean.class}, marketId, couponId, marketName, couponName, thumbnail, isFavorite);
     }
 
 }

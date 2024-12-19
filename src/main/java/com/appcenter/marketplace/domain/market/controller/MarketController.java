@@ -101,7 +101,7 @@ public class MarketController {
                     " 즉, 사장님이 쿠폰 내용을 수정하거나, 숨김/보기 처리를 하게 되면, 최신 등록 집계에 포함이 됩니다.")
     @GetMapping("/top-latest-coupon")
     public ResponseEntity<CommonResponse<List<TopLatestCouponRes>>> getLatestTopCouponList(
-            @RequestParam(defaultValue = "5", name = "count") Integer size) {
+            @RequestParam(defaultValue = "10", name = "count") Integer size) {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopLatestCoupons(size)));
     }

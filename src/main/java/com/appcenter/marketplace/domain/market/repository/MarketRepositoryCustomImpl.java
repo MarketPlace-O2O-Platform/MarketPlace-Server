@@ -186,10 +186,13 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         coupon.id,
                         market.name,
                         coupon.name,
-                        market.thumbnail
+                        market.thumbnail,
+                        favorite.id.isNotNull()
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.isDeleted.eq(false)))
                 .where(whereClause
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
