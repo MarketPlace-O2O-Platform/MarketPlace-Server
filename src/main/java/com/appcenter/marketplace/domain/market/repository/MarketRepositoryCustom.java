@@ -12,6 +12,10 @@ public interface MarketRepositoryCustom {
 
     public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major);
 
+    public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size);
+
+    public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major);
+
     public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
     public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
