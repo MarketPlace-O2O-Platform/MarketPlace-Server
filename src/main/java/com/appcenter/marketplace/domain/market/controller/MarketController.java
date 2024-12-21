@@ -101,9 +101,10 @@ public class MarketController {
                     " 즉, 사장님이 쿠폰 내용을 수정하거나, 숨김/보기 처리를 하게 되면, 최신 등록 집계에 포함이 됩니다.")
     @GetMapping("/top-latest-coupon")
     public ResponseEntity<CommonResponse<List<TopLatestCouponRes>>> getLatestTopCouponList(
+            @RequestParam Long memberId,
             @RequestParam(defaultValue = "10", name = "count") Integer size) {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                marketService.getTopLatestCoupons(size)));
+                marketService.getTopLatestCoupons(memberId, size)));
     }
 
     @Operation(summary = "최신 등록 쿠폰의 매장 더보기 조회",
@@ -115,6 +116,7 @@ public class MarketController {
     )
     @GetMapping("/latest-coupon")
     public ResponseEntity<CommonResponse<MarketPageRes<LatestCouponRes>>> getLatestMarketByCoupon(
+            @RequestParam(required = true) Long memberId,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastPageIndex") Long couponId,
             @Parameter(description = "위에 작성한 couponId의 modifiedAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
@@ -122,7 +124,7 @@ public class MarketController {
             @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        marketService.getLatestCouponPage(lastModifiedAt, couponId, size)));
+                        marketService.getLatestCouponPage(memberId, lastModifiedAt, couponId, size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 TOP 조회",
