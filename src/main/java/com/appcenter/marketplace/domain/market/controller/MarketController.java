@@ -51,6 +51,24 @@ public class MarketController {
                         ,marketService.getMarketPage(memberId, marketId,size,major)));
     }
 
+    @Operation(summary = "주소 별 매장 조회",
+            description = "처음 요청 시, pageSize만 필요합니다. 기본값은 10입니다. <br>" +
+                    "카테고리 별 매장을 조회하시려면 category도 필요합니다. <br>" +
+                    "최신순으로 보여줍니다.")
+    @GetMapping("/map")
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
+            @RequestParam Long memberId,
+            @Parameter(description = "페이지의 마지막 marketId")
+            @RequestParam(required = false, name = "lastPageIndex") Long marketId,
+            @RequestParam(required = false, name = "category") String major,
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
+            @RequestParam String address)
+    {
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage()
+                        ,marketService.getMarketPageByAddress(memberId, marketId, size, major, address)));
+    }
+
     @Operation(summary = "자신이 찜한 매장 조회",
             description = "자신이 찜한 매장 정보 리스트를 반환합니다. <br>" +
                     "처음 요청 시엔 pageSize만 필요합니다.기본값은 10입니다. <br>" +

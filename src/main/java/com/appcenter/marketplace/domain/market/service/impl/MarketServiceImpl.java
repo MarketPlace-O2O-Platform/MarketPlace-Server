@@ -1,5 +1,7 @@
 package com.appcenter.marketplace.domain.market.service.impl;
 
+import com.appcenter.marketplace.domain.local.Local;
+import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketService;
@@ -12,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.StringTokenizer;
 
-import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 
 @Transactional(readOnly = true)
@@ -22,6 +24,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIS
 @RequiredArgsConstructor
 public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
+    private final LocalRepository localRepository;
 
 
     // 매장 상세 정보 조회
@@ -43,6 +46,27 @@ public class MarketServiceImpl implements MarketService {
             marketResList = marketRepository.findMarketList(memberId, marketId, size);
         } else if (Major.exists(major)) {
             marketResList = marketRepository.findMarketListByCategory(memberId, marketId, size, major);
+        } else throw new CustomException(CATEGORY_NOT_EXIST);
+
+        return checkNextPageAndReturn(marketResList, size);
+    }
+
+    @Override
+    public MarketPageRes<MarketRes> getMarketPageByAddress(Long memberId, Long marketId, Integer size, String major, String address) {
+        StringTokenizer st= new StringTokenizer(address);
+
+        // 두 개 이상의 단어가 있을 경우만 처리
+        if (st.countTokens() < 2) {
+            throw new CustomException(ADDRESS_INVALID);
+        }
+
+        Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
+
+        List<MarketRes> marketResList;
+        if (major == null) {
+            marketResList = marketRepository.findMarketListByAddress(memberId, marketId, local.getId(), size);
+        } else if (Major.exists(major)) {
+            marketResList = marketRepository.findMarketListByAddressAndCategory(memberId, marketId,local.getId(), size, major);
         } else throw new CustomException(CATEGORY_NOT_EXIST);
 
         return checkNextPageAndReturn(marketResList, size);

@@ -113,6 +113,63 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size) {
+        return jpaQueryFactory
+                .select(new QMarketRes(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull(),
+                        coupon.id.isNotNull()))
+                .from(market)
+                .innerJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.isDeleted.eq(false)
+                                .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
+                .leftJoin(coupon).on(coupon.market.eq(market)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                .innerJoin(local).on(market.local.eq(local)
+                        .and(market.local.id.eq(localId)))
+                .innerJoin(metro).on(local.metro.eq(metro))
+                .where(ltMarketId(marketId))
+                .orderBy(market.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
+
+    @Override
+    public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major) {
+        return jpaQueryFactory
+                .select(new QMarketRes(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        favorite.id.isNotNull(),
+                        coupon.id.isNotNull()))
+                .from(market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
+                                .and(favorite.member.id.eq(memberId))))
+                .leftJoin(coupon).on(coupon.market.eq(market)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                .innerJoin(category).on(market.category.eq(category))
+                .innerJoin(local).on(market.local.eq(local)
+                        .and(market.local.id.eq(localId)))
+                .innerJoin(metro).on(local.metro.eq(metro))
+                .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
+                .orderBy(market.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
+
     // 회원이 찜한 매장 페이징 조회
     @Override
     public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
