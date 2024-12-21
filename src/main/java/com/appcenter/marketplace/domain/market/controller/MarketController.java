@@ -111,7 +111,7 @@ public class MarketController {
             description = "조회 기준은 다음과 같습니다. <br>" +
                     "- 각 매장별 최근에 등록된 쿠폰을 시간순으로 정렬 <br>" +
                     "즉, 가장 최근에 등록된 쿠폰의 매장 순으로 리스트가 조회됩니다. <br> <br>" +
-                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 5입니다) <br>" +
+                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>" +
                     "hasNext가 true일 시, 다음 페이지가 존재합니다.<br>"
     )
     @GetMapping("/latest-coupon")
@@ -121,7 +121,7 @@ public class MarketController {
             @RequestParam(required = false, name = "lastPageIndex") Long couponId,
             @Parameter(description = "위에 작성한 couponId의 modifiedAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastModifiedAt") LocalDateTime lastModifiedAt,
-            @RequestParam(defaultValue = "5", name = "pageSize") Integer size) {
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         marketService.getLatestCouponPage(memberId, lastModifiedAt, couponId, size)));
@@ -129,11 +129,11 @@ public class MarketController {
 
     @Operation(summary = "마감 임박 쿠폰 TOP 조회",
             description = "매장별 마감 임박학 쿠폰 1개를 조회하여 보여줍니다. <br>" +
-                    "이때, TOP 10으로 변동해야 할 시, count 로 10을 넣어주시면 됩니다. 기본값은 5개 입니다. <br>" +
+                    "이때, TOP 5으로 변동해야 할 시, count 로 5을 넣어주시면 됩니다. 기본값은 10개 입니다. <br>" +
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/top-closing-coupon")
     public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
-            @RequestParam(defaultValue = "5", name="count") Integer size){
+            @RequestParam(defaultValue = "10", name="count") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopClosingCoupons(size)));
     }
