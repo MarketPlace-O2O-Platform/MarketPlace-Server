@@ -218,7 +218,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                     .and(coupon.isDeleted.eq(false))
                     .and(coupon.isHidden.eq(false))
                     .and(coupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)));
-            ;
+
         }
 
         return jpaQueryFactory
@@ -229,12 +229,15 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
+                        favorite.id.isNotNull(),
                         coupon.modifiedAt
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
+                .leftJoin(favorite).on(market.eq(favorite.market)
+                        .and(favorite.isDeleted.eq(false)))
                 .where(whereClause)
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회

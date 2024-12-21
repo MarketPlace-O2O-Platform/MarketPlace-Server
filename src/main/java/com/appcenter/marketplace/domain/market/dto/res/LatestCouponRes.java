@@ -13,16 +13,18 @@ public class LatestCouponRes {
     private final String marketDescription;
     private final String address;
     private final String thumbnail;
+    private final Boolean isFavorite;
     private final LocalDateTime modifiedAt;
 
     @QueryProjection
-    public LatestCouponRes(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, LocalDateTime modifiedAt) {
+    public LatestCouponRes(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, LocalDateTime modifiedAt) {
         this.marketId = marketId;
         this.couponId = couponId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
         this.address = address;
         this.thumbnail = thumbnail;
+        this.isFavorite = isFavorite;
         this.modifiedAt = modifiedAt;
     }
 }
