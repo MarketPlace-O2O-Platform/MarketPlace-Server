@@ -11,6 +11,8 @@ public interface MarketService {
 
     MarketPageRes<MarketRes> getMarketPage(Long memberId, Long marketId, Integer size, String major);
 
+    MarketPageRes<MarketRes> getMarketPageByAddress(Long memberId, Long marketId, Integer size, String major, String address);
+
     MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
     MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
