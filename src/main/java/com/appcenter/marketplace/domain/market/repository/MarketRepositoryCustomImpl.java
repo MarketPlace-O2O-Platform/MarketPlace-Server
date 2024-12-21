@@ -44,14 +44,14 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 // groupBy(sql의 groupBy가 아니다)를 통해 마켓id를 기준으로 그룹화해 마켓 DTO List로 만든다.
                 // 그룹화를 함으로 써 이미지 DTO 리스트를 list()로 받을 수 있게된다.
                 .transform(groupBy(market.id).list(new QMarketDetailsRes(
-                                market.id,
-                                market.name,
-                                market.description,
-                                market.operationHours,
-                                market.closedDays,
-                                market.phoneNumber,
-                                market.address,
-                                list(new QImageRes(image.id, image.sequence, image.name)
+                        market.id,
+                        market.name,
+                        market.description,
+                        market.operationHours,
+                        market.closedDays,
+                        market.phoneNumber,
+                        market.address,
+                        list(new QImageRes(image.id, image.sequence, image.name)
                         ))));
     }
 
@@ -70,7 +70,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.member.id.eq(memberId)
-                        .and(favorite.isDeleted.eq(false))))
+                                .and(favorite.isDeleted.eq(false))))
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
                 .where(ltMarketId(marketId))
@@ -144,7 +144,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .from(market)
                 // 모든 사용자 기준 찜 데이터 JOIN
                 .leftJoin(favorite).on(market.eq(favorite.market)
-                                .and(favorite.isDeleted.eq(false)))
+                        .and(favorite.isDeleted.eq(false)))
                 // 특정 사용자의 찜 여부 확인을 위한 JOIN
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.member.id.eq(memberId)
@@ -168,7 +168,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
-                                .and(favorite.isDeleted.eq(false)))
+                        .and(favorite.isDeleted.eq(false)))
                 .groupBy(market.id, market.name, market.thumbnail)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();
@@ -176,7 +176,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
-    public List<TopLatestCouponRes> findTopLatestCoupons(Integer size) {
+    public List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size) {
+        QFavorite favoriteMember = new QFavorite("favoriteMember");
 
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
@@ -186,14 +187,18 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         coupon.id,
                         market.name,
                         coupon.name,
-                        market.thumbnail
+                        market.thumbnail,
+                        favoriteMember.id.isNotNull()
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
+                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+                        .and(favoriteMember.member.id.eq(memberId))
+                        .and(favoriteMember.isDeleted.eq(false)))
                 .where(whereClause
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
                 .limit(size)
                 .fetch();
@@ -201,22 +206,20 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 최신 등록 쿠폰 페이징 조회
     @Override
-    public List<LatestCouponRes> findLatestCouponList(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+        QFavorite favoriteMember = new QFavorite("favoriteMember");
+
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
-        // lastModifiedAt 조건 추가
         if (lastModifiedAt != null && lastCouponId != null) {
-
-            // LocalDateTime을 밀리초 단위로 전환 -> 쿠폰의 수정시간이 밀리초 단위로 순서가 바뀔 수 있기 때문.
-            LocalDateTime truncatedTime = lastModifiedAt.truncatedTo(ChronoUnit.MILLIS);
-
-            // 시간 정렬로 하였을 때, 더 이른 시간을 보여줌.
-            whereClause.and(coupon.modifiedAt.loe(truncatedTime))
-                    .and(coupon.isDeleted.eq(false))
-                    .and(coupon.isHidden.eq(false))
-                    .and(coupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)));
-            ;
+            whereClause.and(coupon.modifiedAt.loe(lastModifiedAt)  // 같거나 더 이른 시간으로 계산 ( == loe)( 더 먼저 등록된 쿠폰)
+                    .and(coupon.modifiedAt.eq(lastModifiedAt).not()
+                            .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
         }
+
+        whereClause.and(coupon.isDeleted.eq(false))
+                .and(coupon.isHidden.eq(false))
+                .and(coupon.deadLine.after(LocalDateTime.now()));
 
         return jpaQueryFactory
                 .select(new QLatestCouponRes(
@@ -226,14 +229,18 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
+                        favoriteMember.id.isNotNull(),
                         coupon.modifiedAt
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(market.local,local)
                 .innerJoin(local.metro,metro)
+                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+                        .and(favoriteMember.member.id.eq(memberId))
+                        .and(favoriteMember.isDeleted.eq(false)))
                 .where(whereClause)
-                .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
+                .orderBy(coupon.modifiedAt.desc(), coupon.id.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
                 .fetch();
     }
@@ -325,7 +332,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(subCoupon.market, market)
                 .where(subCoupon.isDeleted.eq(false)
                         .and(subCoupon.isHidden.eq(false))
-                        .and(subCoupon.deadLine.after(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))))
+                        .and(subCoupon.deadLine.after(LocalDateTime.now())))
                 .groupBy(market.id);
 
         // 기본 조건
