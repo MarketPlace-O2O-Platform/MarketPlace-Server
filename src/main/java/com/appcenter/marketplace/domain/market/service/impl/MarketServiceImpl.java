@@ -90,8 +90,8 @@ public class MarketServiceImpl implements MarketService {
 
     // 찜 수가 가장 많은 매장 TOP 조회
     @Override
-    public List<TopFavoriteMarketRes> getTopFavoriteMarkets(Integer size) {
-        return marketRepository.findTopFavoriteMarkets(size);
+    public List<TopFavoriteMarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
+        return marketRepository.findTopFavoriteMarkets(memberId, size);
     }
 
 

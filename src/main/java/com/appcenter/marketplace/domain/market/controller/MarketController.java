@@ -107,10 +107,11 @@ public class MarketController {
                     "size의 기본값은 10입니다.")
     @GetMapping("/top-favorite")
     public ResponseEntity<CommonResponse<List<TopFavoriteMarketRes>>> getTopFavoriteMarketList(
+            @RequestParam Long memberId,
             @RequestParam(defaultValue = "10", name = "size") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
-                        ,marketService.getTopFavoriteMarkets(size)));
+                        ,marketService.getTopFavoriteMarkets(memberId, size)));
     }
 
     @Operation(summary = "최신 등록 쿠폰 TOP 조회",
