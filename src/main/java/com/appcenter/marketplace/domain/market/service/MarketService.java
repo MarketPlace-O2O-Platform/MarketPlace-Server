@@ -16,11 +16,12 @@ public interface MarketService {
     MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
     MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
+
     List<TopFavoriteMarketRes> getTopFavoriteMarkets(Integer size);
 
-    List<TopLatestCouponRes> getTopLatestCoupons(Integer size);
+    List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size);
 
-    MarketPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime modifiedAt, Long couponId, Integer size);
+    MarketPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime modifiedAt, Long couponId, Integer size);
 
     List<TopClosingCouponRes> getTopClosingCoupons(Integer size);
 

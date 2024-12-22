@@ -22,9 +22,9 @@ public interface MarketRepositoryCustom {
 
     public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size);
 
-    List<TopLatestCouponRes> findTopLatestCoupons(Integer size);
+    List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size);
 
-    List<LatestCouponRes> findLatestCouponList(LocalDateTime modifiedAt, Long couponId, Integer size);
+    List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime modifiedAt, Long couponId, Integer size);
 
     List<TopClosingCouponRes> findTopClosingCoupons(Integer size);
 }

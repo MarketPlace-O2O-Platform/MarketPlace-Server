@@ -97,14 +97,14 @@ public class MarketServiceImpl implements MarketService {
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
-    public List<TopLatestCouponRes> getTopLatestCoupons(Integer size) {
-        return marketRepository.findTopLatestCoupons(size);
+    public List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size) {
+        return marketRepository.findTopLatestCoupons(memberId, size);
     }
 
     // 최신 등록 쿠폰의 매장 더보기 조회
     @Override
-    public MarketPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
-        List<LatestCouponRes> resDtoList = marketRepository.findLatestCouponList(lastModifiedAt, lastCouponId, size);
+    public MarketPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+        List<LatestCouponRes> resDtoList = marketRepository.findLatestCouponList(memberId, lastModifiedAt, lastCouponId, size);
 
         if (resDtoList.isEmpty())
             throw new CustomException(MARKET_NOT_EXIST);
