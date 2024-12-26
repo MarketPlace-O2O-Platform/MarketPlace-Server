@@ -13,8 +13,8 @@ public class QTopFavoriteMarketRes extends ConstructorExpression<TopFavoriteMark
 
     private static final long serialVersionUID = -1900564640L;
 
-    public QTopFavoriteMarketRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> thumbnail) {
-        super(TopFavoriteMarketRes.class, new Class<?>[]{long.class, String.class, String.class}, marketId, marketName, thumbnail);
+    public QTopFavoriteMarketRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<Boolean> isFavorite) {
+        super(TopFavoriteMarketRes.class, new Class<?>[]{long.class, String.class, String.class, boolean.class}, marketId, marketName, thumbnail, isFavorite);
     }
 
 }

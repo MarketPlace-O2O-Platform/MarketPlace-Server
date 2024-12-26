@@ -13,7 +13,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static com.appcenter.marketplace.domain.category.QCategory.category;
@@ -237,15 +236,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 Top 조회
     @Override
-    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size) {
+    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
+        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+
         return jpaQueryFactory
                 .select(new QTopFavoriteMarketRes(
                         market.id,
                         market.name,
-                        market.thumbnail))
+                        market.thumbnail,
+                        favoriteMember.id.isNotNull()))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)))
+                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+                        .and(favoriteMember.isDeleted.eq(false)
+                                .and(favoriteMember.member.id.eq(memberId))))
                 .groupBy(market.id, market.name, market.thumbnail)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();

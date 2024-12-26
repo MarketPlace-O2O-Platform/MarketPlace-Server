@@ -6,21 +6,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MarketRepositoryCustom {
-    public List<MarketDetailsRes> findMarketDetailList(Long marketId);
+    List<MarketDetailsRes> findMarketDetailList(Long marketId);
 
-    public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size);
+    List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size);
 
-    public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major);
+    List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major);
 
-    public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size);
+    List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size);
 
-    public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major);
+    List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major);
 
-    public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+    List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
+    List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
 
-    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Integer size);
+    // 찜 수가 가장 많은 매장 Top 조회
+    List<TopFavoriteMarketRes> findTopFavoriteMarkets(Long memberId, Integer size);
 
     List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size);
 
