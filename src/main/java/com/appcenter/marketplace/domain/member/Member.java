@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.member;
 
 import com.appcenter.marketplace.global.common.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,10 +20,15 @@ public class Member extends BaseEntity {
     @Id
     private Long id;
 
+    @Column(name = "cheer_ticket", nullable = false)
+    private Long cheerTicket;
+
     @Builder
-    public Member (Long id){
+    public Member (Long id, Long cheerTicket) {
         this.id = id;
+        this.cheerTicket = cheerTicket;
     }
+
 
 }
 
