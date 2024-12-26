@@ -293,6 +293,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                             .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
         }
 
+        // booleanTemplate -> 결과에서 coupon.createdAt.goe(LocalDateTime.now().minusDays(7)) 와 같은 문은 변환과정에서 오류가 남.
+        // CASE 조건절로 해결
         return jpaQueryFactory
                 .select(new QLatestCouponRes(
                         market.id,
