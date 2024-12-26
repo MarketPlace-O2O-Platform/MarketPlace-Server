@@ -24,7 +24,7 @@ public interface MarketRepositoryCustom {
 
     List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size);
 
-    List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime modifiedAt, Long couponId, Integer size);
+    List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
 
     List<TopClosingCouponRes> findTopClosingCoupons(Integer size);
 }

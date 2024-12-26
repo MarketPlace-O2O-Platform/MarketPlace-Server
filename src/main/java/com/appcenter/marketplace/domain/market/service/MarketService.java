@@ -21,7 +21,7 @@ public interface MarketService {
 
     List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size);
 
-    MarketPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime modifiedAt, Long couponId, Integer size);
+    MarketPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
 
     List<TopClosingCouponRes> getTopClosingCoupons(Integer size);
 

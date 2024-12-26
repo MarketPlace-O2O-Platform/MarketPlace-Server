@@ -137,12 +137,12 @@ public class MarketController {
             @RequestParam(required = true) Long memberId,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastPageIndex") Long couponId,
-            @Parameter(description = "위에 작성한 couponId의 modifiedAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
-            @RequestParam(required = false, name = "lastModifiedAt") LocalDateTime lastModifiedAt,
+            @Parameter(description = "위에 작성한 couponId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
+            @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        marketService.getLatestCouponPage(memberId, lastModifiedAt, couponId, size)));
+                        marketService.getLatestCouponPage(memberId, lastCreatedAt, couponId, size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 TOP 조회",
