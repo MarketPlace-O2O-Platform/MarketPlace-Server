@@ -6,6 +6,8 @@ import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -281,7 +283,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
-    // 최신 등록 쿠폰 페이징 조회
+    // 최신 등록 쿠폰의 매장 페이징 조회
     @Override
     public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember");
@@ -294,30 +296,30 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                             .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
         }
 
-        whereClause.and(coupon.isDeleted.eq(false))
-                .and(coupon.isHidden.eq(false))
-                .and(coupon.deadLine.after(LocalDateTime.now()));
-
         return jpaQueryFactory
                 .select(new QLatestCouponRes(
                         market.id,
-                        coupon.id,
                         market.name,
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         favoriteMember.id.isNotNull(),
-                        coupon.modifiedAt
+                        Expressions.booleanTemplate(
+                                "CASE WHEN {0} >= {1} THEN true ELSE false END",
+                                coupon.createdAt,
+                                LocalDateTime.now().minusDays(7)
+                        ),
+                        coupon.createdAt
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
-                .innerJoin(market.local,local)
-                .innerJoin(local.metro,metro)
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.member.id.eq(memberId))
                         .and(favoriteMember.isDeleted.eq(false)))
                 .where(whereClause)
-                .orderBy(coupon.modifiedAt.desc(), coupon.id.desc()) // 최신순 정렬
+                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
                 .fetch();
     }
