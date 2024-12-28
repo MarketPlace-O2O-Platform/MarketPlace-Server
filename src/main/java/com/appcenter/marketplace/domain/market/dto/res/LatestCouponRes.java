@@ -8,23 +8,23 @@ import java.time.LocalDateTime;
 @Getter
 public class LatestCouponRes {
     private final Long marketId;
-    private final Long couponId;
     private final String marketName;
     private final String marketDescription;
     private final String address;
     private final String thumbnail;
     private final Boolean isFavorite;
-    private final LocalDateTime modifiedAt;
+    private final Boolean isNewCoupon;
+    private final LocalDateTime createdAt;
 
     @QueryProjection
-    public LatestCouponRes(Long marketId, Long couponId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, LocalDateTime modifiedAt) {
+    public LatestCouponRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, LocalDateTime createdAt) {
         this.marketId = marketId;
-        this.couponId = couponId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
         this.address = address;
         this.thumbnail = thumbnail;
         this.isFavorite = isFavorite;
-        this.modifiedAt = modifiedAt;
+        this.isNewCoupon = isNewCoupon;
+        this.createdAt = createdAt;
     }
 }

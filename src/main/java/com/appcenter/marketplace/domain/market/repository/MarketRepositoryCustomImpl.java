@@ -6,6 +6,8 @@ import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -277,52 +279,51 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.member.id.eq(memberId))
                         .and(favoriteMember.isDeleted.eq(false)))
-                .where(whereClause
-                        .and(coupon.isDeleted.eq(false))
-                        .and(coupon.isHidden.eq(false))
-                        .and(coupon.deadLine.after(LocalDateTime.now())))
-                .orderBy(coupon.modifiedAt.desc()) // 최신순 정렬
+                .where(whereClause)
+                .orderBy(coupon.createdAt.desc()) // 최신순 정렬
                 .limit(size)
                 .fetch();
     }
 
-    // 최신 등록 쿠폰 페이징 조회
+    // 최신 등록 쿠폰의 매장 페이징 조회
     @Override
-    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastModifiedAt, Long lastCouponId, Integer size) {
+    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember");
 
         BooleanBuilder whereClause = booleanBuilderSubQuery();
 
-        if (lastModifiedAt != null && lastCouponId != null) {
-            whereClause.and(coupon.modifiedAt.loe(lastModifiedAt)  // 같거나 더 이른 시간으로 계산 ( == loe)( 더 먼저 등록된 쿠폰)
-                    .and(coupon.modifiedAt.eq(lastModifiedAt).not()
+        if (lastCreatedAt != null && lastCouponId != null) {
+            whereClause.and(coupon.modifiedAt.loe(lastCreatedAt)  // 같거나 더 이른 시간으로 계산 ( == loe)( 더 먼저 등록된 쿠폰)
+                    .and(coupon.modifiedAt.eq(lastCreatedAt).not()
                             .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
         }
 
-        whereClause.and(coupon.isDeleted.eq(false))
-                .and(coupon.isHidden.eq(false))
-                .and(coupon.deadLine.after(LocalDateTime.now()));
-
+        // booleanTemplate -> 결과에서 coupon.createdAt.goe(LocalDateTime.now().minusDays(7)) 와 같은 문은 변환과정에서 오류가 남.
+        // CASE 조건절로 해결
         return jpaQueryFactory
                 .select(new QLatestCouponRes(
                         market.id,
-                        coupon.id,
                         market.name,
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         favoriteMember.id.isNotNull(),
-                        coupon.modifiedAt
+                        Expressions.booleanTemplate(
+                                "CASE WHEN {0} >= {1} THEN true ELSE false END",
+                                coupon.createdAt,
+                                LocalDateTime.now().minusDays(7)
+                        ),
+                        coupon.createdAt
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
-                .innerJoin(market.local,local)
-                .innerJoin(local.metro,metro)
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.member.id.eq(memberId))
                         .and(favoriteMember.isDeleted.eq(false)))
                 .where(whereClause)
-                .orderBy(coupon.modifiedAt.desc(), coupon.id.desc()) // 최신순 정렬
+                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
                 .fetch();
     }
@@ -360,7 +361,6 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.stock.gt(0))
                         .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.deadLine.asc(), coupon.id.desc())
-
                 .limit(size)
                 .fetch();
     }
@@ -407,18 +407,19 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
         BooleanBuilder whereClause = new BooleanBuilder();
 
-        // 서브쿼리: 각 market_id 그룹별 최신 쿠폰의 modifiedAt을 구함
+        // 서브쿼리: 각 market_id 그룹별 최신 쿠폰의 createdAt을 구함
         JPQLQuery<Tuple> subQuery = JPAExpressions
-                .select(market.id, subCoupon.modifiedAt.max())
+                .select(market.id, subCoupon.createdAt.max())
                 .from(subCoupon)
                 .innerJoin(subCoupon.market, market)
                 .where(subCoupon.isDeleted.eq(false)
                         .and(subCoupon.isHidden.eq(false))
+                        .and(subCoupon.stock.gt(0))
                         .and(subCoupon.deadLine.after(LocalDateTime.now())))
                 .groupBy(market.id);
 
         // 기본 조건
-        whereClause.and(Expressions.list(coupon.market.id, coupon.modifiedAt).in(subQuery)); // 서브쿼리와 매칭
+        whereClause.and(Expressions.list(coupon.market.id, coupon.createdAt).in(subQuery)); // 서브쿼리와 매칭
 
         return whereClause;
     }
