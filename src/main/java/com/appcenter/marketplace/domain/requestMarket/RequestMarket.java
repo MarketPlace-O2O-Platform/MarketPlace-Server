@@ -16,17 +16,17 @@ public class RequestMarket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
-    private Long count;
+    private Integer count;
 
     @Builder
-    public RequestMarket(String name, String address, Long count) {
+    public RequestMarket(String name, String address, Integer count) {
         this.name = name;
         this.address = address;
         this.count = count;
