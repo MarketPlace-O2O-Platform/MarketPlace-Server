@@ -31,4 +31,6 @@ public class RequestMarket {
         this.address = address;
         this.count = count;
     }
+
+    public void plusCount(){ this.count++;}
 }
