@@ -15,8 +15,6 @@ public class RequestMarketCreateReq {
     @NotBlank(message = "주소값은 필수입력값입니다.")
     private String address;
 
-    private Integer count;
-
     public RequestMarket toEntity(){
         return RequestMarket.builder()
                 .name(name)
