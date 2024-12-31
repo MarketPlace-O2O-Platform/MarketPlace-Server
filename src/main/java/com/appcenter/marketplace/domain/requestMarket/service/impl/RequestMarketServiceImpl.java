@@ -36,7 +36,7 @@ public class RequestMarketServiceImpl implements RequestMarketService {
 
     @Override
     public Page<RequestMarket> getRequestMarkets(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("count").descending());
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("count").descending());
         return requestMarketRepository.findAll(pageable);
     }
 }
