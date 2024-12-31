@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.requestMarket.service.impl;
 
 import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
-import com.appcenter.marketplace.domain.requestMarket.dto.req.RequestMarketReq;
+import com.appcenter.marketplace.domain.requestMarket.dto.req.RequestMarketCreateReq;
 import com.appcenter.marketplace.domain.requestMarket.dto.res.RequestMarketRes;
 import com.appcenter.marketplace.domain.requestMarket.repository.RequestMarketRepository;
 import com.appcenter.marketplace.domain.requestMarket.service.RequestMarketService;
@@ -18,14 +18,14 @@ public class RequestMarketServiceImpl implements RequestMarketService {
 
     @Override
     @Transactional
-    public RequestMarketRes createRequestMarket(RequestMarketReq requestMarketReq) {
-        if(requestMarketRepository.existsByName(requestMarketReq.getName())){
-            RequestMarket requestMarket=requestMarketRepository.findRequestMarketByName(requestMarketReq.getName());
+    public RequestMarketRes createRequestMarket(RequestMarketCreateReq requestMarketCreateReq) {
+        if(requestMarketRepository.existsByName(requestMarketCreateReq.getName())){
+            RequestMarket requestMarket=requestMarketRepository.findRequestMarketByName(requestMarketCreateReq.getName());
             requestMarket.plusCount();
             return RequestMarketRes.from(requestMarket);
         }
         else{
-            RequestMarket requestMarket=requestMarketRepository.save(requestMarketReq.toEntity());
+            RequestMarket requestMarket=requestMarketRepository.save(requestMarketCreateReq.toEntity());
             return RequestMarketRes.from(requestMarket);
         }
     }

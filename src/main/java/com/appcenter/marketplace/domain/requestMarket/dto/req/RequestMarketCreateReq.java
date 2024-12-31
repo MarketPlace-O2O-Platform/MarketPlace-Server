@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RequestMarketReq {
+public class RequestMarketCreateReq {
 
     @NotBlank(message = "매장명은 필수입력값입니다.")
     private String name;
