@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.tempMarket.controller;
 
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -15,7 +16,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tempMarkets")
+@RequestMapping("/api/tempMarkets")
 public class TempMarketController {
     private final TempMarketService tempMarketService;
 
@@ -36,5 +37,13 @@ public class TempMarketController {
     ){
         return ResponseEntity.status(MARKET_UPDATE.getStatus())
                 .body(CommonResponse.from(MARKET_UPDATE.getMessage(), tempMarketService.updateMarket(marketId, tempMarketReq, multipartFile)));
+    }
+
+    @PutMapping("/hidden/{tempMarketId}")
+    public ResponseEntity<CommonResponse<TempMarketHiddenRes>> toggleTempMarket(
+            @PathVariable Long tempMarketId
+    ){
+        return ResponseEntity.status(MARKET_HIDDEN.getStatus())
+                .body(CommonResponse.from(MARKET_HIDDEN.getMessage(), tempMarketService.toggleHidden(tempMarketId)));
     }
 }

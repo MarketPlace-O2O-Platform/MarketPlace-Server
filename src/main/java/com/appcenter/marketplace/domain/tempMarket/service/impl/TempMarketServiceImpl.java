@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.repository.TempMarketRepository;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
@@ -66,6 +67,14 @@ public class TempMarketServiceImpl implements TempMarketService {
         }
 
         return TempMarketRes.toDto(tempMarket);
+    }
+
+    @Override
+    @Transactional
+    public TempMarketHiddenRes toggleHidden(Long marketId) {
+        TempMarket tempMarket = findMarket(marketId);
+        tempMarket.toggleHidden();
+        return TempMarketHiddenRes.toDto(tempMarket);
     }
 
     private Category findCategory(String category) {

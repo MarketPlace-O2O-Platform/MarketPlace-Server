@@ -16,13 +16,14 @@ public enum StatusCode {
     MARKET_IMAGE_UPDATE(OK,"매장 이미지 리스트 수정 완료"),
     MARKET_DELETE(OK,"매장 삭제 완료"),
     MARKET_ALREADY_EXISTS(BAD_REQUEST, "이미 존재하는 매장입니다."),
+    MARKET_HIDDEN(OK, "매장 숨김(공개) 처리 완료"),
 
     // Coupon
     COUPON_CREATE(CREATED,"쿠폰 생성 완료"),
     COUPON_ISSUED(OK,"쿠폰 발급 완료"),
     COUPON_FOUND(OK,"쿠폰 조회 완료"),
     COUPON_UPDATE(OK,"쿠폰 수정 완료"),
-    COUPON_HIDDEN(OK,"쿠폰 숨김처리 완료"),
+    COUPON_HIDDEN(OK,"쿠폰 숨김(공개)처리 완료"),
     COUPON_USED(OK,"쿠폰 사용처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
 

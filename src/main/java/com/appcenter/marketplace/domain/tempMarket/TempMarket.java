@@ -64,4 +64,8 @@ public class TempMarket extends BaseEntity {
     public void updateThumbnail(String thumbnail){
         this.thumbnail = thumbnail;
     }
+
+    public void toggleHidden() {
+        this.isHidden = !this.isHidden;
+    }
 }
