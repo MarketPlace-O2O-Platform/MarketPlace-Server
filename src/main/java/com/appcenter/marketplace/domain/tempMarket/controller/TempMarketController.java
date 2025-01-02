@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,11 @@ public class TempMarketController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<TempMarketRes>> createTempMarket(
             @RequestPart(value = "file")MultipartFile multipartFile,
-            @RequestPart(value = "jsonData")TempMarketReq tempMarketReq) {
+            @RequestPart(value = "jsonData") @Valid TempMarketReq tempMarketReq) {
 
         return ResponseEntity.status(MARKET_CREATE.getStatus())
                 .body(CommonResponse.from(MARKET_CREATE.getMessage(), tempMarketService.create(tempMarketReq, multipartFile)));
     }
+
 
 }
