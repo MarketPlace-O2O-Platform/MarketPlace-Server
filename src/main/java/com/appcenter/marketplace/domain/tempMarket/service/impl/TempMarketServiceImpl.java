@@ -5,6 +5,7 @@ import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.repository.TempMarketRepository;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
@@ -34,7 +35,7 @@ public class TempMarketServiceImpl implements TempMarketService {
 
     @Override
     @Transactional
-    public TempMarketRes create(TempMarketReq marketReq, MultipartFile multipartFile) {
+    public TempMarketDetailRes create(TempMarketReq marketReq, MultipartFile multipartFile) {
         Category category = findCategory(marketReq.getCategory());
 
         // 중복 매장명 확인
@@ -45,12 +46,12 @@ public class TempMarketServiceImpl implements TempMarketService {
 
         // 요청 매장 삭제 로직 추가 (요청 API 구현 확인 후)
 
-        return TempMarketRes.toDto(market);
+        return TempMarketDetailRes.toDto(market);
     }
 
     @Override
     @Transactional
-    public TempMarketRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile) {
+    public TempMarketDetailRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile) {
         TempMarket tempMarket = findMarket(marketId);
         Category category = findCategory(marketReq.getCategory());
         tempMarket.updateMarket(marketReq, category);
@@ -66,7 +67,7 @@ public class TempMarketServiceImpl implements TempMarketService {
             tempMarket.updateThumbnail(newThumbnail);
         }
 
-        return TempMarketRes.toDto(tempMarket);
+        return TempMarketDetailRes.toDto(tempMarket);
     }
 
     @Override
@@ -75,6 +76,11 @@ public class TempMarketServiceImpl implements TempMarketService {
         TempMarket tempMarket = findMarket(marketId);
         tempMarket.toggleHidden();
         return TempMarketHiddenRes.toDto(tempMarket);
+    }
+
+    @Override
+    public TempMarketRes getMarketList(Long memberId, Long marketId, Integer size, String category) {
+        return null;
     }
 
     @Override

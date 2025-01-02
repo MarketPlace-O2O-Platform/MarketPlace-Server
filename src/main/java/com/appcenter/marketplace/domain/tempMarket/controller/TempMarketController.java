@@ -2,7 +2,7 @@ package com.appcenter.marketplace.domain.tempMarket.controller;
 
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
-import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ public class TempMarketController {
     private final TempMarketService tempMarketService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse<TempMarketRes>> createTempMarket(
+    public ResponseEntity<CommonResponse<TempMarketDetailRes>> createTempMarket(
             @RequestPart(value = "file")MultipartFile multipartFile,
             @RequestPart(value = "jsonData") @Valid TempMarketReq tempMarketReq) {
 
@@ -30,7 +30,7 @@ public class TempMarketController {
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse<TempMarketRes>> updateTempMarket(
+    public ResponseEntity<CommonResponse<TempMarketDetailRes>> updateTempMarket(
             @RequestParam(name="marketId") Long marketId,
             @RequestPart(value ="file", required = false) MultipartFile multipartFile,
             @RequestPart(value = "jsonData") TempMarketReq tempMarketReq
