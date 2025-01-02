@@ -10,13 +10,14 @@ public class TempMarketRes {
     private final String marketName;
     private final String thumbnail;
     private final Long cheerCount;
+    private final Boolean isCheer;
 
     @QueryProjection
-    public TempMarketRes(Long marketId, String marketName, String thumbnail, Long cheerCount) {
+    public TempMarketRes(Long marketId, String marketName, String thumbnail, Long cheerCount, Boolean isCheer) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.thumbnail = thumbnail;
         this.cheerCount = cheerCount;
-
+        this.isCheer = isCheer;
     }
 }

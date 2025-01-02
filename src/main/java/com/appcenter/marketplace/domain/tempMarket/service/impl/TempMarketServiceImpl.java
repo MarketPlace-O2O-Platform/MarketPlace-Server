@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketPageRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.repository.TempMarketRepository;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
@@ -79,8 +81,15 @@ public class TempMarketServiceImpl implements TempMarketService {
     }
 
     @Override
-    public TempMarketRes getMarketList(Long memberId, Long marketId, Integer size, String category) {
-        return null;
+    public TempMarketPageRes<TempMarketRes> getMarketList(Long memberId, Long marketId, Integer size, String category) {
+        List<TempMarketRes> marketResList;
+        if(category == null){
+            marketResList = tempMarketRepository.findMarketList(memberId, marketId, size);
+        } else if(Major.exists(category)){
+            marketResList = tempMarketRepository.findMarketListByCategory(memberId, marketId, size, category);
+        }
+        else throw new CustomException(CATEGORY_NOT_EXIST);
+        return checkNextPageAndReturn(marketResList, size);
     }
 
     @Override
@@ -128,5 +137,16 @@ public class TempMarketServiceImpl implements TempMarketService {
                 throw new CustomException(FILE_DELETE_INVALID);
             }
         }
+    }
+
+    private <T> TempMarketPageRes<T> checkNextPageAndReturn(List<T> marketResDtoList, Integer size){
+        boolean hasNext = false;
+
+        if(marketResDtoList != null && marketResDtoList.size() > size){
+            hasNext = true;
+            marketResDtoList.remove(size.intValue());
+        }
+
+        return new TempMarketPageRes<>(marketResDtoList, hasNext);
     }
 }

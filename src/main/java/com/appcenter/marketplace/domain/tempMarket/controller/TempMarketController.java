@@ -3,6 +3,8 @@ package com.appcenter.marketplace.domain.tempMarket.controller;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketPageRes;
+import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import jakarta.validation.Valid;
@@ -45,6 +47,17 @@ public class TempMarketController {
     ){
         return ResponseEntity.status(MARKET_HIDDEN.getStatus())
                 .body(CommonResponse.from(MARKET_HIDDEN.getMessage(), tempMarketService.toggleHidden(tempMarketId)));
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> getTempMarket(
+            @RequestParam Long memberId,
+            @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
+            @RequestParam(required = false, name = "category") String category,
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size
+    ){
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getMarketList(memberId, tempMarketId, size, category)));
     }
 
     @DeleteMapping("/{tempMarketId}")
