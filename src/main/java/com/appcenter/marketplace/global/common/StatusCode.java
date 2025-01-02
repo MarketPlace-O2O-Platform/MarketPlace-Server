@@ -30,6 +30,9 @@ public enum StatusCode {
     // Favorite
     FAVORITE_CREATE(CREATED,"찜 생성(취소) 완료"),
 
+    // Cheer
+    CHEER_SUCCESS(OK, "공감 확인(취소) 완료"),
+
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
     MEMBER_FOUND(OK, "회원 조회 완료"),

@@ -68,4 +68,16 @@ public class TempMarket extends BaseEntity {
     public void toggleHidden() {
         this.isHidden = !this.isHidden;
     }
+
+    public void increaseCheerCount() {
+        this.cheerCount++;
+    }
+
+    public void decreaseCheerCount() {
+        this.cheerCount--;
+
+        if(this.cheerCount < 0L){
+            this.cheerCount = 0L;
+        }
+    }
 }
