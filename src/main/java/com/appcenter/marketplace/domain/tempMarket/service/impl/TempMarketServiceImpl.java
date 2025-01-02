@@ -77,6 +77,14 @@ public class TempMarketServiceImpl implements TempMarketService {
         return TempMarketHiddenRes.toDto(tempMarket);
     }
 
+    @Override
+    @Transactional
+    public void deleteMarket(Long marketId) {
+        TempMarket tempMarket = findMarket(marketId);
+        tempMarketRepository.deleteById(tempMarket.getId());
+    }
+
+
     private Category findCategory(String category) {
         if (Major.exists(category)) {
             return categoryRepository.findByMajor(Major.valueOf(category))

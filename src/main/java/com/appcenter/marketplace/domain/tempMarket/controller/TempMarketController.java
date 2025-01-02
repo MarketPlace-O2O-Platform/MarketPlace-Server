@@ -46,4 +46,12 @@ public class TempMarketController {
         return ResponseEntity.status(MARKET_HIDDEN.getStatus())
                 .body(CommonResponse.from(MARKET_HIDDEN.getMessage(), tempMarketService.toggleHidden(tempMarketId)));
     }
+
+    @DeleteMapping("/{tempMarketId}")
+    public ResponseEntity<CommonResponse<Object>> deleteMarket(
+            @PathVariable Long tempMarketId
+    ){
+        tempMarketService.deleteMarket(tempMarketId);
+        return ResponseEntity.ok(CommonResponse.from(MARKET_DELETE.getMessage()));
+    }
 }

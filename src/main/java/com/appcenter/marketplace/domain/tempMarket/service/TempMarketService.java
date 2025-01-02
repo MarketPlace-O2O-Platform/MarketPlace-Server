@@ -11,4 +11,6 @@ public interface TempMarketService {
     TempMarketRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile);
 
     TempMarketHiddenRes toggleHidden(Long marketId);
+
+    void deleteMarket(Long marketId);
 }
