@@ -6,4 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface TempMarketService {
     TempMarketRes create(TempMarketReq marketReq, MultipartFile multipartFile);
+
+    TempMarketRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile);
 }

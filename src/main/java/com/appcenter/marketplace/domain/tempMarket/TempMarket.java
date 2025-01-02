@@ -2,12 +2,14 @@ package com.appcenter.marketplace.domain.tempMarket;
 
 
 import com.appcenter.marketplace.domain.category.Category;
+import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.query.hql.internal.StandardHqlTranslator;
 
 @Table(name = "temp_market")
 @Entity
@@ -50,5 +52,16 @@ public class TempMarket extends BaseEntity {
         this.address = address;
         this.cheerCount = cheerCount;
         this.isHidden = isHidden;
+    }
+
+    public void updateMarket(TempMarketReq marketReq, Category category){
+        this.category = category;
+        this.name = marketReq.getMarketName();
+        this.description = marketReq.getDescription();
+        this.address = marketReq.getAddress();
+    }
+
+    public void updateThumbnail(String thumbnail){
+        this.thumbnail = thumbnail;
     }
 }

@@ -47,6 +47,27 @@ public class TempMarketServiceImpl implements TempMarketService {
         return TempMarketRes.toDto(market);
     }
 
+    @Override
+    @Transactional
+    public TempMarketRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile) {
+        TempMarket tempMarket = findMarket(marketId);
+        Category category = findCategory(marketReq.getCategory());
+        tempMarket.updateMarket(marketReq, category);
+
+        // 이미지 수정
+        if( multipartFile != null && !multipartFile.isEmpty()){
+            String oldThumbnail = tempMarket.getThumbnail();
+            if( oldThumbnail != null ){
+                deleteImage(oldThumbnail);
+            }
+
+            String newThumbnail = saveImage(multipartFile);
+            tempMarket.updateThumbnail(newThumbnail);
+        }
+
+        return TempMarketRes.toDto(tempMarket);
+    }
+
     private Category findCategory(String category) {
         if (Major.exists(category)) {
             return categoryRepository.findByMajor(Major.valueOf(category))
@@ -61,6 +82,11 @@ public class TempMarketServiceImpl implements TempMarketService {
         }
     }
 
+    private TempMarket findMarket(Long marketId) {
+        return tempMarketRepository.findById(marketId)
+                .orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
+    }
+
     private String saveImage(MultipartFile file) {
         try {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -69,6 +95,15 @@ public class TempMarketServiceImpl implements TempMarketService {
             return fileName;
         }catch(IOException e){
             throw new CustomException(FILE_SAVE_INVALID);
+        }
+    }
+
+    private void deleteImage(String imageName){
+        File file = new File(imageFolder + imageName);
+        if(file.exists() && file.isFile()) {
+            if (!file.delete()) {
+                throw new CustomException(FILE_DELETE_INVALID);
+            }
         }
     }
 }
