@@ -21,7 +21,7 @@ public class QRequestMarket extends EntityPathBase<RequestMarket> {
 
     public final StringPath address = createString("address");
 
-    public final NumberPath<Long> count = createNumber("count", Long.class);
+    public final NumberPath<Integer> count = createNumber("count", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
