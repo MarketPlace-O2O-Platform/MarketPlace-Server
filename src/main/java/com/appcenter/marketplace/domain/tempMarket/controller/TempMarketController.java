@@ -54,10 +54,21 @@ public class TempMarketController {
             @RequestParam Long memberId,
             @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
             @RequestParam(required = false, name = "category") String category,
-            @RequestParam(defaultValue = "10", name = "pageSize") Integer size
+            @RequestParam(defaultValue = "10", name = "count") Integer size
     ){
-        return ResponseEntity
-                .ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getMarketList(memberId, tempMarketId, size, category)));
+        return ResponseEntity.status(MARKET_FOUND.getStatus())
+                .body(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getMarketList(memberId, tempMarketId, size, category)));
+    }
+
+    @GetMapping("/cheer")
+    public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> getTempMarketPage(
+            @RequestParam Long memberId,
+            @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
+            @RequestParam(required = false, name = "lastCheerCount") Long cheerCount,
+            @RequestParam(defaultValue = "10", name = "count") Integer size
+    ){
+        return ResponseEntity.status(MARKET_FOUND.getStatus())
+                .body(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getUpcomingNearMarketList(memberId, tempMarketId, cheerCount, size)));
     }
 
     @DeleteMapping("/{tempMarketId}")

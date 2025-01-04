@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.tempMarket.service;
 
+import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
@@ -18,5 +19,6 @@ public interface TempMarketService {
 
     TempMarketPageRes<TempMarketRes> getMarketList(Long memberId, Long marketId, Integer size, String category);
 
+    TempMarketPageRes<TempMarketRes> getUpcomingNearMarketList(Long memberId, Long marketId, Long cheerCount, Integer size);
     void deleteMarket(Long marketId);
 }
