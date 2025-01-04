@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.tempMarket.service;
 
-import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;

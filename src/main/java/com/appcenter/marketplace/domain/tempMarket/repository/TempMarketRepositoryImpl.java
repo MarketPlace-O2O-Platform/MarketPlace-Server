@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.tempMarket.repository;
 
-import com.appcenter.marketplace.domain.category.QCategory;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.QTempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.querydsl.core.BooleanBuilder;

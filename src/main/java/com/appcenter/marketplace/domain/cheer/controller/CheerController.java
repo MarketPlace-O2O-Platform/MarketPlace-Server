@@ -1,9 +1,7 @@
 package com.appcenter.marketplace.domain.cheer.controller;
 
-import com.appcenter.marketplace.domain.cheer.Cheer;
 import com.appcenter.marketplace.domain.cheer.service.CheerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
-import com.appcenter.marketplace.global.common.StatusCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
