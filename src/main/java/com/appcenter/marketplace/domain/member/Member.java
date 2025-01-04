@@ -21,14 +21,20 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(name = "cheer_ticket", nullable = false)
-    private Long cheerTicket;
+    private Integer cheerTicket;
 
     @Builder
-    public Member (Long id, Long cheerTicket) {
+    public Member (Long id, Integer cheerTicket) {
         this.id = id;
         this.cheerTicket = cheerTicket;
     }
 
+    public void reduceTicket() {
+        this.cheerTicket--;
+    }
 
+    public void resetTicket() {
+        this.cheerTicket = 1;
+    }
 }
 

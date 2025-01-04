@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.cheer.Cheer;
 import com.appcenter.marketplace.domain.cheer.CheerRepository;
 import com.appcenter.marketplace.domain.cheer.service.CheerService;
 import com.appcenter.marketplace.domain.member.Member;
-import com.appcenter.marketplace.domain.member.MemberRepository;
+import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.repository.TempMarketRepository;
 
@@ -40,6 +40,7 @@ public class CheerServiceImpl implements CheerService {
                 tempMarket.decreaseCheerCount();
             } else {
                 tempMarket.increaseCheerCount();
+                member.reduceTicket();
             }
 
         }else{
@@ -52,6 +53,7 @@ public class CheerServiceImpl implements CheerService {
             cheerRepository.save(cheer);
 
             tempMarket.increaseCheerCount();
+            member.reduceTicket();
         }
     }
 }

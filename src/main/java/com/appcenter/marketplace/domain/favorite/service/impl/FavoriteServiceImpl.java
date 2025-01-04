@@ -6,7 +6,7 @@ import com.appcenter.marketplace.domain.favorite.service.FavoriteService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.member.Member;
-import com.appcenter.marketplace.domain.member.MemberRepository;
+import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
