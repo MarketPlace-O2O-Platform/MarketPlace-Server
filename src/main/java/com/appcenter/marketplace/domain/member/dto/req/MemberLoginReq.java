@@ -19,6 +19,7 @@ public class MemberLoginReq {
     public Member toEntity(Long studentId) {
         return Member.builder()
                 .id(studentId)
+                .cheerTicket(1)
                 .build();
     }
 }
