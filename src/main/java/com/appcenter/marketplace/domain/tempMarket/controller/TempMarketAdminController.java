@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
 
@@ -44,6 +46,12 @@ public class TempMarketAdminController {
     ){
         return ResponseEntity.status(MARKET_UPDATE.getStatus())
                 .body(CommonResponse.from(MARKET_UPDATE.getMessage(), tempMarketAdminService.updateMarket(marketId, tempMarketReq, multipartFile)));
+    }
+
+    @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다.")
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TempMarketDetailRes>>> getAllTempMarket() {
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList()));
     }
 
     @Operation(summary = "매장 공개(숨김) 처리", description = "매장을 공개(숨김)처리가 가능합니다." )

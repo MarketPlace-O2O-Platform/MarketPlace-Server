@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
@@ -67,6 +69,17 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         }
 
         return TempMarketDetailRes.toDto(tempMarket);
+    }
+
+    @Override
+    public List<TempMarketDetailRes> getMarketList() {
+        List<TempMarketDetailRes> tempMarketDetailRes = new ArrayList<>();
+
+        List<TempMarket> tempMarketList = tempMarketRepository.findAll();
+        for (TempMarket tempMarket : tempMarketList) {
+            tempMarketDetailRes.add(TempMarketDetailRes.toDto(tempMarket));
+        }
+        return tempMarketDetailRes;
     }
 
     @Override
