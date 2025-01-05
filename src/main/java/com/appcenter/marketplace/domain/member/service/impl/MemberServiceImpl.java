@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.member.service.impl;
 
 import com.appcenter.marketplace.domain.member.Member;
-import com.appcenter.marketplace.domain.member.MemberRepository;
+import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 import com.appcenter.marketplace.domain.member.service.MemberService;
@@ -25,8 +25,17 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberLoginRes login(MemberLoginReq memberLoginReq) {
         Long studentId = validateAndParseStudentId(memberLoginReq);
-        Member member = memberRepository.save(memberLoginReq.toEntity(studentId));
-        return MemberLoginRes.toDto(member);
+
+        Member existMember = findMemberByMemberId(studentId);
+
+        // 회원 정보 반환
+        if( existMember != null){
+            return MemberLoginRes.toDto(existMember);
+        }
+
+        // 회원 추가
+        Member newMember = memberRepository.save(memberLoginReq.toEntity(studentId));
+        return MemberLoginRes.toDto(newMember);
     }
 
     @Override

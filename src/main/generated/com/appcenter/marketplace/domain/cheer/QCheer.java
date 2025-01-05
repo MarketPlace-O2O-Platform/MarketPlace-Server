@@ -29,6 +29,8 @@ public class QCheer extends EntityPathBase<Cheer> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final com.appcenter.marketplace.domain.member.QMember member;
 
     //inherited

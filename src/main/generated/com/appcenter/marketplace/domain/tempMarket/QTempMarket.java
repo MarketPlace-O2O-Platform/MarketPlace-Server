@@ -24,12 +24,16 @@ public class QTempMarket extends EntityPathBase<TempMarket> {
 
     public final com.appcenter.marketplace.global.common.QBaseEntity _super = new com.appcenter.marketplace.global.common.QBaseEntity(this);
 
+    public final StringPath address = createString("address");
+
     public final com.appcenter.marketplace.domain.category.QCategory category;
 
-    public final NumberPath<Long> cheerCount = createNumber("cheerCount", Long.class);
+    public final NumberPath<Integer> cheerCount = createNumber("cheerCount", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
+    public final StringPath description = createString("description");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

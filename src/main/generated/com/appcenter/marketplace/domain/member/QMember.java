@@ -21,7 +21,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final com.appcenter.marketplace.global.common.QBaseEntity _super = new com.appcenter.marketplace.global.common.QBaseEntity(this);
 
-    public final NumberPath<Long> cheerTicket = createNumber("cheerTicket", Long.class);
+    public final NumberPath<Integer> cheerTicket = createNumber("cheerTicket", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
