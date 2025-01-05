@@ -70,7 +70,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         favorite.id.isNotNull(),
                         coupon.id.isNotNull()))
                 .from(market)
-                .innerJoin(favorite).on(market.eq(favorite.market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
                         .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
                 .leftJoin(coupon).on(coupon.market.eq(market)
@@ -126,7 +126,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         favorite.id.isNotNull(),
                         coupon.id.isNotNull()))
                 .from(market)
-                .innerJoin(favorite).on(market.eq(favorite.market)
+                .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
                                 .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
                 .leftJoin(coupon).on(coupon.market.eq(market)
