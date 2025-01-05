@@ -33,7 +33,7 @@ public class TempMarketServiceImpl implements TempMarketService {
     }
 
     @Override
-    public TempMarketPageRes<TempMarketRes> getUpcomingNearMarketList(Long memberId, Long marketId, Long cheerCount, Integer size) {
+    public TempMarketPageRes<TempMarketRes> getUpcomingNearMarketList(Long memberId, Long marketId, Integer cheerCount, Integer size) {
         List<TempMarketRes> marketResList = tempMarketRepository.findUpcomingMarketList(memberId, marketId, cheerCount, size);
 
         return checkNextPageAndReturn(marketResList, size);

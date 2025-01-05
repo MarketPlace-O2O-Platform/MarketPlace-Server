@@ -42,7 +42,7 @@ public class TempMarketController {
     public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> getTempMarketPage(
             @RequestParam Long memberId,
             @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
-            @RequestParam(required = false, name = "lastCheerCount") Long cheerCount,
+            @RequestParam(required = false, name = "lastCheerCount") Integer cheerCount,
             @RequestParam(defaultValue = "10", name = "count") Integer size
     ) {
         return ResponseEntity.status(MARKET_FOUND.getStatus())

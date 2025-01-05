@@ -58,7 +58,7 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
     }
 
     @Override
-    public List<TempMarketRes> findUpcomingMarketList(Long memberId, Long marketId, Long cheerCount, Integer size) {
+    public List<TempMarketRes> findUpcomingMarketList(Long memberId, Long marketId, Integer cheerCount, Integer size) {
 
         return jpaQueryFactory
                 .select(new QTempMarketRes(
@@ -87,7 +87,7 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
         return builder;
     }
 
-    private BooleanBuilder ltCheerCountAndMarketId(Long marketId, Long lastCheerCount) {
+    private BooleanBuilder ltCheerCountAndMarketId(Long marketId, Integer lastCheerCount) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (lastCheerCount != null) {

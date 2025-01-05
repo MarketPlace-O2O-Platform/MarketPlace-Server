@@ -11,11 +11,11 @@ public class TempMarketDetailRes {
     private final String description;
     private final String address;
     private final String thumbnail;
-    private final Long cheerCount;
+    private final Integer cheerCount;
     private final Boolean isHidden;
 
     @Builder
-    private TempMarketDetailRes(Long marketId, String marketName, String description, String address, String thumbnail, Long cheerCount, Boolean isHidden) {
+    private TempMarketDetailRes(Long marketId, String marketName, String description, String address, String thumbnail, Integer cheerCount, Boolean isHidden) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.description = description;

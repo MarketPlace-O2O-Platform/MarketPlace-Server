@@ -35,7 +35,7 @@ public class TempMarketReq {
                 .description(description)
                 .address(address)
                 .thumbnail(imageFile)
-                .cheerCount(0L)
+                .cheerCount(0)
                 .isHidden(false)
                 .build();
     }

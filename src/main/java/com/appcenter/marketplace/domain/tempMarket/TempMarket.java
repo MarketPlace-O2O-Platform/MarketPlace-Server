@@ -37,13 +37,13 @@ public class TempMarket extends BaseEntity {
     private String address;
 
     @Column(name = "cheer_count", nullable = false)
-    private Long cheerCount;
+    private Integer cheerCount;
 
     @Column(name = "is_hidden", nullable = false)
     private Boolean isHidden;
 
     @Builder
-    public TempMarket(Category category, String name, String description, String thumbnail, String address, Long cheerCount, Boolean isHidden) {
+    public TempMarket(Category category, String name, String description, String thumbnail, String address, Integer cheerCount, Boolean isHidden) {
         this.category = category;
         this.name = name;
         this.description = description;
@@ -75,8 +75,8 @@ public class TempMarket extends BaseEntity {
     public void decreaseCheerCount() {
         this.cheerCount--;
 
-        if(this.cheerCount < 0L){
-            this.cheerCount = 0L;
+        if(this.cheerCount < 0){
+            this.cheerCount = 0;
         }
     }
 }
