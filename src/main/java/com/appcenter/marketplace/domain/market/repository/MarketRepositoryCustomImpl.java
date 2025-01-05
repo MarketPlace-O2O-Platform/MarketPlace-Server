@@ -253,7 +253,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.isDeleted.eq(false)
                                 .and(favoriteMember.member.id.eq(memberId))))
-                .groupBy(market.id, market.name, market.thumbnail)
+                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();
     }
