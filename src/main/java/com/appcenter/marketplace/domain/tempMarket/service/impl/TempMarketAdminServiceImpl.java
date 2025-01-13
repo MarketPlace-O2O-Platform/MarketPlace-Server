@@ -2,6 +2,8 @@ package com.appcenter.marketplace.domain.tempMarket.service.impl;
 
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
+import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
+import com.appcenter.marketplace.domain.requestMarket.repository.RequestMarketRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
@@ -20,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
@@ -30,6 +33,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INV
 public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     private final TempMarketRepository tempMarketRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestMarketRepository requestMarketRepository;
 
     @Value("${tempImage.upload.path}")
     private String imageFolder;
@@ -45,8 +49,14 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         String imageName = saveImage(multipartFile);
         TempMarket market =tempMarketRepository.save(marketReq.toEntity(category, imageName));
 
-        // 요청 매장 삭제 로직 추가 (요청 API 구현 확인 후)
-
+        // 요청 매장 삭제 로직 추가
+        // 요청 매장의 이름이나 주소가 일치하는 매장만 삭제
+        if(requestMarketRepository.existsByName(market.getName()) || requestMarketRepository.existsByAddress(market.getAddress())) {
+            RequestMarket requestMarket = requestMarketRepository.findRequestMarketByName(market.getName());
+            requestMarketRepository.deleteById(requestMarket.getId());
+        }else{
+            throw new CustomException(MARKET_NOT_DELETED);
+        }
         return TempMarketDetailRes.toDto(market);
     }
 
