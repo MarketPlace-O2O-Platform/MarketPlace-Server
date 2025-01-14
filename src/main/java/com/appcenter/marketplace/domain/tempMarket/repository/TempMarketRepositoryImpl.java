@@ -29,7 +29,8 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                 .leftJoin(cheer).on(tempMarket.eq(cheer.tempMarket)
                         .and(cheer.isDeleted.eq(false)
                         .and(cheer.member.id.eq(memberId))))
-                .where(ltMarketId(marketId))
+                .where(ltMarketId(marketId)
+                        .and(tempMarket.isHidden.eq(false)))
                 .orderBy(tempMarket.id.desc())
                 .limit(size+1)
                 .fetch();
@@ -51,6 +52,7 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                                 .and(cheer.member.id.eq(memberId))))
                 .innerJoin(category).on(tempMarket.category.eq(category))
                 .where(ltMarketId(marketId)
+                        .and(tempMarket.isHidden.eq(false))
                         .and(category.major.stringValue().eq(major)))
                 .orderBy(tempMarket.id.desc())
                 .limit(size+1)
@@ -72,7 +74,8 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                         .and(cheer.isDeleted.eq(false)
                                 .and(cheer.member.id.eq(memberId))))
                 .where(ltCheerCountAndMarketId(marketId, cheerCount)
-                        .and(tempMarket.cheerCount.goe(14)))  // 달성 임박에 올라간 후, 공감순으로 보여줘야 함.
+                        .and(tempMarket.cheerCount.goe(14))
+                        .and(tempMarket.isHidden.eq(false)))  // 달성 임박에 올라간 후, 공감순으로 보여줘야 함.
                 .orderBy(tempMarket.cheerCount.desc(), tempMarket.id.desc())
                 .limit(size+1)
                 .fetch();

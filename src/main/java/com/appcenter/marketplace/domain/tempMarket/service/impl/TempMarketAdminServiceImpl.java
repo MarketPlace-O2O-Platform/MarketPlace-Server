@@ -21,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
@@ -31,6 +28,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INV
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     private final TempMarketRepository tempMarketRepository;
     private final CategoryRepository categoryRepository;

@@ -9,6 +9,7 @@ import com.appcenter.marketplace.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TempMarketServiceImpl implements TempMarketService {
     private final TempMarketRepository tempMarketRepository;
 
