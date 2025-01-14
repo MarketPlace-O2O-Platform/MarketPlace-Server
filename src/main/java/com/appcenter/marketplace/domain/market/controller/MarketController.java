@@ -73,7 +73,7 @@ public class MarketController {
             description = "처음 요청 시, lastPageIndex는 필요하지 않습니다. <br>" +
                     "최신순으로 보여줍니다.")
     @GetMapping("/search")
-    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> searchMarket(
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketSearchRes>>> searchMarket(
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size,

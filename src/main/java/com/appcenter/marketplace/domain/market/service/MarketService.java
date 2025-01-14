@@ -13,7 +13,7 @@ public interface MarketService {
 
     MarketPageRes<MarketRes> getMarketPageByAddress(Long memberId, Long marketId, Integer size, String major, String address);
 
-    MarketPageRes<MarketRes> searchMarket(Long marketId, Integer size, String name);
+    MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name);
 
     MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
