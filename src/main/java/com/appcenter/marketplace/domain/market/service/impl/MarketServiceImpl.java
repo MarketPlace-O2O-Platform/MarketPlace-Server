@@ -8,6 +8,7 @@ import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
     private final LocalRepository localRepository;
+    private final EntityManager entityManager;
 
 
     // 매장 상세 정보 조회
@@ -70,6 +72,11 @@ public class MarketServiceImpl implements MarketService {
         } else throw new CustomException(CATEGORY_NOT_EXIST);
 
         return checkNextPageAndReturn(marketResList, size);
+    }
+
+    @Override
+    public MarketPageRes<MarketRes> searchMarket(Long marketId, Integer size, String name) {
+        return null;
     }
 
     // 자신이 찜한 매장 리스트 조회

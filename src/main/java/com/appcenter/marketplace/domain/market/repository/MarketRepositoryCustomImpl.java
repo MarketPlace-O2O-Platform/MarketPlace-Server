@@ -6,8 +6,6 @@ import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -171,6 +169,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+
     // 회원이 찜한 매장 페이징 조회
     @Override
     public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
@@ -253,7 +252,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
                         .and(favoriteMember.isDeleted.eq(false)
                                 .and(favoriteMember.member.id.eq(memberId))))
-                .groupBy(market.id, market.name, market.thumbnail)
+                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
                 .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
                 .fetch();
     }
