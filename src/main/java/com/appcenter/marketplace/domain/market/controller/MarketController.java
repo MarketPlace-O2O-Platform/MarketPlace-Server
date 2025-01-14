@@ -69,6 +69,21 @@ public class MarketController {
                         ,marketService.getMarketPageByAddress(memberId, marketId, size, major, address)));
     }
 
+    @Operation(summary = "매장 검색",
+            description = "처음 요청 시, lastPageIndex는 필요하지 않습니다. <br>" +
+                    "최신순으로 보여줍니다.")
+    @GetMapping("/search")
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> searchMarket(
+            @Parameter(description = "페이지의 마지막 marketId")
+            @RequestParam(required = false, name = "lastPageIndex") Long marketId,
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
+            @RequestParam String name)
+    {
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage()
+                        ,marketService.searchMarket(marketId, size,name)));
+    }
+
     @Operation(summary = "자신이 찜한 매장 조회",
             description = "자신이 찜한 매장 정보 리스트를 반환합니다. <br>" +
                     "처음 요청 시엔 pageSize만 필요합니다.기본값은 10입니다. <br>" +
