@@ -14,6 +14,7 @@ import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,13 +50,11 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         String imageName = saveImage(multipartFile);
         TempMarket market =tempMarketRepository.save(marketReq.toEntity(category, imageName));
 
-        // 요청 매장 삭제 로직 추가
+        // 요청 매장 삭제 로직
         // 요청 매장의 이름이나 주소가 일치하는 매장만 삭제
         if(requestMarketRepository.existsByName(market.getName()) || requestMarketRepository.existsByAddress(market.getAddress())) {
             RequestMarket requestMarket = requestMarketRepository.findRequestMarketByName(market.getName());
             requestMarketRepository.deleteById(requestMarket.getId());
-        }else{
-            throw new CustomException(MARKET_NOT_DELETED);
         }
         return TempMarketDetailRes.toDto(market);
     }
@@ -82,14 +81,13 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
-    public List<TempMarketDetailRes> getMarketList() {
-        List<TempMarketDetailRes> tempMarketDetailRes = new ArrayList<>();
+    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size) {
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        List<TempMarket> tempMarketList = tempMarketRepository.findAll();
-        for (TempMarket tempMarket : tempMarketList) {
-            tempMarketDetailRes.add(TempMarketDetailRes.toDto(tempMarket));
-        }
-        return tempMarketDetailRes;
+        Page<TempMarket> tempMarketPage = tempMarketRepository.findAll(pageable);
+
+        return tempMarketPage.map(TempMarketDetailRes::toDto);
     }
 
     @Override

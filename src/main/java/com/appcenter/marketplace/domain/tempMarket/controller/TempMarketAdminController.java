@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.tempMarket.controller;
 
+import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,10 +51,15 @@ public class TempMarketAdminController {
                 .body(CommonResponse.from(MARKET_UPDATE.getMessage(), tempMarketAdminService.updateMarket(marketId, tempMarketReq, multipartFile)));
     }
 
-    @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다.")
+    @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다. <br>" +
+            "pageNum의 기본값은 1입니다. (1페이지) <br>" +
+            "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다.")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<TempMarketDetailRes>>> getAllTempMarket() {
-        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList()));
+    public ResponseEntity<CommonResponse<Page<TempMarketDetailRes>>> getAllTempMarket(
+            @RequestParam(defaultValue = "1", name= "page") Integer page,
+            @RequestParam(defaultValue = "10", name = "size") Integer size
+    ) {
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList(page, size)));
     }
 
     @Operation(summary = "매장 공개(숨김) 처리", description = "매장을 공개(숨김)처리가 가능합니다." )
