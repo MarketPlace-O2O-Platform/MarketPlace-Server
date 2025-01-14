@@ -78,6 +78,9 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name) {
+        if(name.length()<2)
+            throw new CustomException(MARKET_SEARCH_NAME_INVALID);
+
         StringBuffer sb = new StringBuffer();
 
         // SELECT 절
