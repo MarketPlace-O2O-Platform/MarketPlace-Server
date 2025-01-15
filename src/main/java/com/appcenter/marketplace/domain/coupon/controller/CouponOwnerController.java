@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReq;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
@@ -48,9 +47,9 @@ public class CouponOwnerController {
     @Operation(summary = "사장님 쿠폰 내용 수정", description = "사장님이 생성한 쿠폰의 내용을 수정합니다. " +
                                                   "<br> '숨김처리'를 제외한 내용을 수정할 수 있습니다. ")
     @PutMapping("/coupons/{couponId}")
-    public ResponseEntity<CommonResponse<CouponRes>> updateCoupon(@RequestBody @Valid CouponUpdateReq couponUpdateReq,
+    public ResponseEntity<CommonResponse<CouponRes>> updateCoupon(@RequestBody @Valid CouponReq couponReq,
                                                                   @PathVariable Long couponId ){
-        return ResponseEntity.status(COUPON_UPDATE.getStatus()).body(CommonResponse.from(COUPON_UPDATE.getMessage(),couponService.updateCoupon(couponUpdateReq, couponId)));
+        return ResponseEntity.status(COUPON_UPDATE.getStatus()).body(CommonResponse.from(COUPON_UPDATE.getMessage(),couponService.updateCoupon(couponReq, couponId)));
     }
 
     @Operation(summary = "숨김/공개 처리 기능", description = "사장님은 생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.")

@@ -2,7 +2,6 @@ package com.appcenter.marketplace.domain.coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReq;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
@@ -48,9 +47,9 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    public CouponRes updateCoupon(CouponUpdateReq couponUpdateReq, Long couponId) {
+    public CouponRes updateCoupon(CouponReq couponReq, Long couponId) {
         Coupon coupon = findCouponById(couponId);
-        coupon.update(couponUpdateReq);
+        coupon.update(couponReq);
         return CouponRes.toDto(coupon);
     }
 
