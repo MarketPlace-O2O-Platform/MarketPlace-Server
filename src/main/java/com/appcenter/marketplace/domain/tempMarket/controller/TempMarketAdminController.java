@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.tempMarket.controller;
 
-import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
@@ -9,16 +8,12 @@ import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
@@ -26,7 +21,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
 @Tag(name ="[관리자 공감매장]", description = "[관리자] 관리자 공감매장 관리")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/tempMarkets")
+@RequestMapping("/api/admin/temp-markets")
 public class TempMarketAdminController {
     private final TempMarketAdminService tempMarketAdminService;
 
@@ -55,7 +50,7 @@ public class TempMarketAdminController {
     @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다. <br>" +
             "pageNum의 기본값은 1입니다. (1페이지) <br>" +
             "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다.")
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<CommonResponse<Page<TempMarketDetailRes>>> getAllTempMarket(
             @RequestParam(defaultValue = "1", name= "page") Integer page,
             @RequestParam(defaultValue = "10", name = "size") Integer size
