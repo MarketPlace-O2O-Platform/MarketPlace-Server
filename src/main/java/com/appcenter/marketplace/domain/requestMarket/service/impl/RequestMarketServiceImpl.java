@@ -39,4 +39,19 @@ public class RequestMarketServiceImpl implements RequestMarketService {
         Pageable pageable = PageRequest.of(page-1, size, Sort.by("count").descending());
         return requestMarketRepository.findAll(pageable);
     }
+
+    @Override
+    public boolean existRequestMarket(String marketName) {
+        return requestMarketRepository.existsByName(marketName);
+    }
+
+    @Override
+    public void deleteRequestMarket(Long marketId) {
+        requestMarketRepository.deleteById(marketId);
+    }
+
+    @Override
+    public RequestMarket getRequestMarketName(String marketName) {
+        return requestMarketRepository.findRequestMarketByName(marketName);
+    }
 }
