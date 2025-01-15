@@ -89,6 +89,12 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
+    public TempMarketDetailRes getMarket(Long marketId) {
+        TempMarket tempMarket = findMarket(marketId);
+        return TempMarketDetailRes.toDto(tempMarket);
+    }
+
+    @Override
     @Transactional
     public TempMarketHiddenRes toggleHidden(Long marketId) {
         TempMarket tempMarket = findMarket(marketId);
@@ -102,6 +108,7 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         TempMarket tempMarket = findMarket(marketId);
         tempMarketRepository.deleteById(tempMarket.getId());
     }
+
 
 
     private Category findCategory(String category) {

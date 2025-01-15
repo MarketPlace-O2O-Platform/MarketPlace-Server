@@ -9,6 +9,7 @@ import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,12 +55,18 @@ public class TempMarketAdminController {
     @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다. <br>" +
             "pageNum의 기본값은 1입니다. (1페이지) <br>" +
             "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다.")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<CommonResponse<Page<TempMarketDetailRes>>> getAllTempMarket(
             @RequestParam(defaultValue = "1", name= "page") Integer page,
             @RequestParam(defaultValue = "10", name = "size") Integer size
     ) {
         return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList(page, size)));
+    }
+
+    @Operation(summary = "매장 정보 상세 조회", description = "매장 정보를 상세 조회합니다.")
+    @GetMapping("/{tempMarketId}")
+    public ResponseEntity<CommonResponse<TempMarketDetailRes>> getTempMarket(@PathVariable Long tempMarketId){
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarket(tempMarketId)));
     }
 
     @Operation(summary = "매장 공개(숨김) 처리", description = "매장을 공개(숨김)처리가 가능합니다." )
