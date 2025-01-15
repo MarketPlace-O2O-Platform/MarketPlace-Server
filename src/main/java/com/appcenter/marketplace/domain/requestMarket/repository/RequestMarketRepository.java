@@ -8,4 +8,6 @@ public interface RequestMarketRepository extends JpaRepository<RequestMarket,Lon
     boolean existsByName(String name);
 
     RequestMarket findRequestMarketByName(String name);
+
+    boolean existsByAddress(String address);
 }
