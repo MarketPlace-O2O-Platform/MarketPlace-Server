@@ -1,8 +1,7 @@
 package com.appcenter.marketplace.domain.market.controller;
 
-import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
-import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -30,21 +29,21 @@ public class MarketOwnerController {
             "이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<MarketDetailsRes>> createMarket(
-            @RequestPart(value = "jsonData") @Valid MarketCreateReq marketCreateReq,
+            @RequestPart(value = "jsonData") @Valid MarketReq marketReq,
             @RequestPart(value = "images") List<MultipartFile> multipartFileList){
         return ResponseEntity
                 .status(MARKET_CREATE.getStatus())
                 .body(CommonResponse.from(MARKET_CREATE.getMessage()
-                        ,marketOwnerService.createMarket(marketCreateReq,multipartFileList)));
+                        ,marketOwnerService.createMarket(marketReq,multipartFileList)));
     }
 
     @Operation(summary = "사장님 매장 정보 수정", description = "사장님이 생성한 매장 정보를 수정합니다.")
     @PutMapping("/{marketId}")
     public ResponseEntity<CommonResponse<MarketDetailsRes>> updateMarket(
-            @RequestBody @Valid MarketUpdateReq marketUpdateReq, @PathVariable Long marketId) {
+            @RequestBody @Valid MarketReq marketReq, @PathVariable Long marketId) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_UPDATE.getMessage()
-                        ,marketOwnerService.updateMarket(marketId, marketUpdateReq)));
+                        ,marketOwnerService.updateMarket(marketId, marketReq)));
     }
 
     @Operation(summary = "사장님 매장 이미지 수정", description = "매장의 이미지를 추가,삭제 및 순서 변경을 합니다. <br>" +

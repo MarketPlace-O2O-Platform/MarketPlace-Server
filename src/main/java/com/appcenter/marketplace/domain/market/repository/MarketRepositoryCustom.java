@@ -16,12 +16,12 @@ public interface MarketRepositoryCustom {
 
     List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major);
 
-    List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+    List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
+    List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
 
     // 찜 수가 가장 많은 매장 Top 조회
-    List<TopFavoriteMarketRes> findTopFavoriteMarkets(Long memberId, Integer size);
+    List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size);
 
     List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size);
 

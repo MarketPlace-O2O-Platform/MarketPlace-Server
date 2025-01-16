@@ -13,13 +13,13 @@ public interface MarketService {
 
     MarketPageRes<MarketRes> getMarketPageByAddress(Long memberId, Long marketId, Integer size, String major, String address);
 
+    MarketPageRes<MarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+
     MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name);
 
-    MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size);
+    MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
 
-    MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
-
-    List<TopFavoriteMarketRes> getTopFavoriteMarkets(Long memberId, Integer size);
+    List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size);
 
     List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size);
 

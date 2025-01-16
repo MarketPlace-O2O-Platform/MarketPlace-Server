@@ -6,9 +6,8 @@ import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.market.dto.req.MarketCreateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
-import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
@@ -38,10 +37,10 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public MarketDetailsRes createMarket(MarketCreateReq marketCreateReq, List<MultipartFile> multipartFileList){
-        Category category=findCategoryByMajor(marketCreateReq.getMajor());
+    public MarketDetailsRes createMarket(MarketReq marketReq, List<MultipartFile> multipartFileList){
+        Category category=findCategoryByMajor(marketReq.getMajor());
 
-        StringTokenizer st= new StringTokenizer(marketCreateReq.getAddress());
+        StringTokenizer st= new StringTokenizer(marketReq.getAddress());
 
         // 두 개 이상의 단어가 있을 경우만 처리
         if (st.countTokens() < 2) {
@@ -50,17 +49,17 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
         Local local=localRepository.findByAdress(st.nextToken(),st.nextToken());
 
-        Market market=marketRepository.save(marketCreateReq.toEntity(category,local));
+        Market market=marketRepository.save(marketReq.toEntity(category,local));
         imageService.createImage(market,multipartFileList);
         return marketService.getMarketDetails(market.getId());
     }
 
     @Override
     @Transactional
-    public MarketDetailsRes updateMarket(Long marketId, MarketUpdateReq marketUpdateReq) {
+    public MarketDetailsRes updateMarket(Long marketId, MarketReq marketReq) {
         Market market=findMarketByMarketId(marketId);
-        Category category=findCategoryByMajor(marketUpdateReq.getMajor());
-        market.updateMarketInfo(marketUpdateReq,category);
+        Category category=findCategoryByMajor(marketReq.getMajor());
+        market.updateMarketInfo(marketReq,category);
         return marketService.getMarketDetails(market.getId());
     }
 
