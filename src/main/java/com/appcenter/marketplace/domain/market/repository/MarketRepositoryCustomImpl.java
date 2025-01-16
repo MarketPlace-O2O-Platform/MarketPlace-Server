@@ -74,7 +74,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId))
@@ -102,7 +102,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
@@ -130,7 +130,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
@@ -158,7 +158,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
@@ -168,6 +168,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .limit(size + 1)
                 .fetch();
     }
+
 
     // 회원이 찜한 매장 페이징 조회
     @Override
@@ -189,7 +190,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltFavoriteModifiedAt(lastModifiedAt)) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
@@ -224,7 +225,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
