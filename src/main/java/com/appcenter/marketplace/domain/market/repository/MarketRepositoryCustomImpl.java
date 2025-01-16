@@ -6,8 +6,6 @@ import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -173,9 +171,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 회원이 찜한 매장 페이징 조회
     @Override
-    public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+    public List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
         return jpaQueryFactory
-                .select(new QMyFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -202,11 +200,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 페이징 조회
     @Override
-    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
+    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
 
         return jpaQueryFactory
-                .select(new QFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -238,11 +236,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 Top 조회
     @Override
-    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
+    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
 
         return jpaQueryFactory
-                .select(new QTopFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.thumbnail,

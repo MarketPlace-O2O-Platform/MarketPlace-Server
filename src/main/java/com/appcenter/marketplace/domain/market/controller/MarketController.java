@@ -75,7 +75,7 @@ public class MarketController {
                     "JWT 구현 전 까지는 memberId를 추가해야합니다. <br>" +
                     "최신 찜 순으로 보여줍니다.")
     @GetMapping("/my-favorite")
-    public ResponseEntity<CommonResponse<MarketPageRes<MyFavoriteMarketRes>>> getMemberFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMemberFavoriteMarketList(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 favoriteModifiedAt (e.g. 2024-11-25 11:19:26.378948 )")
             @RequestParam(required = false, name = "lastModifiedAt") LocalDateTime lastModifiedAt,
@@ -90,7 +90,7 @@ public class MarketController {
                     "처음 요청 시엔 pageSize만 필요합니다. 기본값은 10입니다. <br>" +
                     "찜 수가 가장 많은 순으로 보여줍니다.")
     @GetMapping("/favorite")
-    public ResponseEntity<CommonResponse<MarketPageRes<FavoriteMarketRes>>> getTopFavoriteMarketList(
+    public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getTopFavoriteMarketList(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastMarketId") Long marketId,
@@ -106,7 +106,7 @@ public class MarketController {
             description = "사용자들이 가장 많이 찜한 매장 Top을 반환합니다. <br>" +
                     "size의 기본값은 10입니다.")
     @GetMapping("/top-favorite")
-    public ResponseEntity<CommonResponse<List<TopFavoriteMarketRes>>> getTopFavoriteMarketList(
+    public ResponseEntity<CommonResponse<List<MarketRes>>> getTopFavoriteMarketList(
             @RequestParam Long memberId,
             @RequestParam(defaultValue = "10", name = "size") Integer size) {
         return ResponseEntity
