@@ -2,6 +2,8 @@ package com.appcenter.marketplace.domain.tempMarket.service.impl;
 
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
+import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
+import com.appcenter.marketplace.domain.requestMarket.repository.RequestMarketRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
@@ -12,14 +14,13 @@ import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
@@ -27,9 +28,11 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INV
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     private final TempMarketRepository tempMarketRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestMarketRepository requestMarketRepository;
 
     @Value("${tempImage.upload.path}")
     private String imageFolder;
@@ -45,8 +48,12 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         String imageName = saveImage(multipartFile);
         TempMarket market =tempMarketRepository.save(marketReq.toEntity(category, imageName));
 
-        // 요청 매장 삭제 로직 추가 (요청 API 구현 확인 후)
-
+        // 요청 매장 삭제 로직
+        // 요청 매장의 이름이나 주소가 일치하는 매장만 삭제
+        if(requestMarketRepository.existsByName(market.getName()) || requestMarketRepository.existsByAddress(market.getAddress())) {
+            RequestMarket requestMarket = requestMarketRepository.findRequestMarketByName(market.getName());
+            requestMarketRepository.deleteById(requestMarket.getId());
+        }
         return TempMarketDetailRes.toDto(market);
     }
 
@@ -72,14 +79,13 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
-    public List<TempMarketDetailRes> getMarketList() {
-        List<TempMarketDetailRes> tempMarketDetailRes = new ArrayList<>();
+    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size) {
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        List<TempMarket> tempMarketList = tempMarketRepository.findAll();
-        for (TempMarket tempMarket : tempMarketList) {
-            tempMarketDetailRes.add(TempMarketDetailRes.toDto(tempMarket));
-        }
-        return tempMarketDetailRes;
+        Page<TempMarket> tempMarketPage = tempMarketRepository.findAll(pageable);
+
+        return tempMarketPage.map(TempMarketDetailRes::toDto);
     }
 
     @Override

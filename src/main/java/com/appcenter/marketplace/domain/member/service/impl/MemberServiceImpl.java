@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.appcenter.marketplace.global.common.StatusCode.INVALID_STUDENT_ID;
 import static com.appcenter.marketplace.global.common.StatusCode.UNAUTHORIZED_LOGIN_ERROR;
 
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -26,7 +27,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberLoginRes login(MemberLoginReq memberLoginReq) {
         Long studentId = validateAndParseStudentId(memberLoginReq);
 
-        Member existMember = findMemberByMemberId(studentId);
+        Member existMember = memberRepository.findById(studentId).orElse(null);
 
         // 회원 정보 반환
         if( existMember != null){
