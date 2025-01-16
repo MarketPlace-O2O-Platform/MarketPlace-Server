@@ -23,10 +23,10 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
-    public List<CouponMemberRes> getCouponList(Long marketId) {
+    public CouponPageRes<CouponMemberRes> getCouponList(Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
-        List<CouponMemberRes> couponList = couponRepository.findMemberCouponResDtoByMarketId(marketId);
-        return couponList;
+        List<CouponMemberRes> couponList = couponRepository.findCouponsForMemberByMarketId(market.getId(), couponId, size);
+        return checkNextPageAndReturn(couponList, size);
     }
 
     private Market findMarketById(Long marketId) {
@@ -34,4 +34,14 @@ public class CouponServiceImpl implements CouponService {
 
     }
 
+    private <T>CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
+        boolean hasNext = false;
+
+        if(couponList.size() > size){
+            hasNext = true;
+            couponList.remove(size.intValue());
+        }
+
+        return new CouponPageRes<>(couponList, hasNext);
+    }
 }

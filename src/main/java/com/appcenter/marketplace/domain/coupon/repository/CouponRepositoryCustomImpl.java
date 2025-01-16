@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.QCouponMemberRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.QCouponRes;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +20,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 사장님) '숨김처리'에 관계없이 발행한 모든 쿠폰을 확인할 수 있습니다.
     @Override
-    public List<CouponRes> findOwnerCouponResDtoByMarketId(Long marketId) {
+    public List<CouponRes> findCouponsForOwnerByMarketId(Long marketId, Long couponId, Integer size) {
 
         return jpaQueryFactory.select(new QCouponRes(coupon.id,
                         coupon.market.id,
@@ -30,14 +31,17 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.isHidden))
                 .from(coupon)
                 .join(market).on(coupon.market.id.eq(market.id))
-                .where(coupon.market.id.eq(marketId)
+                .where(ltCouponId(couponId)
+                        .and(coupon.market.id.eq(marketId))
                         .and(coupon.isDeleted.eq(false)))
+                .orderBy(coupon.id.desc())
+                .limit(size + 1)
                 .fetch();
     }
 
     // 유저) 사장님이 발행한 쿠폰 중 '공개처리'가 된 쿠폰들만 유저는 리스트에서 확인 가능합니다.
     @Override
-    public List<CouponMemberRes> findMemberCouponResDtoByMarketId(Long marketId) {
+    public List<CouponMemberRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size) {
 
         return jpaQueryFactory.select(new QCouponMemberRes(coupon.id,
                         coupon.name,
@@ -45,10 +49,21 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.deadLine))
                 .from(coupon)
                 .innerJoin(coupon).on(coupon.market.id.eq(market.id))
-                .where(coupon.market.id.eq(marketId)
+                .where(ltCouponId(couponId)
+                        .and(coupon.market.id.eq(marketId))
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false)))
+                .orderBy(coupon.id.desc())
+                .limit(size + 1)
                 .fetch();
 
+    }
+
+    private BooleanBuilder ltCouponId(Long couponId) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if( couponId !=  null){
+            builder.and(coupon.id.lt(couponId));
+        }
+        return builder;
     }
 }
