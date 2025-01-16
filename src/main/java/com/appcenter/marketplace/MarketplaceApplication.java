@@ -9,7 +9,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 
 //@OpenAPIDefinition(servers = {@Server(url = "https://marketplace.inuappcenter.kr", description = "기본 서버 주소")})
 @EnableScheduling // 스케줄링 활성화
-//@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
+@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 @SpringBootApplication
 public class MarketplaceApplication {
 
