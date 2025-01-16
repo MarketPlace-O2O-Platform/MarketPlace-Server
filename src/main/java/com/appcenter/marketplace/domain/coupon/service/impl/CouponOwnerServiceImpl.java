@@ -3,6 +3,7 @@ package com.appcenter.marketplace.domain.coupon.service.impl;
 import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
@@ -40,9 +41,11 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    public List<CouponRes> getCouponList(Long marketId) {
+    public CouponPageRes<CouponRes> getCouponList(Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
-        return couponRepository.findOwnerCouponResDtoByMarketId(market.getId());
+        List<CouponRes> couponResList = couponRepository.findCouponsForOwnerByMarketId(market.getId(), couponId, size);
+
+        return checkNextPageAndReturn(couponResList, size);
     }
 
     @Override
@@ -83,5 +86,16 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
             return coupon;
 
         else throw new CustomException(COUPON_IS_DELETED);
+    }
+
+    private <T> CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
+        boolean hasNext = false;
+
+        if(couponList.size() > size){
+            hasNext = true;
+            couponList.remove(size.intValue());
+        }
+
+        return new CouponPageRes<>(couponList, hasNext);
     }
 }

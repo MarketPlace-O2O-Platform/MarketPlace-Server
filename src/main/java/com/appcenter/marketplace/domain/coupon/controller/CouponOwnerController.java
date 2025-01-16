@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -40,8 +41,11 @@ public class CouponOwnerController {
 
     @Operation(summary = "사장님 매장별 전체 쿠폰 조회", description = "사장님의 특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
     @GetMapping("/coupons")
-    public ResponseEntity<CommonResponse<List<CouponRes>>> getCouponList(@RequestParam(name= "marketId")Long id) {
-        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(id)));
+    public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getCouponList(@RequestParam(name= "marketId")Long marketId,
+                                                                                  @RequestParam(name="couponId", required = false) Long couponId,
+                                                                                  @RequestParam(name="size", defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(marketId, couponId, size)));
     }
 
     @Operation(summary = "사장님 쿠폰 내용 수정", description = "사장님이 생성한 쿠폰의 내용을 수정합니다. " +
