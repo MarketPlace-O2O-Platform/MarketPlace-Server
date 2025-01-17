@@ -6,8 +6,6 @@ import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -76,7 +74,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId))
@@ -104,7 +102,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
@@ -132,7 +130,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
@@ -160,7 +158,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
@@ -171,11 +169,12 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+
     // 회원이 찜한 매장 페이징 조회
     @Override
-    public List<MyFavoriteMarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+    public List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
         return jpaQueryFactory
-                .select(new QMyFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -191,7 +190,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltFavoriteModifiedAt(lastModifiedAt)) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
@@ -202,11 +201,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 페이징 조회
     @Override
-    public List<FavoriteMarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
+    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
 
         return jpaQueryFactory
-                .select(new QFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
@@ -226,7 +225,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(3)))) // 3일 전 보다 크거나 같은 쿠폰
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
@@ -238,11 +237,11 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 찜 수가 가장 많은 매장 Top 조회
     @Override
-    public List<TopFavoriteMarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
+    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
         QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
 
         return jpaQueryFactory
-                .select(new QTopFavoriteMarketRes(
+                .select(new QMarketRes(
                         market.id,
                         market.name,
                         market.thumbnail,

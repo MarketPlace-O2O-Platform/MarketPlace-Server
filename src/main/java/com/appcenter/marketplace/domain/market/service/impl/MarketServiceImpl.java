@@ -8,7 +8,10 @@ import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 public class MarketServiceImpl implements MarketService {
     private final MarketRepository marketRepository;
     private final LocalRepository localRepository;
+    private final EntityManager entityManager;
 
 
     // 매장 상세 정보 조회
@@ -72,25 +76,81 @@ public class MarketServiceImpl implements MarketService {
         return checkNextPageAndReturn(marketResList, size);
     }
 
+    @Override
+    public MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name) {
+        if(name.length()<2)
+            throw new CustomException(MARKET_SEARCH_NAME_INVALID);
+
+        StringBuffer sb = new StringBuffer();
+
+        // SELECT 절
+        sb.append("SELECT ")
+                .append("market.id AS id, ")
+                .append("market.name AS name, ")
+                .append("market.description AS description, ")
+                .append("CONCAT(metropolitan_government.name, ' ', local_government.name) AS location, ")
+                .append("market.thumbnail AS thumbnail, ")
+                .append("(coupon.id IS NOT NULL) AS has_coupon ");
+
+        // FROM 절
+        sb.append("FROM market ")
+                .append("LEFT JOIN coupon ")
+                .append("ON coupon.market_id = market.id ")
+                .append("AND coupon.is_deleted = FALSE ")
+                .append("AND coupon.is_hidden = FALSE ")
+                .append("AND coupon.created_at >= NOW() - INTERVAL 7 DAY ")
+                .append("INNER JOIN local_government ")
+                .append("ON market.local_government_id = local_government.id ")
+                .append("INNER JOIN metropolitan_government ")
+                .append("ON local_government.metropolitan_government_id = metropolitan_government.id ");
+
+        // WHERE 절
+        sb.append("WHERE MATCH(market.name) AGAINST(:name IN NATURAL LANGUAGE MODE) ");
+
+        // marketId 조건 추가
+        if (marketId != null) {
+            sb.append("AND market.id < :marketId ");
+        }
+
+        // ORDER BY 및 LIMIT
+        sb.append("ORDER BY market.id DESC ")
+                .append("LIMIT :size;");
+
+        Query query = entityManager.createNativeQuery(sb.toString())
+                .setParameter("name", name)
+                .setParameter("size", size+1);
+
+        // marketId가 null이 아닐 경우 두 번째 파라미터 설정
+        if (marketId != null) {
+            query.setParameter("marketId", marketId);
+        }
+
+        // qlrm을 사용한 결과 매핑
+        JpaResultMapper resultMapper = new JpaResultMapper();
+        List<MarketSearchRes> marketSearchResDtoList= resultMapper.list(query, MarketSearchRes.class);
+
+        return checkNextPageAndReturn(marketSearchResDtoList, size);
+    }
+
     // 자신이 찜한 매장 리스트 조회
     @Override
-    public MarketPageRes<MyFavoriteMarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
-        List<MyFavoriteMarketRes> marketResDtoList = marketRepository.findMyFavoriteMarketList(memberId, lastModifiedAt, size);
+    public MarketPageRes<MarketRes> getMyFavoriteMarketPage(Long memberId, LocalDateTime lastModifiedAt, Integer size) {
+        List<MarketRes> marketResDtoList = marketRepository.findMyFavoriteMarketList(memberId, lastModifiedAt, size);
 
         return checkNextPageAndReturn(marketResDtoList, size);
     }
 
     // 찜 수가 가장 많은 매장 더보기 조회
     @Override
-    public MarketPageRes<FavoriteMarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
-        List<FavoriteMarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
+    public MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
+        List<MarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
 
         return checkNextPageAndReturn(favoriteMarketResList, size);
     }
 
     // 찜 수가 가장 많은 매장 TOP 조회
     @Override
-    public List<TopFavoriteMarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
+    public List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
         return marketRepository.findTopFavoriteMarkets(memberId, size);
     }
 

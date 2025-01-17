@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.requestMarket.controller;
 
 
-import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
 import com.appcenter.marketplace.domain.requestMarket.dto.req.RequestMarketCreateReq;
 import com.appcenter.marketplace.domain.requestMarket.dto.res.RequestMarketRes;
 import com.appcenter.marketplace.domain.requestMarket.service.RequestMarketService;
@@ -38,7 +37,7 @@ public class RequestMarketController {
             "page의 기본값은 1입니다. <br>"+
             "size의 기본값은 10입니다.")
     @GetMapping
-    public ResponseEntity<CommonResponse<Page<RequestMarket>>> createRequestMarket(
+    public ResponseEntity<CommonResponse<Page<RequestMarketRes>>> createRequestMarket(
             @RequestParam(defaultValue = "1", name = "page") Integer page,
             @RequestParam(defaultValue = "10", name = "size") Integer size) {
         return ResponseEntity

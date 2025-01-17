@@ -49,6 +49,7 @@ public enum StatusCode {
     FILE_DELETE_INVALID(BAD_REQUEST,"파일 삭제 중 오류가 발생했습니다."),
     DATA_INTEGRITY_VIOLATION(BAD_REQUEST,"이미 존재하는 값이거나 필수 필드에 null이 있습니다."),
     MARKET_NOT_DELETED(BAD_REQUEST,"사용자 요청매장과 정보가 일치하지 않아 삭제할 수 없습니다."),
+    MARKET_SEARCH_NAME_INVALID(BAD_REQUEST,"검색어는 2글자 이상 입력해야 합니다."),
 
     /* 401 UNAUTHORIZED : 비인증 사용자 */
     UNAUTHORIZED_LOGIN_ERROR(UNAUTHORIZED, "학번 또는 비밀번호가 올바르지 않습니다."),

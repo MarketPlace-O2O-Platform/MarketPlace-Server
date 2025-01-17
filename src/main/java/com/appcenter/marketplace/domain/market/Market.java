@@ -3,7 +3,7 @@ package com.appcenter.marketplace.domain.market;
 
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.local.Local;
-import com.appcenter.marketplace.domain.market.dto.req.MarketUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -64,13 +64,13 @@ public class Market extends BaseEntity {
         this.local=local;
     }
 
-    public void updateMarketInfo(MarketUpdateReq marketUpdateReq, Category category){
-        this.name = marketUpdateReq.getMarketName();
-        this.description = marketUpdateReq.getDescription();
-        this.operationHours = marketUpdateReq.getOperationHours();
-        this.closedDays = marketUpdateReq.getClosedDays();
-        this.phoneNumber = marketUpdateReq.getPhoneNumber();
-        this.address = marketUpdateReq.getAddress();
+    public void updateMarketInfo(MarketReq marketReq, Category category){
+        this.name = marketReq.getMarketName();
+        this.description = marketReq.getDescription();
+        this.operationHours = marketReq.getOperationHours();
+        this.closedDays = marketReq.getClosedDays();
+        this.phoneNumber = marketReq.getPhoneNumber();
+        this.address = marketReq.getAddress();
         this.category= category;
     }
     public void updateThumbnailPath(String thumbnail){
