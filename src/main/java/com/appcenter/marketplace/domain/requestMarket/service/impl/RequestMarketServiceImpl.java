@@ -41,4 +41,19 @@ public class RequestMarketServiceImpl implements RequestMarketService {
 
         return requestMarketPage.map(RequestMarketRes::from);
     }
+
+    @Override
+    public boolean existRequestMarket(String marketName) {
+        return requestMarketRepository.existsByName(marketName);
+    }
+
+    @Override
+    public void deleteRequestMarket(Long marketId) {
+        requestMarketRepository.deleteById(marketId);
+    }
+
+    @Override
+    public RequestMarket getRequestMarketName(String marketName) {
+        return requestMarketRepository.findRequestMarketByName(marketName);
+    }
 }

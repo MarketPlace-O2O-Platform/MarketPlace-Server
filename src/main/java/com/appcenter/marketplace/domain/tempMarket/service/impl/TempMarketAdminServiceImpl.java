@@ -3,7 +3,7 @@ package com.appcenter.marketplace.domain.tempMarket.service.impl;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
 import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
-import com.appcenter.marketplace.domain.requestMarket.repository.RequestMarketRepository;
+import com.appcenter.marketplace.domain.requestMarket.service.RequestMarketService;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
@@ -32,7 +32,8 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INV
 public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     private final TempMarketRepository tempMarketRepository;
     private final CategoryRepository categoryRepository;
-    private final RequestMarketRepository requestMarketRepository;
+
+    private final RequestMarketService requestMarketService;
 
     @Value("${tempImage.upload.path}")
     private String imageFolder;
@@ -49,11 +50,12 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         TempMarket market =tempMarketRepository.save(marketReq.toEntity(category, imageName));
 
         // 요청 매장 삭제 로직
-        // 요청 매장의 이름이나 주소가 일치하는 매장만 삭제
-        if(requestMarketRepository.existsByName(market.getName()) || requestMarketRepository.existsByAddress(market.getAddress())) {
-            RequestMarket requestMarket = requestMarketRepository.findRequestMarketByName(market.getName());
-            requestMarketRepository.deleteById(requestMarket.getId());
+        // 요청 매장의 이름(unique)가 일치하는 매장만 삭제
+        if(requestMarketService.existRequestMarket(market.getName())){
+            RequestMarket requestMarket = requestMarketService.getRequestMarketName(market.getName());
+            requestMarketService.deleteRequestMarket(requestMarket.getId());
         }
+
         return TempMarketDetailRes.toDto(market);
     }
 
@@ -89,6 +91,12 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
+    public TempMarketDetailRes getMarket(Long marketId) {
+        TempMarket tempMarket = findMarket(marketId);
+        return TempMarketDetailRes.toDto(tempMarket);
+    }
+
+    @Override
     @Transactional
     public TempMarketHiddenRes toggleHidden(Long marketId) {
         TempMarket tempMarket = findMarket(marketId);
@@ -102,6 +110,7 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         TempMarket tempMarket = findMarket(marketId);
         tempMarketRepository.deleteById(tempMarket.getId());
     }
+
 
 
     private Category findCategory(String category) {

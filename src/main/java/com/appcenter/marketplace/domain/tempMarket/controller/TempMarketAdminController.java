@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.tempMarket.controller;
 
-import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketDetailRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
@@ -11,13 +10,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
@@ -25,7 +21,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
 @Tag(name ="[관리자 공감매장]", description = "[관리자] 관리자 공감매장 관리")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/tempMarkets")
+@RequestMapping("/api/admin/temp-markets")
 public class TempMarketAdminController {
     private final TempMarketAdminService tempMarketAdminService;
 
@@ -60,6 +56,12 @@ public class TempMarketAdminController {
             @RequestParam(defaultValue = "10", name = "size") Integer size
     ) {
         return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList(page, size)));
+    }
+
+    @Operation(summary = "매장 정보 상세 조회", description = "매장 정보를 상세 조회합니다.")
+    @GetMapping("/{tempMarketId}")
+    public ResponseEntity<CommonResponse<TempMarketDetailRes>> getTempMarket(@PathVariable Long tempMarketId){
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarket(tempMarketId)));
     }
 
     @Operation(summary = "매장 공개(숨김) 처리", description = "매장을 공개(숨김)처리가 가능합니다." )

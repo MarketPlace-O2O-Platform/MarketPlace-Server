@@ -1,6 +1,6 @@
 package com.appcenter.marketplace.domain.coupon;
 
-import com.appcenter.marketplace.domain.coupon.dto.req.CouponUpdateReq;
+import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -54,11 +54,11 @@ public class Coupon extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public void update(CouponUpdateReq couponUpdateReq) {
-        this.name = couponUpdateReq.getCouponName();
-        this.description = couponUpdateReq.getDescription();
-        this.deadLine = couponUpdateReq.getDeadLine();
-        this.stock = couponUpdateReq.getStock();
+    public void update(CouponReq couponUpReq) {
+        this.name = couponUpReq.getCouponName();
+        this.description = couponUpReq.getDescription();
+        this.deadLine = couponUpReq.getDeadLine();
+        this.stock = couponUpReq.getStock();
     }
 
     public void updateHidden() {

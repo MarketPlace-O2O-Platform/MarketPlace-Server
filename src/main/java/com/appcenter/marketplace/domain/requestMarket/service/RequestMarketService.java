@@ -9,4 +9,10 @@ public interface RequestMarketService {
     RequestMarketRes createRequestMarket(RequestMarketCreateReq requestMarketCreateReq);
 
     Page<RequestMarketRes> getRequestMarkets(Integer page, Integer size);
+
+    boolean existRequestMarket(String marketName);
+
+    void deleteRequestMarket(Long marketId);
+
+    RequestMarket getRequestMarketName(String marketName);
 }

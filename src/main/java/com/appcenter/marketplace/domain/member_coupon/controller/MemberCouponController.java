@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.member_coupon.controller;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.appcenter.marketplace.domain.member_coupon.MemberCouponType.*;
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Tag(name = "[회원 쿠폰]", description = "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인")
@@ -32,31 +34,40 @@ public class MemberCouponController {
     }
 
     @Operation(summary = "사용 가능한 쿠폰 리스트", description = "쿠폰 리스트를 조회하면 기본적으로 조회되는 리스트입니다." +
-                                                    "<br> '사용가능'한 쿠폰 리스트를 의미합니다." )
+                                                    "<br> '사용가능'한 쿠폰 리스트를 의미합니다.<br>" +
+            "무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다." )
     @GetMapping("/valid")
-    public ResponseEntity<CommonResponse<List<IssuedCouponRes>>> getCouponList(@RequestParam(name="memberId")Long memberId){
+    public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getCouponList(@RequestParam(name="memberId")Long memberId,
+                                                                                        @RequestParam(name="memberCouponId", required = false) Long memberCouponId,
+                                                                                        @RequestParam(name="size", defaultValue = "10")Integer size) {
         return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId)));
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId, ISSUED, memberCouponId, size)));
     }
 
     @Operation(summary = "만료된 쿠폰 리스트", description = "기간이 만료된 쿠폰 리스트를 조회합니다." +
                                                  "<br> 조건은 다음과 같습니다." +
-                                                 "1. 쿠폰의 deadLine(만료날짜) 이후여야 합니다." +
-                                                 "2. 쿠폰은 발급받았지만, 사용처리가 되지 않아야 합니다.")
+                                                 "1. 쿠폰의 deadLine(만료날짜) 이후여야 합니다. <br>" +
+                                                 "2. 쿠폰은 발급받았지만, 사용처리가 되지 않아야 합니다. <br>" +
+            "무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다.")
     @GetMapping("/expired")
-    public ResponseEntity<CommonResponse<List<IssuedCouponRes>>> getExpiredCouponList(@RequestParam(name="memberId")Long memberId){
+    public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getExpiredCouponList(@RequestParam(name="memberId")Long memberId,
+                                                                                      @RequestParam(name="memberCouponId", required = false) Long memberCouponId,
+                                                                                      @RequestParam(name="size", defaultValue = "10")Integer size){
         return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getExpiredMemberCouponList(memberId)));
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId, EXPIRED, memberCouponId, size)));
     }
 
     @Operation(summary = "사용완료된 쿠폰 리스트", description = "사용이 완료된 쿠폰 리스트를 조회합니다." +
                                                 "<br> 조건은 다음과 같습니다." +
-                                                "1. 쿠폰을 발급받고, 사용처리가 완료되어야 합니다." +
-                                                "2. 쿠폰의 deadLine(만료날짜)와는 상관이 없습니다.")
+                                                "1. 쿠폰을 발급받고, 사용처리가 완료되어야 합니다.<br>" +
+                                                "2. 쿠폰의 deadLine(만료날짜)와는 상관이 없습니다.<br>" +
+            "무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다.")
     @GetMapping("/used")
-    public ResponseEntity<CommonResponse<List<IssuedCouponRes>>> getUsedCouponList(@RequestParam(name="memberId")Long memberId){
+    public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getUsedCouponList(@RequestParam(name="memberId")Long memberId,
+                                                                                   @RequestParam(name="memberCouponId", required = false) Long memberCouponId,
+                                                                                   @RequestParam(name="size", defaultValue = "10")Integer size){
         return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getUsedMemberCouponList(memberId)));
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId, USED, memberCouponId, size)));
     }
 
     @Operation(summary = "회원 쿠폰 사용처리", description = "회원은 발급받은 memberCouponId로 사용처리를 할 수 있습니다." )

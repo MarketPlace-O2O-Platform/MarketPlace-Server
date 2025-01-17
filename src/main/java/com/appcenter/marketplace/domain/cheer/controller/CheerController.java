@@ -13,7 +13,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.CHEER_SUCCESS;
 @Tag(name = "[공감]", description = "[공감] 임시 매장 공감하기")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cheer")
+@RequestMapping("/api/cheer")
 public class CheerController {
 
     private final CheerService cheerService;

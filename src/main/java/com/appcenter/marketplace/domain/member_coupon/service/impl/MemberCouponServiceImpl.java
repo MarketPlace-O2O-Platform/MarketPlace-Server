@@ -1,10 +1,12 @@
 package com.appcenter.marketplace.domain.member_coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
+import com.appcenter.marketplace.domain.member_coupon.MemberCouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
@@ -40,7 +42,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
         // 회원이 이미 해당 쿠폰을 발급받았는지 확인
         if (!memberCouponRepository.existCouponByMemberId(member.getId(), coupon.getId())) {
-            MemberCoupon memberCoupon = memberCouponRepository.save(MemberCoupon.builder()
+            memberCouponRepository.save(MemberCoupon.builder()
                     .member(member)
                     .coupon(coupon)
                     .isUsed(false)
@@ -54,20 +56,19 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     @Override
     @Transactional
-    public List<IssuedCouponRes> getMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findIssuedCouponResDtoByMemberId);
-    }
+    public CouponPageRes<IssuedCouponRes> getMemberCouponList(Long memberId, MemberCouponType type, Long memberCouponId, Integer size) {
+        List<IssuedCouponRes> couponList;
 
-    @Override
-    @Transactional
-    public List<IssuedCouponRes> getExpiredMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findExpiredCouponResDtoByMemberId);
-    }
+        switch (type) {
+            case EXPIRED ->
+                    couponList = memberCouponRepository.findExpiredCouponResDtoByMemberId(memberId, memberCouponId, size);
+            case USED ->
+                    couponList = memberCouponRepository.findUsedMemberCouponResDtoByMemberId(memberId, memberCouponId, size);
+            default ->
+                    couponList = memberCouponRepository.findIssuedCouponResDtoByMemberId(memberId, memberCouponId, size);
+        };
 
-    @Override
-    @Transactional
-    public List<IssuedCouponRes> getUsedMemberCouponList(Long memberId) {
-        return getMemberCouponList(memberId, memberCouponRepository::findUsedMemberCouponResDtoByMemberId);
+        return checkNextPageAndReturn(couponList, size);
     }
 
     @Override
@@ -84,11 +85,6 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return IssuedCouponRes.toDto(memberCoupon);
     }
 
-    private List<IssuedCouponRes> getMemberCouponList(Long memberId, Function<Long, List<IssuedCouponRes>> findCoupons) {
-        Member member = findMemberById(memberId);
-        return findCoupons.apply(member.getId());
-    }
-
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));
     }
@@ -103,5 +99,16 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     private MemberCoupon findMemberCouponById(Long memberCouponId) {
         return memberCouponRepository.findById(memberCouponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
+    }
+
+    private <T> CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
+        boolean hasNext = false;
+
+        if(couponList.size() > size){
+            hasNext = true;
+            couponList.remove(size.intValue());
+        }
+
+        return new CouponPageRes<>(couponList, hasNext);
     }
 }

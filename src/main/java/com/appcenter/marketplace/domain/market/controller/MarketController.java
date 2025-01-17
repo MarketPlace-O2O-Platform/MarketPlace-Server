@@ -136,7 +136,7 @@ public class MarketController {
     @GetMapping("/top-latest-coupon")
     public ResponseEntity<CommonResponse<List<TopLatestCouponRes>>> getLatestTopCouponList(
             @RequestParam Long memberId,
-            @RequestParam(defaultValue = "10", name = "count") Integer size) {
+            @RequestParam(defaultValue = "10", name = "size") Integer size) {
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopLatestCoupons(memberId, size)));
     }
@@ -152,13 +152,13 @@ public class MarketController {
     public ResponseEntity<CommonResponse<MarketPageRes<LatestCouponRes>>> getLatestMarketByCoupon(
             @RequestParam(required = true) Long memberId,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
-            @RequestParam(required = false, name = "lastPageIndex") Long couponId,
-            @Parameter(description = "위에 작성한 couponId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
+            @RequestParam(required = false, name = "lastPageIndex") Long marketId,
+            @Parameter(description = "위에 작성한 marketId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        marketService.getLatestCouponPage(memberId, lastCreatedAt, couponId, size)));
+                        marketService.getLatestCouponPage(memberId, lastCreatedAt, marketId, size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 TOP 조회",
@@ -167,7 +167,7 @@ public class MarketController {
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/top-closing-coupon")
     public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
-            @RequestParam(defaultValue = "10", name="count") Integer size){
+            @RequestParam(defaultValue = "10", name="size") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 marketService.getTopClosingCoupons(size)));
     }
