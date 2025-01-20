@@ -1,6 +1,6 @@
 package com.appcenter.marketplace.domain.market.dto.res;
 
-import com.querydsl.core.types.dsl.*;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
 
 import com.querydsl.core.types.ConstructorExpression;
 import javax.annotation.processing.Generated;

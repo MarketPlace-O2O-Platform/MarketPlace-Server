@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.market.controller;
 
 
-
 import com.appcenter.marketplace.domain.market.dto.res.*;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
@@ -159,16 +157,5 @@ public class MarketController {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         marketService.getLatestCouponPage(memberId, lastCreatedAt, marketId, size)));
-    }
-
-    @Operation(summary = "마감 임박 쿠폰 TOP 조회",
-            description = "매장별 마감 임박학 쿠폰 1개를 조회하여 보여줍니다. <br>" +
-                    "이때, TOP 5으로 변동해야 할 시, count 로 5을 넣어주시면 됩니다. 기본값은 10개 입니다. <br>" +
-                    "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
-    @GetMapping("/top-closing-coupon")
-    public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
-            @RequestParam(defaultValue = "10", name="size") Integer size){
-        return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                marketService.getTopClosingCoupons(size)));
     }
 }

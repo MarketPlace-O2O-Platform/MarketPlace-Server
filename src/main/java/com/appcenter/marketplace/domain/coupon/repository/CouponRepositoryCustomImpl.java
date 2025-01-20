@@ -1,13 +1,17 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.QCouponMemberRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.QCouponRes;
+import com.appcenter.marketplace.domain.coupon.QCoupon;
+import com.appcenter.marketplace.domain.coupon.dto.res.*;
+import com.appcenter.marketplace.domain.market.dto.res.QTopClosingCouponRes;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
@@ -57,6 +61,43 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .limit(size + 1)
                 .fetch();
 
+    }
+
+    // 마감 임박 쿠폰 TOP 조회
+    @Override
+    public List<TopClosingCouponRes> findTopClosingCoupons(Integer size) {
+
+        QCoupon subCoupon = new QCoupon("subCoupon");
+
+        // 서브쿼리: 각 market_id 그룹별 가장 가까운 deadLine을 구함
+        JPQLQuery<Tuple> subQuery = JPAExpressions
+                .select(subCoupon.market.id, subCoupon.deadLine.min())
+                .from(subCoupon)
+                .innerJoin(subCoupon.market, market)
+                .where(subCoupon.isDeleted.eq(false)
+                        .and(subCoupon.isHidden.eq(false))
+                        .and(subCoupon.stock.gt(0))
+                        .and(subCoupon.deadLine.after(LocalDateTime.now())))
+                .groupBy(subCoupon.market.id)
+                .limit(1);
+
+        return jpaQueryFactory.select(new QTopClosingCouponRes(
+                        market.id,
+                        coupon.id,
+                        market.name,
+                        coupon.name,
+                        coupon.deadLine,
+                        market.thumbnail))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .where(Expressions.list(coupon.market.id, coupon.deadLine).in(subQuery)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.stock.gt(0))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
+                .orderBy(coupon.deadLine.asc(), coupon.id.desc())
+                .limit(size)
+                .fetch();
     }
 
     private BooleanBuilder ltCouponId(Long couponId) {

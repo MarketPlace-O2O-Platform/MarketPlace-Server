@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,16 @@ public class CouponController {
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(marketId, couponId, size)));
     }
 
+    @Operation(summary = "마감 임박 쿠폰 TOP 조회",
+            description = "매장별 마감 임박학 쿠폰 1개를 조회하여 보여줍니다. <br>" +
+                    "이때, TOP 5으로 변동해야 할 시, count 로 5을 넣어주시면 됩니다. 기본값은 10개 입니다. <br>" +
+                    "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
+    @GetMapping("/top-closing-coupon")
+    public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
+            @RequestParam(defaultValue = "10", name="size") Integer size){
+        return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
+                couponService.getTopClosingCoupons(size)));
+    }
 
   
 }

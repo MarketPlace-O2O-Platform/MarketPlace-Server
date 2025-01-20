@@ -29,6 +29,12 @@ public class CouponServiceImpl implements CouponService {
         return checkNextPageAndReturn(couponList, size);
     }
 
+    // 마감 임박 쿠폰 TOP 조회
+    @Override
+    public List<TopClosingCouponRes> getTopClosingCoupons(Integer size) {
+        return marketRepository.findTopClosingCoupons(size);
+    }
+
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
 

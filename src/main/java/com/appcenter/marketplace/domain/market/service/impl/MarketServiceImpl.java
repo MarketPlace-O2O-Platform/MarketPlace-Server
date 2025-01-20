@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.market.service.impl;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
 import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.dto.res.*;
@@ -170,12 +171,6 @@ public class MarketServiceImpl implements MarketService {
             throw new CustomException(MARKET_NOT_EXIST);
 
         return checkNextPageAndReturn(resDtoList, size);
-    }
-
-    // 마감 임박 쿠폰 TOP 조회
-    @Override
-    public List<TopClosingCouponRes> getTopClosingCoupons(Integer size) {
-        return marketRepository.findTopClosingCoupons(size);
     }
 
     private <T> MarketPageRes<T> checkNextPageAndReturn(List<T> marketResDtoList, Integer size) {
