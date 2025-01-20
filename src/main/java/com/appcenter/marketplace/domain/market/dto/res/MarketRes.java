@@ -16,7 +16,7 @@ public class MarketRes {
     private final String thumbnail;
     private Boolean isFavorite;
     private Boolean isNewCoupon;
-    private LocalDateTime favoriteModifedAt;
+    private LocalDateTime favoriteModifiedAt;
 
     // 전체/카테고리 매장 조회
     @QueryProjection
@@ -54,7 +54,7 @@ public class MarketRes {
 
     // 사용자가 찜한 매장 조회
     @QueryProjection
-    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, LocalDateTime favoriteModifedAt) {
+    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, LocalDateTime favoriteModifiedAt) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
@@ -62,7 +62,7 @@ public class MarketRes {
         this.thumbnail = thumbnail;
         this.isFavorite = isFavorite;
         this.isNewCoupon = isNewCoupon;
-        this.favoriteModifedAt = favoriteModifedAt;
+        this.favoriteModifiedAt = favoriteModifiedAt;
     }
 
     // 검색 매장 조회
