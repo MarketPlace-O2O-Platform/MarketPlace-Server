@@ -77,7 +77,7 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name) {
+    public MarketPageRes<MarketRes> searchMarket(Long marketId, Integer size, String name) {
         if(name.length()<2)
             throw new CustomException(MARKET_SEARCH_NAME_INVALID);
 
@@ -127,9 +127,9 @@ public class MarketServiceImpl implements MarketService {
 
         // qlrm을 사용한 결과 매핑
         JpaResultMapper resultMapper = new JpaResultMapper();
-        List<MarketSearchRes> marketSearchResDtoList= resultMapper.list(query, MarketSearchRes.class);
+        List<MarketRes> marketResDtoList= resultMapper.list(query, MarketRes.class);
 
-        return checkNextPageAndReturn(marketSearchResDtoList, size);
+        return checkNextPageAndReturn(marketResDtoList, size);
     }
 
     // 자신이 찜한 매장 리스트 조회

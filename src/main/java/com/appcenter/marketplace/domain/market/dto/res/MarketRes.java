@@ -14,7 +14,7 @@ public class MarketRes {
     private String marketDescription;
     private String address;
     private final String thumbnail;
-    private final Boolean isFavorite;
+    private Boolean isFavorite;
     private Boolean isNewCoupon;
     private Long favoriteCount;
     private LocalDateTime AtParam;
@@ -66,5 +66,17 @@ public class MarketRes {
         this.AtParam = AtParam;
     }
 
-
+    // 검색 매장 조회
+    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Long isNewCoupon) {
+        this.marketId = marketId;
+        this.marketName = marketName;
+        this.marketDescription = marketDescription;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        if (isNewCoupon > 0) { // db에서 Boolean값은 존재하지않아 쿼리결과에서 Long 값을 Boolean값으로 변환해줘야한다.
+            this.isNewCoupon = true;
+        } else {
+            this.isNewCoupon = false;
+        }
+    }
 }
