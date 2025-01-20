@@ -16,8 +16,7 @@ public class MarketRes {
     private final String thumbnail;
     private Boolean isFavorite;
     private Boolean isNewCoupon;
-    private Long favoriteCount;
-    private LocalDateTime AtParam;
+    private LocalDateTime favoriteModifedAt;
 
     // 전체/카테고리 매장 조회
     @QueryProjection
@@ -31,9 +30,31 @@ public class MarketRes {
         this.isNewCoupon = isNewCoupon;
     }
 
-    // 매장 찜순 조회
+//    // 매장 찜순 조회
+//    @QueryProjection
+//    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, Long favoriteCount) {
+//        this.marketId = marketId;
+//        this.marketName = marketName;
+//        this.marketDescription = marketDescription;
+//        this.address = address;
+//        this.thumbnail = thumbnail;
+//        this.isFavorite = isFavorite;
+//        this.isNewCoupon = isNewCoupon;
+//        this.favoriteCount = favoriteCount;
+//    }
+//
+//    // TOP 5 매장 찜 순 조회
+//    @QueryProjection
+//    public MarketRes(Long marketId, String marketName, String thumbnail, Boolean isFavorite) {
+//        this.marketId = marketId;
+//        this.marketName = marketName;
+//        this.thumbnail = thumbnail;
+//        this.isFavorite = isFavorite;
+//    }
+
+    // 사용자가 찜한 매장 조회
     @QueryProjection
-    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, Long favoriteCount) {
+    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, LocalDateTime favoriteModifedAt) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
@@ -41,29 +62,7 @@ public class MarketRes {
         this.thumbnail = thumbnail;
         this.isFavorite = isFavorite;
         this.isNewCoupon = isNewCoupon;
-        this.favoriteCount = favoriteCount;
-    }
-
-    // TOP 5 매장 찜 순 조회
-    @QueryProjection
-    public MarketRes(Long marketId, String marketName, String thumbnail, Boolean isFavorite) {
-        this.marketId = marketId;
-        this.marketName = marketName;
-        this.thumbnail = thumbnail;
-        this.isFavorite = isFavorite;
-    }
-
-    // 사용자가 찜한 매장 조회/ 최신 쿠폰 순 매장 조회
-    @QueryProjection
-    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Boolean isFavorite, Boolean isNewCoupon, LocalDateTime AtParam) {
-        this.marketId = marketId;
-        this.marketName = marketName;
-        this.marketDescription = marketDescription;
-        this.address = address;
-        this.thumbnail = thumbnail;
-        this.isFavorite = isFavorite;
-        this.isNewCoupon = isNewCoupon;
-        this.AtParam = AtParam;
+        this.favoriteModifedAt = favoriteModifedAt;
     }
 
     // 검색 매장 조회

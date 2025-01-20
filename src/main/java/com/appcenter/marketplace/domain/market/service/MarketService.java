@@ -17,9 +17,9 @@ public interface MarketService {
 
     MarketPageRes<MarketRes> searchMarket(Long marketId, Integer size, String name);
 
-    MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
-
-    List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size);
+//    MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size);
+//
+//    List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size);
 
     List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size);
 

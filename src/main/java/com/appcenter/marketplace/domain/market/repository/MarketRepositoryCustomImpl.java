@@ -112,6 +112,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 주소별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size) {
         return jpaQueryFactory
@@ -140,6 +141,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 주소&카테고리 별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major) {
         return jpaQueryFactory
@@ -199,63 +201,63 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
-    // 찜 수가 가장 많은 매장 페이징 조회
-    @Override
-    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
-
-        return jpaQueryFactory
-                .select(new QMarketRes(
-                        market.id,
-                        market.name,
-                        market.description,
-                        metro.name.concat(" ").concat(local.name),
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull(),
-                        coupon.id.isNotNull(),
-                        favorite.id.count()))
-                .from(market)
-                // 모든 사용자 기준 찜 데이터 JOIN
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)))
-                // 특정 사용자의 찜 여부 확인을 위한 JOIN
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.isDeleted.eq(false)
-                        .and(favoriteMember.member.id.eq(memberId))))
-                .leftJoin(coupon).on(coupon.market.eq(market)
-                        .and(coupon.isDeleted.eq(false))
-                        .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
-                .having(loeFavoriteCountAndLtMarketId(count,marketId))
-                .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
-                .limit(size+1) // 반환할 리스트 크기 제한
-                .fetch(); // 결과 반환
-    }
-
-    // 찜 수가 가장 많은 매장 Top 조회
-    @Override
-    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
-
-        return jpaQueryFactory
-                .select(new QMarketRes(
-                        market.id,
-                        market.name,
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull()))
-                .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)))
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.isDeleted.eq(false)
-                                .and(favoriteMember.member.id.eq(memberId))))
-                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
-                .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
-                .fetch();
-    }
+//    // 찜 수가 가장 많은 매장 페이징 조회
+//    @Override
+//    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
+//        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+//
+//        return jpaQueryFactory
+//                .select(new QMarketRes(
+//                        market.id,
+//                        market.name,
+//                        market.description,
+//                        metro.name.concat(" ").concat(local.name),
+//                        market.thumbnail,
+//                        favoriteMember.id.isNotNull(),
+//                        coupon.id.isNotNull(),
+//                        favorite.id.count()))
+//                .from(market)
+//                // 모든 사용자 기준 찜 데이터 JOIN
+//                .leftJoin(favorite).on(market.eq(favorite.market)
+//                        .and(favorite.isDeleted.eq(false)))
+//                // 특정 사용자의 찜 여부 확인을 위한 JOIN
+//                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+//                        .and(favoriteMember.isDeleted.eq(false)
+//                        .and(favoriteMember.member.id.eq(memberId))))
+//                .leftJoin(coupon).on(coupon.market.eq(market)
+//                        .and(coupon.isDeleted.eq(false))
+//                        .and(coupon.isHidden.eq(false))
+//                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
+//                .innerJoin(local).on(market.local.eq(local))
+//                .innerJoin(metro).on(local.metro.eq(metro))
+//                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
+//                .having(loeFavoriteCountAndLtMarketId(count,marketId))
+//                .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
+//                .limit(size+1) // 반환할 리스트 크기 제한
+//                .fetch(); // 결과 반환
+//    }
+//
+//    // 찜 수가 가장 많은 매장 Top 조회
+//    @Override
+//    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
+//        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+//
+//        return jpaQueryFactory
+//                .select(new QMarketRes(
+//                        market.id,
+//                        market.name,
+//                        market.thumbnail,
+//                        favoriteMember.id.isNotNull()))
+//                .from(market)
+//                .leftJoin(favorite).on(market.eq(favorite.market)
+//                        .and(favorite.isDeleted.eq(false)))
+//                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+//                        .and(favoriteMember.isDeleted.eq(false)
+//                                .and(favoriteMember.member.id.eq(memberId))))
+//                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
+//                .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
+//                .fetch();
+//    }
 
     // 최신 등록 쿠폰 TOP 조회
     @Override

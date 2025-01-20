@@ -140,19 +140,19 @@ public class MarketServiceImpl implements MarketService {
         return checkNextPageAndReturn(marketResDtoList, size);
     }
 
-    // 찜 수가 가장 많은 매장 더보기 조회
-    @Override
-    public MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
-        List<MarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
-
-        return checkNextPageAndReturn(favoriteMarketResList, size);
-    }
-
-    // 찜 수가 가장 많은 매장 TOP 조회
-    @Override
-    public List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
-        return marketRepository.findTopFavoriteMarkets(memberId, size);
-    }
+//    // 찜 수가 가장 많은 매장 더보기 조회
+//    @Override
+//    public MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
+//        List<MarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
+//
+//        return checkNextPageAndReturn(favoriteMarketResList, size);
+//    }
+//
+//    // 찜 수가 가장 많은 매장 TOP 조회
+//    @Override
+//    public List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
+//        return marketRepository.findTopFavoriteMarkets(memberId, size);
+//    }
 
 
     // 최신 등록 쿠폰 TOP 조회
