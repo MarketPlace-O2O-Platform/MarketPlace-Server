@@ -1,9 +1,7 @@
 package com.appcenter.marketplace.domain.market.repository;
 
-import com.appcenter.marketplace.domain.market.dto.res.LatestCouponRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketRes;
-import com.appcenter.marketplace.domain.market.dto.res.TopLatestCouponRes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,10 +23,6 @@ public interface MarketRepositoryCustom {
 //
 //    // 찜 수가 가장 많은 매장 Top 조회
 //    List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size);
-
-    List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size);
-
-    List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
     
 }
 

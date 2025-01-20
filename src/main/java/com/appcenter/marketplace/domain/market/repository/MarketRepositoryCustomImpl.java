@@ -1,9 +1,11 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.coupon.QCoupon;
-import com.appcenter.marketplace.domain.favorite.QFavorite;
 import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
-import com.appcenter.marketplace.domain.market.dto.res.*;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
+import com.appcenter.marketplace.domain.market.dto.res.MarketRes;
+import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsRes;
+import com.appcenter.marketplace.domain.market.dto.res.QMarketRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -259,75 +261,6 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 //                .fetch();
 //    }
 
-    // 최신 등록 쿠폰 TOP 조회
-    @Override
-    public List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember");
-
-        BooleanBuilder whereClause = booleanBuilderSubQuery();
-
-        return  jpaQueryFactory
-                .select(new QTopLatestCouponRes(
-                        market.id,
-                        coupon.id,
-                        market.name,
-                        coupon.name,
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull()
-                ))
-                .from(coupon)
-                .innerJoin(coupon.market, market)
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.member.id.eq(memberId))
-                        .and(favoriteMember.isDeleted.eq(false)))
-                .where(whereClause)
-                .orderBy(coupon.createdAt.desc()) // 최신순 정렬
-                .limit(size)
-                .fetch();
-    }
-
-    // 최신 등록 쿠폰의 매장 페이징 조회
-    @Override
-    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember");
-
-        BooleanBuilder whereClause = booleanBuilderSubQuery();
-
-        if (lastCreatedAt != null && lastCouponId != null) {
-            whereClause.and(coupon.modifiedAt.loe(lastCreatedAt)  // 같거나 더 이른 시간으로 계산 ( == loe)( 더 먼저 등록된 쿠폰)
-                    .and(coupon.modifiedAt.eq(lastCreatedAt).not()
-                            .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
-        }
-
-        // booleanTemplate -> 결과에서 coupon.createdAt.goe(LocalDateTime.now().minusDays(7)) 와 같은 문은 변환과정에서 오류가 남.
-        // CASE 조건절로 해결
-        return jpaQueryFactory
-                .select(new QLatestCouponRes(
-                        market.id,
-                        market.name,
-                        market.description,
-                        metro.name.concat(" ").concat(local.name),
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull(),
-                        Expressions.booleanTemplate(
-                                "CASE WHEN {0} >= {1} THEN true ELSE false END",
-                                coupon.createdAt,
-                                LocalDateTime.now().minusDays(7)
-                        ),
-                        coupon.createdAt
-                ))
-                .from(coupon)
-                .innerJoin(coupon.market, market)
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.member.id.eq(memberId))
-                        .and(favoriteMember.isDeleted.eq(false)))
-                .where(whereClause)
-                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
-                .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
-                .fetch();
-    }
 
     // BooleanExpression을 반환 시 where의 첫 조건에서 null 예외가 뜰 수 있다.
     // lt= less than = <(~보다 작은)

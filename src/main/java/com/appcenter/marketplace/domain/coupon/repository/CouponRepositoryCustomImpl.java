@@ -1,6 +1,8 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
+import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.QLatestCouponRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
+import static com.appcenter.marketplace.domain.local.QLocal.local;
 import static com.appcenter.marketplace.domain.market.QMarket.market;
+import static com.appcenter.marketplace.domain.metro.QMetro.metro;
 
 @RequiredArgsConstructor
 public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
@@ -57,6 +61,28 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     }
 
+    // 최신 등록 쿠폰의 매장 페이징 조회
+    @Override
+    public List<LatestCouponRes> findLatestCouponList(LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
+        return jpaQueryFactory
+                .select(new QLatestCouponRes(
+                        coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        coupon.createdAt
+                ))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
+                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
+                .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
+                .fetch();
+    }
+
     // 마감 임박 쿠폰 조회
     @Override
     public List<ClosingCouponRes> findClosingCouponList(Integer size) {
@@ -74,7 +100,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         .and(coupon.stock.gt(0))
                         .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.deadLine.asc(), coupon.id.desc())
-                .limit(size+1)
+                .limit(size)
                 .fetch();
     }
 
