@@ -1,6 +1,5 @@
 package com.appcenter.marketplace.domain.market.service.impl;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
 import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.dto.res.*;

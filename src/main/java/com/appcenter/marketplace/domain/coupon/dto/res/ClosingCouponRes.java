@@ -6,21 +6,21 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class TopClosingCouponRes {
-    private final Long marketId;
+public class ClosingCouponRes {
     private final Long couponId;
-    private final String marketName;
     private final String couponName;
     private final LocalDateTime deadline;
+    private final Long marketId;
+    private final String marketName;
     private final String thumbnail;
 
     @QueryProjection
-    public TopClosingCouponRes(Long marketId, Long couponId, String marketName, String couponName, LocalDateTime deadline, String thumbnail) {
-        this.marketId = marketId;
+    public ClosingCouponRes(Long couponId, String couponName, LocalDateTime deadline, Long marketId, String marketName, String thumbnail) {
         this.couponId = couponId;
-        this.marketName = marketName;
         this.couponName = couponName;
         this.deadline = deadline;
+        this.marketId = marketId;
+        this.marketName = marketName;
         this.thumbnail = thumbnail;
     }
 }

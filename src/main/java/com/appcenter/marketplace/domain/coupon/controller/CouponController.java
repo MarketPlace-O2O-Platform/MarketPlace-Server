@@ -1,8 +1,8 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.ClosingCouponRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 
@@ -44,10 +42,10 @@ public class CouponController {
                     "처음 요청 시엔 pageSize만 필요합니다. 기본값은 10입니다. <br>" +
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/closing")
-    public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingTopCouponList(
+    public ResponseEntity<CommonResponse<CouponPageRes<ClosingCouponRes>>> getClosingTopCouponList(
             @RequestParam(defaultValue = "10", name="pageSize") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                couponService.getTopClosingCoupons(size)));
+                couponService.getClosingCouponPage(size)));
     }
 
   

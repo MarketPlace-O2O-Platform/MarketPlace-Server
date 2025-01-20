@@ -9,5 +9,5 @@ public interface CouponRepositoryCustom {
 
     List<CouponMemberRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size);
 
-    List<TopClosingCouponRes> findTopClosingCoupons(Integer size);
+    List<ClosingCouponRes> findClosingCouponList(Integer size);
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
@@ -22,7 +23,6 @@ public class CouponServiceImpl implements CouponService {
     private final MarketRepository marketRepository;
 
     @Override
-    @Transactional
     public CouponPageRes<CouponMemberRes> getCouponList(Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
         List<CouponMemberRes> couponList = couponRepository.findCouponsForMemberByMarketId(market.getId(), couponId, size);
@@ -31,8 +31,9 @@ public class CouponServiceImpl implements CouponService {
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<TopClosingCouponRes> getTopClosingCoupons(Integer size) {
-        return marketRepository.findTopClosingCoupons(size);
+    public CouponPageRes<ClosingCouponRes> getClosingCouponPage(Integer size) {
+        List<ClosingCouponRes> closingCouponList =couponRepository.findClosingCouponList(size);
+        return checkNextPageAndReturn(closingCouponList,size());
     }
 
     private Market findMarketById(Long marketId) {

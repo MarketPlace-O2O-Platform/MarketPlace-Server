@@ -17,8 +17,8 @@ public class QMarketRes extends ConstructorExpression<MarketRes> {
         super(MarketRes.class, new Class<?>[]{long.class, String.class, String.class, String.class, String.class, boolean.class, boolean.class}, marketId, marketName, marketDescription, address, thumbnail, isFavorite, isNewCoupon);
     }
 
-    public QMarketRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> marketDescription, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<Boolean> isFavorite, com.querydsl.core.types.Expression<Boolean> isNewCoupon, com.querydsl.core.types.Expression<java.time.LocalDateTime> favoriteModifedAt) {
-        super(MarketRes.class, new Class<?>[]{long.class, String.class, String.class, String.class, String.class, boolean.class, boolean.class, java.time.LocalDateTime.class}, marketId, marketName, marketDescription, address, thumbnail, isFavorite, isNewCoupon, favoriteModifedAt);
+    public QMarketRes(com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> marketDescription, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<Boolean> isFavorite, com.querydsl.core.types.Expression<Boolean> isNewCoupon, com.querydsl.core.types.Expression<java.time.LocalDateTime> favoriteModifiedAt) {
+        super(MarketRes.class, new Class<?>[]{long.class, String.class, String.class, String.class, String.class, boolean.class, boolean.class, java.time.LocalDateTime.class}, marketId, marketName, marketDescription, address, thumbnail, isFavorite, isNewCoupon, favoriteModifiedAt);
     }
 
 }
