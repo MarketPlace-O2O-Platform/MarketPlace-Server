@@ -78,6 +78,10 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .innerJoin(coupon.market, market)
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
+                .where(coupon.isDeleted.eq(false)
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.stock.gt(0))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
                 .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
                 .fetch();
