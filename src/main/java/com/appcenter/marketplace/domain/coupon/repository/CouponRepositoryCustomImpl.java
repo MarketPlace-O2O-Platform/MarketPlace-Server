@@ -23,7 +23,6 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     public List<CouponRes> findCouponsForOwnerByMarketId(Long marketId, Long couponId, Integer size) {
 
         return jpaQueryFactory.select(new QCouponRes(coupon.id,
-                        coupon.market.id,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,

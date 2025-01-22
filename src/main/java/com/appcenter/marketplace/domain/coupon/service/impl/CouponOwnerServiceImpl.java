@@ -58,10 +58,9 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    public CouponHiddenRes updateCouponHidden(Long couponId) {
+    public void updateCouponHidden(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.updateHidden();
-        return CouponHiddenRes.toDto(coupon);
     }
 
     @Override

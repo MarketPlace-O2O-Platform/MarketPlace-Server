@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
@@ -12,8 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -58,8 +55,9 @@ public class CouponOwnerController {
 
     @Operation(summary = "숨김/공개 처리 기능", description = "사장님은 생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.")
     @PutMapping("/coupons/hidden/{couponId}")
-    public ResponseEntity<CommonResponse<CouponHiddenRes>> hiddenCoupon(@PathVariable Long couponId) {
-        return ResponseEntity.status(COUPON_HIDDEN.getStatus()).body(CommonResponse.from(COUPON_HIDDEN.getMessage(),couponService.updateCouponHidden(couponId)));
+    public ResponseEntity<CommonResponse<Object>> hiddenCoupon(@PathVariable Long couponId) {
+        couponService.updateCouponHidden(couponId);
+        return ResponseEntity.status(COUPON_HIDDEN.getStatus()).body(CommonResponse.from(COUPON_HIDDEN.getMessage()));
     }
 
     @Operation(summary = "사장님 쿠폰 삭제", description = "사장님은 쿠폰을 삭제할 수 있습니다. " +
