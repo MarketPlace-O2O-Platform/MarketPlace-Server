@@ -1,8 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
-import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.QLatestCouponRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +76,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .innerJoin(coupon.market, market)
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(coupon.isDeleted.eq(false)
+                .where(loeCreateAtAndLtCouponId(lastCreatedAt,lastCouponId)
+                        .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
                         .and(coupon.stock.gt(0))
                         .and(coupon.deadLine.after(LocalDateTime.now())))
@@ -114,5 +113,17 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
             builder.and(coupon.id.lt(couponId));
         }
         return builder;
+    }
+
+    private BooleanBuilder loeCreateAtAndLtCouponId(LocalDateTime createdAt, Long couponId){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (createdAt != null && couponId!=null) {
+            builder.and(coupon.createdAt.loe(createdAt));
+
+            // A or B,둘중 하나의 조건만 만족하면 true
+            builder.and(coupon.createdAt.lt(createdAt).or(coupon.id.lt(couponId)));
+        }
+        return builder;
+
     }
 }

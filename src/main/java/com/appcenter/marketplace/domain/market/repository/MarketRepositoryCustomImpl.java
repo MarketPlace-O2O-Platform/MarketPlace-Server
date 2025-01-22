@@ -273,21 +273,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     }
 
-    // loe= less or equal = <=(~보다 작거나 같은)
-    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
-        BooleanBuilder builder = new BooleanBuilder();
-        if (count != null && marketId!=null) {
-            builder.and(favorite.id.count().loe(count));
-
-            // A or B 여서 둘중 하나의 조건만 만족하면 true
-            // count보다 작으면. A가 true이기 때문에 B는 실행되지않음
-            // A가 false이면 market.id 필터링한 행들만 true
-            // 따라서 favorite.id.count()가 count와 같을 때만 market.id 필터링
-            builder.and(favorite.id.count().lt(count).or(market.id.lt(marketId)));
-        }
-        return builder;
-
-    }
+//    // loe= less or equal = <=(~보다 작거나 같은)
+//    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
+//        BooleanBuilder builder = new BooleanBuilder();
+//        if (count != null && marketId!=null) {
+//            builder.and(favorite.id.count().loe(count));
+//
+//            // A or B 여서 둘중 하나의 조건만 만족하면 true
+//            // count보다 작으면. A가 true이기 때문에 B는 실행되지않음
+//            // A가 false이면 market.id 필터링한 행들만 true
+//            // 따라서 favorite.id.count()가 count와 같을 때만 market.id 필터링
+//            builder.and(favorite.id.count().lt(count).or(market.id.lt(marketId)));
+//        }
+//        return builder;
+//
+//    }
 
     private BooleanBuilder ltFavoriteModifiedAt(LocalDateTime modifiedAt){
         BooleanBuilder builder = new BooleanBuilder();

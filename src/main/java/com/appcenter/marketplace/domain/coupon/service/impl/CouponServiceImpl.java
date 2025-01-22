@@ -36,9 +36,6 @@ public class CouponServiceImpl implements CouponService {
     public CouponPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
         List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(lastCreatedAt, lastCouponId, size);
 
-        if (resDtoList.isEmpty())
-            throw new CustomException(MARKET_NOT_EXIST);
-
         return checkNextPageAndReturn(resDtoList, size);
     }
 
