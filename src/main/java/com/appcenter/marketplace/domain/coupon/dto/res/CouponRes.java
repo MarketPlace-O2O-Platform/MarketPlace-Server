@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CouponRes {
     private final Long couponId;
     private final String couponName;
