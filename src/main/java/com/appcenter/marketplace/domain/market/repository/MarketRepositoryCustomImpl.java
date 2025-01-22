@@ -1,9 +1,11 @@
 package com.appcenter.marketplace.domain.market.repository;
 
 import com.appcenter.marketplace.domain.coupon.QCoupon;
-import com.appcenter.marketplace.domain.favorite.QFavorite;
 import com.appcenter.marketplace.domain.image.dto.res.QImageRes;
-import com.appcenter.marketplace.domain.market.dto.res.*;
+import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
+import com.appcenter.marketplace.domain.market.dto.res.MarketRes;
+import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsRes;
+import com.appcenter.marketplace.domain.market.dto.res.QMarketRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -112,6 +114,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 주소별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size) {
         return jpaQueryFactory
@@ -140,6 +143,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
+    // 주소&카테고리 별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major) {
         return jpaQueryFactory
@@ -199,170 +203,63 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
-    // 찜 수가 가장 많은 매장 페이징 조회
-    @Override
-    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
-
-        return jpaQueryFactory
-                .select(new QMarketRes(
-                        market.id,
-                        market.name,
-                        market.description,
-                        metro.name.concat(" ").concat(local.name),
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull(),
-                        coupon.id.isNotNull(),
-                        favorite.id.count()))
-                .from(market)
-                // 모든 사용자 기준 찜 데이터 JOIN
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)))
-                // 특정 사용자의 찜 여부 확인을 위한 JOIN
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.isDeleted.eq(false)
-                        .and(favoriteMember.member.id.eq(memberId))))
-                .leftJoin(coupon).on(coupon.market.eq(market)
-                        .and(coupon.isDeleted.eq(false))
-                        .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
-                .having(loeFavoriteCountAndLtMarketId(count,marketId))
-                .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
-                .limit(size+1) // 반환할 리스트 크기 제한
-                .fetch(); // 결과 반환
-    }
-
-    // 찜 수가 가장 많은 매장 Top 조회
-    @Override
-    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
-
-        return jpaQueryFactory
-                .select(new QMarketRes(
-                        market.id,
-                        market.name,
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull()))
-                .from(market)
-                .leftJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)))
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.isDeleted.eq(false)
-                                .and(favoriteMember.member.id.eq(memberId))))
-                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
-                .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
-                .fetch();
-    }
-
-    // 최신 등록 쿠폰 TOP 조회
-    @Override
-    public List<TopLatestCouponRes> findTopLatestCoupons(Long memberId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember");
-
-        BooleanBuilder whereClause = booleanBuilderSubQuery();
-
-        return  jpaQueryFactory
-                .select(new QTopLatestCouponRes(
-                        market.id,
-                        coupon.id,
-                        market.name,
-                        coupon.name,
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull()
-                ))
-                .from(coupon)
-                .innerJoin(coupon.market, market)
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.member.id.eq(memberId))
-                        .and(favoriteMember.isDeleted.eq(false)))
-                .where(whereClause)
-                .orderBy(coupon.createdAt.desc()) // 최신순 정렬
-                .limit(size)
-                .fetch();
-    }
-
-    // 최신 등록 쿠폰의 매장 페이징 조회
-    @Override
-    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        QFavorite favoriteMember = new QFavorite("favoriteMember");
-
-        BooleanBuilder whereClause = booleanBuilderSubQuery();
-
-        if (lastCreatedAt != null && lastCouponId != null) {
-            whereClause.and(coupon.modifiedAt.loe(lastCreatedAt)  // 같거나 더 이른 시간으로 계산 ( == loe)( 더 먼저 등록된 쿠폰)
-                    .and(coupon.modifiedAt.eq(lastCreatedAt).not()
-                            .or(coupon.id.lt(lastCouponId)))); // 같은 시간일 경우 -> ID 정렬을 기준으로 다음 id를 보여줌. (페이징 처리이므로 다음 정보를 보여줘야함)
-        }
-
-        // booleanTemplate -> 결과에서 coupon.createdAt.goe(LocalDateTime.now().minusDays(7)) 와 같은 문은 변환과정에서 오류가 남.
-        // CASE 조건절로 해결
-        return jpaQueryFactory
-                .select(new QLatestCouponRes(
-                        market.id,
-                        market.name,
-                        market.description,
-                        metro.name.concat(" ").concat(local.name),
-                        market.thumbnail,
-                        favoriteMember.id.isNotNull(),
-                        Expressions.booleanTemplate(
-                                "CASE WHEN {0} >= {1} THEN true ELSE false END",
-                                coupon.createdAt,
-                                LocalDateTime.now().minusDays(7)
-                        ),
-                        coupon.createdAt
-                ))
-                .from(coupon)
-                .innerJoin(coupon.market, market)
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
-                        .and(favoriteMember.member.id.eq(memberId))
-                        .and(favoriteMember.isDeleted.eq(false)))
-                .where(whereClause)
-                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
-                .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
-                .fetch();
-    }
-
-    // 마감 임박 쿠폰 TOP 조회
-    @Override
-    public List<TopClosingCouponRes> findTopClosingCoupons(Integer size) {
-
-        QCoupon subCoupon = new QCoupon("subCoupon");
-
-        // 서브쿼리: 각 market_id 그룹별 가장 가까운 deadLine을 구함
-        JPQLQuery<Tuple> subQuery = JPAExpressions
-                .select(subCoupon.market.id, subCoupon.deadLine.min())
-                .from(subCoupon)
-                .innerJoin(subCoupon.market, market)
-                .where(subCoupon.isDeleted.eq(false)
-                        .and(subCoupon.isHidden.eq(false))
-                        .and(subCoupon.stock.gt(0))
-                        .and(subCoupon.deadLine.after(LocalDateTime.now())))
-                .groupBy(subCoupon.market.id)
-                .limit(1);
-
-        return jpaQueryFactory.select(new QTopClosingCouponRes(
-                        market.id,
-                        coupon.id,
-                        market.name,
-                        coupon.name,
-                        coupon.deadLine,
-                        market.thumbnail))
-                .from(coupon)
-                .innerJoin(coupon.market, market)
-                .where(Expressions.list(coupon.market.id, coupon.deadLine).in(subQuery)
-                        .and(coupon.isDeleted.eq(false))
-                        .and(coupon.isHidden.eq(false))
-                        .and(coupon.stock.gt(0))
-                        .and(coupon.deadLine.after(LocalDateTime.now())))
-                .orderBy(coupon.deadLine.asc(), coupon.id.desc())
-                .limit(size)
-                .fetch();
-    }
+//    // 찜 수가 가장 많은 매장 페이징 조회
+//    @Override
+//    public List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size) {
+//        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+//
+//        return jpaQueryFactory
+//                .select(new QMarketRes(
+//                        market.id,
+//                        market.name,
+//                        market.description,
+//                        metro.name.concat(" ").concat(local.name),
+//                        market.thumbnail,
+//                        favoriteMember.id.isNotNull(),
+//                        coupon.id.isNotNull(),
+//                        favorite.id.count()))
+//                .from(market)
+//                // 모든 사용자 기준 찜 데이터 JOIN
+//                .leftJoin(favorite).on(market.eq(favorite.market)
+//                        .and(favorite.isDeleted.eq(false)))
+//                // 특정 사용자의 찜 여부 확인을 위한 JOIN
+//                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+//                        .and(favoriteMember.isDeleted.eq(false)
+//                        .and(favoriteMember.member.id.eq(memberId))))
+//                .leftJoin(coupon).on(coupon.market.eq(market)
+//                        .and(coupon.isDeleted.eq(false))
+//                        .and(coupon.isHidden.eq(false))
+//                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
+//                .innerJoin(local).on(market.local.eq(local))
+//                .innerJoin(metro).on(local.metro.eq(metro))
+//                .groupBy(market.id, market.name, market.description, metro.name, local.name, market.thumbnail,favoriteMember.id, coupon.id)
+//                .having(loeFavoriteCountAndLtMarketId(count,marketId))
+//                .orderBy(favorite.id.count().desc(),market.id.desc()) // 찜 수가 많은 순으로 정렬
+//                .limit(size+1) // 반환할 리스트 크기 제한
+//                .fetch(); // 결과 반환
+//    }
+//
+//    // 찜 수가 가장 많은 매장 Top 조회
+//    @Override
+//    public List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size) {
+//        QFavorite favoriteMember = new QFavorite("favoriteMember"); // 해당 사용자의 각 매장의 찜 여부 확인을 위한 별칭 생성
+//
+//        return jpaQueryFactory
+//                .select(new QMarketRes(
+//                        market.id,
+//                        market.name,
+//                        market.thumbnail,
+//                        favoriteMember.id.isNotNull()))
+//                .from(market)
+//                .leftJoin(favorite).on(market.eq(favorite.market)
+//                        .and(favorite.isDeleted.eq(false)))
+//                .leftJoin(favoriteMember).on(market.eq(favoriteMember.market)
+//                        .and(favoriteMember.isDeleted.eq(false)
+//                                .and(favoriteMember.member.id.eq(memberId))))
+//                .groupBy(market.id, market.name, market.thumbnail,favoriteMember.id)
+//                .orderBy(favorite.id.count().desc()) // 찜 수가 많은 순으로 정렬
+//                .fetch();
+//    }
 
 
     // BooleanExpression을 반환 시 where의 첫 조건에서 null 예외가 뜰 수 있다.
@@ -376,21 +273,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     }
 
-    // loe= less or equal = <=(~보다 작거나 같은)
-    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
-        BooleanBuilder builder = new BooleanBuilder();
-        if (count != null && marketId!=null) {
-            builder.and(favorite.id.count().loe(count));
-
-            // A or B 여서 둘중 하나의 조건만 만족하면 true
-            // count보다 작으면. A가 true이기 때문에 B는 실행되지않음
-            // A가 false이면 market.id 필터링한 행들만 true
-            // 따라서 favorite.id.count()가 count와 같을 때만 market.id 필터링
-            builder.and(favorite.id.count().lt(count).or(market.id.lt(marketId)));
-        }
-        return builder;
-
-    }
+//    // loe= less or equal = <=(~보다 작거나 같은)
+//    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
+//        BooleanBuilder builder = new BooleanBuilder();
+//        if (count != null && marketId!=null) {
+//            builder.and(favorite.id.count().loe(count));
+//
+//            // A or B 여서 둘중 하나의 조건만 만족하면 true
+//            // count보다 작으면. A가 true이기 때문에 B는 실행되지않음
+//            // A가 false이면 market.id 필터링한 행들만 true
+//            // 따라서 favorite.id.count()가 count와 같을 때만 market.id 필터링
+//            builder.and(favorite.id.count().lt(count).or(market.id.lt(marketId)));
+//        }
+//        return builder;
+//
+//    }
 
     private BooleanBuilder ltFavoriteModifiedAt(LocalDateTime modifiedAt){
         BooleanBuilder builder = new BooleanBuilder();
