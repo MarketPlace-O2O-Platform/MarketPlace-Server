@@ -40,9 +40,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 유저) 사장님이 발행한 쿠폰 중 '공개처리'가 된 쿠폰들만 유저는 리스트에서 확인 가능합니다.
     @Override
-    public List<CouponMemberRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size) {
+    public List<CouponRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size) {
 
-        return jpaQueryFactory.select(new QCouponMemberRes(coupon.id,
+        return jpaQueryFactory.select(new QCouponRes(coupon.id,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine))

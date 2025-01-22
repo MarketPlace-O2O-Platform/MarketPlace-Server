@@ -25,9 +25,9 @@ public class CouponServiceImpl implements CouponService {
     private final MarketRepository marketRepository;
 
     @Override
-    public CouponPageRes<CouponMemberRes> getCouponList(Long marketId, Long couponId, Integer size) {
+    public CouponPageRes<CouponRes> getCouponList(Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
-        List<CouponMemberRes> couponList = couponRepository.findCouponsForMemberByMarketId(market.getId(), couponId, size);
+        List<CouponRes> couponList = couponRepository.findCouponsForMemberByMarketId(market.getId(), couponId, size);
         return checkNextPageAndReturn(couponList, size);
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface CouponRepositoryCustom {
     List<CouponRes> findCouponsForOwnerByMarketId(Long marketId, Long couponId, Integer size);
 
-    List<CouponMemberRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size);
+    List<CouponRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size);
 
     List<LatestCouponRes> findLatestCouponList(LocalDateTime createdAt, Long couponId, Integer size);
 

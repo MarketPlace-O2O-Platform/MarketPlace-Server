@@ -1,8 +1,8 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.ClosingCouponRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponMemberRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
@@ -34,7 +34,7 @@ public class CouponController {
                                                      "매장 상세 정보에서 조회가 이루어집니다. <br> " +
             "couponId는 다음 페이징 처리를 위해 사용되는 파라미터 입니다.")
     @GetMapping
-    public ResponseEntity<CommonResponse<CouponPageRes<CouponMemberRes>>> getCouponList(
+    public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getCouponList(
             @RequestParam(name= "marketId")Long marketId,
             @RequestParam(name="couponId", required = false) Long couponId,
             @RequestParam(name="size", defaultValue = "10") Integer size

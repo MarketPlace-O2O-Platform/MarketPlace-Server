@@ -13,8 +13,8 @@ public class CouponRes {
     private final String couponName;
     private final String couponDescription;
     private final LocalDateTime deadLine;
-    private final int stock;
-    private final boolean isHidden;
+    private int stock;
+    private boolean isHidden;
 
     @QueryProjection
     @Builder
@@ -25,6 +25,14 @@ public class CouponRes {
         this.deadLine = deadLine;
         this.stock = stock;
         this.isHidden = isHidden;
+    }
+
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.couponDescription = couponDescription;
+        this.deadLine = deadLine;
     }
 
     public static CouponRes toDto(Coupon coupon){
