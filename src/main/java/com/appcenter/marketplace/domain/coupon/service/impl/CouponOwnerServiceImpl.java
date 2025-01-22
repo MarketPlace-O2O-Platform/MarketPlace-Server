@@ -2,7 +2,6 @@ package com.appcenter.marketplace.domain.coupon.service.impl;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponHiddenRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
@@ -18,6 +17,7 @@ import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CouponOwnerServiceImpl implements CouponOwnerService {
@@ -34,13 +34,11 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     }
 
     @Override
-    @Transactional
     public CouponRes getCoupon(Long couponId) {
         return CouponRes.toDto(findCouponById(couponId));
     }
 
     @Override
-    @Transactional
     public CouponPageRes<CouponRes> getCouponList(Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
         List<CouponRes> couponResList = couponRepository.findCouponsForOwnerByMarketId(market.getId(), couponId, size);
