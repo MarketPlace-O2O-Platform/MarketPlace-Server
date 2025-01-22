@@ -16,11 +16,11 @@ public class CouponRes {
     private final String couponDescription;
     private final LocalDateTime deadLine;
     private int stock;
-    private boolean isHidden;
+    private Boolean isHidden;
 
     @QueryProjection
     @Builder
-    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, int stock, boolean isHidden) {
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, int stock, Boolean isHidden) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.couponDescription = couponDescription;
