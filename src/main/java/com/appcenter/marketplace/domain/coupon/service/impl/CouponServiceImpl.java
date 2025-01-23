@@ -33,8 +33,8 @@ public class CouponServiceImpl implements CouponService {
 
     // 최신 등록 쿠폰의 매장 더보기 조회
     @Override
-    public CouponPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(lastCreatedAt, lastCouponId, size);
+    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
+        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, lastCouponId, size);
 
         return checkNextPageAndReturn(resDtoList, size);
     }

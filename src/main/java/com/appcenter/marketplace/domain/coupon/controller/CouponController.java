@@ -50,6 +50,7 @@ public class CouponController {
     )
     @GetMapping("/latest")
     public ResponseEntity<CommonResponse<CouponPageRes<LatestCouponRes>>> getLatestMarketByCoupon(
+            @RequestParam Long memberId,
             @Parameter(description = "위에 작성한 marketId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
@@ -57,7 +58,7 @@ public class CouponController {
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        couponService.getLatestCouponPage(lastCreatedAt, couponId,size)));
+                        couponService.getLatestCouponPage(memberId, lastCreatedAt, couponId,size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 리스트",

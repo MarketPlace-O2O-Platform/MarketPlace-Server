@@ -11,7 +11,7 @@ public interface CouponRepositoryCustom {
 
     List<CouponRes> findCouponsForMemberByMarketId(Long memberId, Long marketId, Long couponId, Integer size);
 
-    List<LatestCouponRes> findLatestCouponList(LocalDateTime createdAt, Long couponId, Integer size);
+    List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
 
     List<ClosingCouponRes> findClosingCouponList(Integer size);
 }

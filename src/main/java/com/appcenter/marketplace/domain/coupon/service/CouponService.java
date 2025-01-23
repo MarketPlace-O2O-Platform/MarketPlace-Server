@@ -12,7 +12,7 @@ public interface CouponService {
 
    CouponPageRes<CouponRes> getCouponList(Long memberId, Long marketId, Long couponId, Integer size);
 
-   CouponPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime createdAt, Long couponId, Integer size);
+   CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
 
    List<ClosingCouponRes> getClosingCouponPage(Integer size);
 }
