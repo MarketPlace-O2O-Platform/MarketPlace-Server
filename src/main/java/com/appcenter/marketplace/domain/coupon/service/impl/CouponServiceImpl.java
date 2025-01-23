@@ -25,16 +25,16 @@ public class CouponServiceImpl implements CouponService {
     private final MarketRepository marketRepository;
 
     @Override
-    public CouponPageRes<CouponMemberRes> getCouponList(Long marketId, Long couponId, Integer size) {
+    public CouponPageRes<CouponRes> getCouponList(Long memberId, Long marketId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
-        List<CouponMemberRes> couponList = couponRepository.findCouponsForMemberByMarketId(market.getId(), couponId, size);
+        List<CouponRes> couponList = couponRepository.findCouponsForMemberByMarketId(memberId, market.getId(), couponId, size);
         return checkNextPageAndReturn(couponList, size);
     }
 
     // 최신 등록 쿠폰의 매장 더보기 조회
     @Override
-    public CouponPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(lastCreatedAt, lastCouponId, size);
+    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
+        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, lastCouponId, size);
 
         return checkNextPageAndReturn(resDtoList, size);
     }
