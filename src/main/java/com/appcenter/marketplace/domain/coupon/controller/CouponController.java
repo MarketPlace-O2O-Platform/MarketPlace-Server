@@ -35,12 +35,13 @@ public class CouponController {
             "couponId는 다음 페이징 처리를 위해 사용되는 파라미터 입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getCouponList(
-            @RequestParam(name= "marketId")Long marketId,
-            @RequestParam(name="couponId", required = false) Long couponId,
-            @RequestParam(name="size", defaultValue = "10") Integer size
+            @RequestParam Long memberId,
+            @RequestParam Long marketId,
+            @RequestParam(required = false) Long couponId,
+            @RequestParam(defaultValue = "10") Integer size
     ) {
         return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(marketId, couponId, size)));
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(memberId, marketId, couponId, size)));
     }
 
     @Operation(summary = "최신 등록 쿠폰 조회",

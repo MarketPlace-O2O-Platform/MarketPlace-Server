@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CouponService {
 
-   CouponPageRes<CouponRes> getCouponList(Long marketId, Long couponId, Integer size);
+   CouponPageRes<CouponRes> getCouponList(Long memberId, Long marketId, Long couponId, Integer size);
 
    CouponPageRes<LatestCouponRes> getLatestCouponPage(LocalDateTime createdAt, Long couponId, Integer size);
 

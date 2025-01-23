@@ -11,6 +11,7 @@ import java.util.List;
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
 import static com.appcenter.marketplace.domain.local.QLocal.local;
 import static com.appcenter.marketplace.domain.market.QMarket.market;
+import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 import static com.appcenter.marketplace.domain.metro.QMetro.metro;
 
 @RequiredArgsConstructor
@@ -40,16 +41,19 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 유저) 사장님이 발행한 쿠폰 중 '공개처리'가 된 쿠폰들만 유저는 리스트에서 확인 가능합니다.
     @Override
-    public List<CouponRes> findCouponsForMemberByMarketId(Long marketId, Long couponId, Integer size) {
+    public List<CouponRes> findCouponsForMemberByMarketId(Long memberId, Long marketId, Long couponId, Integer size) {
 
         return jpaQueryFactory.select(new QCouponRes(coupon.id,
                         coupon.name,
                         coupon.description,
-                        coupon.deadLine))
+                        coupon.deadLine,
+                        coupon.stock.gt(0),
+                        memberCoupon.id.isNotNull()))
                 .from(coupon)
-                .innerJoin(coupon).on(coupon.market.id.eq(market.id))
-                .where(ltCouponId(couponId)
-                        .and(coupon.market.id.eq(marketId))
+                .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon)
+                        .and(memberCoupon.member.id.eq(memberId)))
+                .where(coupon.market.id.eq(marketId)
+                        .and(ltCouponId(couponId))
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false)))
                 .orderBy(coupon.id.desc())
