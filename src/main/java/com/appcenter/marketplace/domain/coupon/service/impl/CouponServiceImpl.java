@@ -33,8 +33,8 @@ public class CouponServiceImpl implements CouponService {
 
     // 최신 등록 쿠폰의 매장 더보기 조회
     @Override
-    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, lastCouponId, size);
+    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, Integer size) {
+        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
 
         return checkNextPageAndReturn(resDtoList, size);
     }
@@ -42,6 +42,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
         List<PopularCouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
+        return checkNextPageAndReturn(resDtoList, size);
     }
 
     // 마감 임박 쿠폰 TOP 조회

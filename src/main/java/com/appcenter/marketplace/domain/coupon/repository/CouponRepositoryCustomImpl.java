@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
+import com.appcenter.marketplace.domain.member_coupon.QMemberCoupon;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -93,6 +94,45 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<PopularCouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size) {
+        QMemberCoupon issuedCoupon = new QMemberCoupon("issuedCoupon"); //해당 사용자의 각 쿠폰의 발급 여부 확인을 위한 별칭 생성
+        return jpaQueryFactory
+                .select(new QPopularCouponRes(
+                        coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        coupon.stock.gt(0),
+                        issuedCoupon.id.isNotNull(),
+                        memberCoupon.id.count()))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .innerJoin(local).on(market.local.eq(local))
+                .innerJoin(metro).on(local.metro.eq(metro))
+                .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon))
+                .leftJoin(issuedCoupon).on(coupon.eq(issuedCoupon.coupon)
+                        .and(issuedCoupon.member.id.eq(memberId)))
+                .where(coupon.isDeleted.eq(false)
+                    .and(coupon.isHidden.eq(false))
+                    .and(coupon.deadLine.after(LocalDateTime.now())))
+                .groupBy(coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        metro.name,
+                        local.name,
+                        market.thumbnail,
+                        coupon.stock,
+                        issuedCoupon.id)
+                .having(loeIssuedCountAndLtCouponId(count,couponId))
+                .orderBy(memberCoupon.id.count().desc(), coupon.id.desc()) // 최신순 정렬
+                .limit(size + 1) // 다음 페이지 여부 확인용 1개 추가 조회
+                .fetch();
+    }
+
     // 마감 임박 쿠폰 조회
     @Override
     public List<ClosingCouponRes> findClosingCouponList(Integer size) {
@@ -129,6 +169,18 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
             // A or B,둘중 하나의 조건만 만족하면 true
             builder.and(coupon.createdAt.lt(createdAt).or(coupon.id.lt(couponId)));
+        }
+        return builder;
+
+    }
+
+    private BooleanBuilder loeIssuedCountAndLtCouponId(Long count, Long couponId){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (count != null && couponId!=null) {
+            builder.and(memberCoupon.id.count().loe(count));
+
+            // A or B,둘중 하나의 조건만 만족하면 true
+            builder.and(memberCoupon.id.count().lt(count).or(coupon.id.lt(couponId)));
         }
         return builder;
 
