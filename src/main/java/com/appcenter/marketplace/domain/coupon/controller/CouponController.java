@@ -1,9 +1,6 @@
 package com.appcenter.marketplace.domain.coupon.controller;
 
-import com.appcenter.marketplace.domain.coupon.dto.res.ClosingCouponRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
-import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +64,7 @@ public class CouponController {
                     "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>"
     )
     @GetMapping("/popular")
-    public ResponseEntity<CommonResponse<CouponPageRes<LatestCouponRes>>> getPopularCoupon(
+    public ResponseEntity<CommonResponse<CouponPageRes<PopularCouponRes>>> getPopularCoupon(
             @RequestParam Long memberId,
             @Parameter(description = "페이지의 마지막 issuedCount")
             @RequestParam(required = false, name = "lastIssuedCount") Long count,
@@ -76,7 +73,7 @@ public class CouponController {
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        couponService.getLatestCouponPage(memberId, count, couponId,size)));
+                        couponService.getPopularCouponPage(memberId, count, couponId,size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 리스트",

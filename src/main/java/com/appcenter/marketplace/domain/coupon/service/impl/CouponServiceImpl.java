@@ -39,6 +39,11 @@ public class CouponServiceImpl implements CouponService {
         return checkNextPageAndReturn(resDtoList, size);
     }
 
+    @Override
+    public CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
+        List<PopularCouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
+    }
+
     // 마감 임박 쿠폰 TOP 조회
     @Override
     public List<ClosingCouponRes> getClosingCouponPage(Integer size) {
