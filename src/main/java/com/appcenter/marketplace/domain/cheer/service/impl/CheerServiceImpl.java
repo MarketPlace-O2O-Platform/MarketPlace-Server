@@ -26,28 +26,16 @@ public class CheerServiceImpl implements CheerService {
 
     @Override
     @Transactional
-    public void toggleCheerStatus(Long memberId, Long marketId) {
+    public void cheerTempMarket(Long memberId, Long marketId) {
         TempMarket tempMarket = tempMarketRepository.findById(marketId).orElseThrow(()-> new CustomException(MARKET_NOT_EXIST));
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CustomException(MEMBER_NOT_EXIST));
 
         Optional<Cheer> isCheer = cheerRepository.findByMemberIdAndTempMarketId(memberId, marketId);
 
-        if (isCheer.isPresent()) {
-            Cheer cheer = isCheer.get();
-            cheer.toggleIsDeleted();
-
-            if (cheer.getIsDeleted()) {
-                tempMarket.decreaseCheerCount();
-            } else {
-                tempMarket.increaseCheerCount();
-                member.reduceTicket();
-            }
-
-        }else{
+        if(!isCheer.isPresent()){
             Cheer cheer = Cheer.builder()
                     .member(member)
                     .tempMarket(tempMarket)
-                    .isDeleted(false)
                     .build();
 
             cheerRepository.save(cheer);

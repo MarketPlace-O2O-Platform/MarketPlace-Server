@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,36 +9,48 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CouponRes {
     private final Long couponId;
-    private final Long marketId;
     private final String couponName;
-    private final String description;
+    private final String couponDescription;
     private final LocalDateTime deadLine;
-    private final int stock;
-    private final boolean isHidden;
+    private Integer stock;
+    private Boolean isHidden;
+    private Boolean isAvailable;
+    private Boolean isMemberIssued;
 
+    // 사장님 매장 쿠폰 페이징 조회
     @QueryProjection
     @Builder
-    public CouponRes(Long couponId, Long marketId, String couponName, String description, LocalDateTime deadLine, int stock, boolean isHidden) {
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Integer stock, Boolean isHidden) {
         this.couponId = couponId;
         this.couponName = couponName;
-        this.description = description;
+        this.couponDescription = couponDescription;
         this.deadLine = deadLine;
         this.stock = stock;
         this.isHidden = isHidden;
-        this.marketId = marketId;
+    }
+
+    // 매장 별 쿠폰 페이징 조회
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Boolean isAvailable, Boolean isMemberIssued) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.couponDescription = couponDescription;
+        this.deadLine = deadLine;
+        this.isAvailable= isAvailable;
+        this.isMemberIssued= isMemberIssued;
     }
 
     public static CouponRes toDto(Coupon coupon){
         return CouponRes.builder()
                 .couponId(coupon.getId())
                 .couponName(coupon.getName())
-                .description(coupon.getDescription())
+                .couponDescription(coupon.getDescription())
                 .deadLine(coupon.getDeadLine())
                 .stock(coupon.getStock())
                 .isHidden(coupon.getIsHidden())
-                .marketId(coupon.getMarket().getId())
                 .build();
     }
 

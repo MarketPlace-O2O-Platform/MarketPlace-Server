@@ -77,7 +77,7 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public MarketPageRes<MarketSearchRes> searchMarket(Long marketId, Integer size, String name) {
+    public MarketPageRes<MarketRes> searchMarket(Long marketId, Integer size, String name) {
         if(name.length()<2)
             throw new CustomException(MARKET_SEARCH_NAME_INVALID);
 
@@ -127,9 +127,9 @@ public class MarketServiceImpl implements MarketService {
 
         // qlrm을 사용한 결과 매핑
         JpaResultMapper resultMapper = new JpaResultMapper();
-        List<MarketSearchRes> marketSearchResDtoList= resultMapper.list(query, MarketSearchRes.class);
+        List<MarketRes> marketResDtoList= resultMapper.list(query, MarketRes.class);
 
-        return checkNextPageAndReturn(marketSearchResDtoList, size);
+        return checkNextPageAndReturn(marketResDtoList, size);
     }
 
     // 자신이 찜한 매장 리스트 조회
@@ -140,43 +140,19 @@ public class MarketServiceImpl implements MarketService {
         return checkNextPageAndReturn(marketResDtoList, size);
     }
 
-    // 찜 수가 가장 많은 매장 더보기 조회
-    @Override
-    public MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
-        List<MarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
-
-        return checkNextPageAndReturn(favoriteMarketResList, size);
-    }
-
-    // 찜 수가 가장 많은 매장 TOP 조회
-    @Override
-    public List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
-        return marketRepository.findTopFavoriteMarkets(memberId, size);
-    }
-
-
-    // 최신 등록 쿠폰 TOP 조회
-    @Override
-    public List<TopLatestCouponRes> getTopLatestCoupons(Long memberId, Integer size) {
-        return marketRepository.findTopLatestCoupons(memberId, size);
-    }
-
-    // 최신 등록 쿠폰의 매장 더보기 조회
-    @Override
-    public MarketPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
-        List<LatestCouponRes> resDtoList = marketRepository.findLatestCouponList(memberId, lastCreatedAt, lastCouponId, size);
-
-        if (resDtoList.isEmpty())
-            throw new CustomException(MARKET_NOT_EXIST);
-
-        return checkNextPageAndReturn(resDtoList, size);
-    }
-
-    // 마감 임박 쿠폰 TOP 조회
-    @Override
-    public List<TopClosingCouponRes> getTopClosingCoupons(Integer size) {
-        return marketRepository.findTopClosingCoupons(size);
-    }
+//    // 찜 수가 가장 많은 매장 더보기 조회
+//    @Override
+//    public MarketPageRes<MarketRes> getFavoriteMarketPage(Long memberId, Long marketId, Long count, Integer size) {
+//        List<MarketRes> favoriteMarketResList = marketRepository.findFavoriteMarketList(memberId, marketId, count, size);
+//
+//        return checkNextPageAndReturn(favoriteMarketResList, size);
+//    }
+//
+//    // 찜 수가 가장 많은 매장 TOP 조회
+//    @Override
+//    public List<MarketRes> getTopFavoriteMarkets(Long memberId, Integer size) {
+//        return marketRepository.findTopFavoriteMarkets(memberId, size);
+//    }
 
     private <T> MarketPageRes<T> checkNextPageAndReturn(List<T> marketResDtoList, Integer size) {
         boolean hasNext = false;

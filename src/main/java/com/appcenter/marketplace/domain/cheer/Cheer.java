@@ -27,17 +27,10 @@ public class Cheer extends BaseEntity {
     @JoinColumn(name = "temp_market_id", nullable = false)
     private TempMarket tempMarket;
 
-    @Column(nullable = false)
-    private Boolean isDeleted;
-
     @Builder
-    public Cheer(Member member, TempMarket tempMarket, Boolean isDeleted) {
+    public Cheer(Member member, TempMarket tempMarket) {
         this.member = member;
         this.tempMarket = tempMarket;
-        this.isDeleted = isDeleted;
     }
 
-    public void toggleIsDeleted() {
-        this.isDeleted = !this.isDeleted;
-    }
 }

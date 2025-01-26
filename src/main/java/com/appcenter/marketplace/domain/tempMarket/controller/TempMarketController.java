@@ -5,12 +5,16 @@ import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.service.TempMarketService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.appcenter.marketplace.global.common.StatusCode.*;
+import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
 
 @Tag(name = "[회원 공감매장]", description = "[회원] 공감매장 조회")
 @RestController
@@ -47,5 +51,21 @@ public class TempMarketController {
     ) {
         return ResponseEntity.status(MARKET_FOUND.getStatus())
                 .body(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getUpcomingNearMarketList(memberId, tempMarketId, cheerCount, size)));
+    }
+
+    @Operation(summary = "검색 매장 조회",
+            description = "처음 요청 시, lastPageIndex는 필요하지 않습니다. <br>" +
+                    "최신순으로 보여줍니다.")
+    @GetMapping("/search")
+    public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> searchMarket(
+            @RequestParam Long memberId,
+            @Parameter(description = "페이지의 마지막 marketId")
+            @RequestParam(required = false, name = "lastPageIndex") Long marketId,
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
+            @RequestParam String name)
+    {
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage()
+                        ,tempMarketService.searchMarket(memberId, marketId, size,name)));
     }
 }
