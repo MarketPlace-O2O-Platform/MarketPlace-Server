@@ -13,6 +13,8 @@ import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRep
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.function.Function;
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberCouponServiceImpl implements MemberCouponService {
 
@@ -46,6 +49,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
                     .member(member)
                     .coupon(coupon)
                     .isUsed(false)
+                    .isExpired(false)
                     .build());
             coupon.reduce();
 
@@ -71,6 +75,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return checkNextPageAndReturn(couponList, size);
     }
 
+    // 쿠폰 사용처리
     @Override
     @Transactional
     public CouponHandleRes updateCoupon(Long memberCouponId) {
@@ -84,6 +89,22 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
         return IssuedCouponRes.toDto(memberCoupon);
     }
+
+    // 발급 쿠폰 3일뒤 만료 처리
+    @Scheduled(cron = "${schedule.cheerTicket.cron}", zone="Asia/Seoul")
+    @Transactional
+    @Override
+    public void check3DaysCoupons() {
+        try{
+            long result = memberCouponRepository.expired3DaysCoupons();
+            log.info("Scheduler : 발급 쿠폰 3일 후 만료 처리(총 {}행)", result);
+
+        }catch (Exception e){
+            log.error("MemberCouponService.check3DaysCoupons: {} 에러 발생", e.getMessage());
+        }
+    }
+
+
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));
