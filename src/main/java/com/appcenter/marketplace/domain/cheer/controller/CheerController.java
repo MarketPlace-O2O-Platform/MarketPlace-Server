@@ -18,13 +18,13 @@ public class CheerController {
 
     private final CheerService cheerService;
 
-    @Operation(summary = "공감탭 매장 공감하기", description = "매장을 공감하고 공감을 취소합니다. ")
+    @Operation(summary = "공감탭 매장 공감하기", description = "임시 매장을 공감합니다. ")
     @PostMapping
     public ResponseEntity<CommonResponse<Object>> createCheer(
             @RequestParam Long memberId,
             @RequestParam Long tempMarketId
     ){
-        cheerService.toggleCheerStatus(memberId, tempMarketId);
+        cheerService.cheerTempMarket(memberId, tempMarketId);
         return ResponseEntity.ok(CommonResponse.from(CHEER_SUCCESS.getMessage()));
     }
 }

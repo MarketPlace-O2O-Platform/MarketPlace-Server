@@ -3,10 +3,8 @@ package com.appcenter.marketplace.domain.coupon.dto.res;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
-public class LatestCouponRes {
+public class PopularCouponRes {
     private final Long couponId;
     private final String couponName;
     private final Long marketId;
@@ -15,10 +13,10 @@ public class LatestCouponRes {
     private final String thumbnail;
     private final Boolean isAvailable;
     private final Boolean isMemberIssued;
-    private final LocalDateTime CouponCreatedAt;
+    private final Long issuedCount;
 
     @QueryProjection
-    public LatestCouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, LocalDateTime couponCreatedAt) {
+    public PopularCouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, Long issuedCount) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.marketId = marketId;
@@ -27,6 +25,6 @@ public class LatestCouponRes {
         this.thumbnail = thumbnail;
         this.isAvailable = isAvailable;
         this.isMemberIssued = isMemberIssued;
-        CouponCreatedAt = couponCreatedAt;
+        this.issuedCount = issuedCount;
     }
 }
