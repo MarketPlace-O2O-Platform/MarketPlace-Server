@@ -91,20 +91,16 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     }
 
     // 발급 쿠폰 3일뒤 만료 처리
-    @Scheduled(cron = "${schedule.cheerTicket.cron}", zone="Asia/Seoul")
     @Transactional
     @Override
     public void check3DaysCoupons() {
-        try{
-            long result = memberCouponRepository.expired3DaysCoupons();
-            log.info("Scheduler : 발급 쿠폰 3일 후 만료 처리(총 {}행)", result);
-
-        }catch (Exception e){
-            log.error("MemberCouponService.check3DaysCoupons: {} 에러 발생", e.getMessage());
-        }
+        memberCouponRepository.check3DaysCoupons();
     }
 
-
+    @Override
+    public void checkExpiredCoupons() {
+        memberCouponRepository.checkExpiredCoupons();
+    }
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));

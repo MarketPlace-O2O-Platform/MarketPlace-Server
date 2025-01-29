@@ -59,11 +59,22 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
 
     // 3일 후 유효한지 체크
     @Override
-    public long expired3DaysCoupons(){
-        return jpaQueryFactory
+    public void check3DaysCoupons(){
+        jpaQueryFactory
                 .update(memberCoupon)
                 .set(memberCoupon.isExpired, true)
                 .where(memberCoupon.createdAt.before(LocalDateTime.now().minusDays(3))
+                        .and(memberCoupon.isUsed.eq(false)))
+                .execute();
+    }
+
+    // 쿠폰 기간이 만료되었는지 체크
+    @Override
+    public void checkExpiredCoupons(){
+         jpaQueryFactory
+                .update(memberCoupon)
+                .set(memberCoupon.isExpired, true)
+                .where(memberCoupon.coupon.deadLine.before(LocalDateTime.now())
                         .and(memberCoupon.isUsed.eq(false)))
                 .execute();
     }

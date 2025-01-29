@@ -10,6 +10,6 @@ public interface MemberCouponRepositoryCustom {
     List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
     List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
     List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
-
-    long expired3DaysCoupons();
+    void check3DaysCoupons();
+    void checkExpiredCoupons();
 }

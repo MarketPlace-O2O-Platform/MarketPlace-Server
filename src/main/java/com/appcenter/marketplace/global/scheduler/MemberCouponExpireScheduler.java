@@ -22,4 +22,13 @@ public class MemberCouponExpireScheduler {
         }
     }
 
+    // 쿠폰의 deadLine이 넘어가면 만료
+    @Scheduled(cron = "${schedule.cron.run-daily}", zone = "Asia/Seoul")
+    public void checkExpireCoupons() {
+        try{
+            memberCouponService.checkExpiredCoupons();
+        }catch(Exception e){
+            log.error("MemberCouponExpireScheduler.checkExpireCoupons: {} 에러 발생", e.getMessage());
+        }
+    }
 }

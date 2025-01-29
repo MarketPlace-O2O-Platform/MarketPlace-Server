@@ -12,4 +12,5 @@ public interface MemberCouponService {
     CouponHandleRes updateCoupon(Long memberCouponId);
     IssuedCouponRes getMemberCoupon(Long memberCouponId);
     void check3DaysCoupons();
+    void checkExpiredCoupons();
 }
