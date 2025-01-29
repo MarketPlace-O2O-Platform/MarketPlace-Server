@@ -98,6 +98,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     }
 
     @Override
+    @Transactional
     public void checkExpiredCoupons() {
         memberCouponRepository.checkExpiredCoupons();
     }
