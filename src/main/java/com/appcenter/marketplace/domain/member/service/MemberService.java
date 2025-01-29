@@ -6,4 +6,5 @@ import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 public interface MemberService {
     MemberLoginRes login(MemberLoginReq memberLoginReq);
     MemberLoginRes getMember(Long studentId);
+    long resetCheerTickets();
 }

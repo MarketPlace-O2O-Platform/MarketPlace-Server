@@ -32,9 +32,5 @@ public class Member extends BaseEntity {
     public void reduceTicket() {
         this.cheerTicket--;
     }
-
-    public void resetTicket() {
-        this.cheerTicket = 1;
-    }
 }
 
