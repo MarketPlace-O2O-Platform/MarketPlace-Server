@@ -50,6 +50,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
                     .coupon(coupon)
                     .isUsed(false)
                     .isExpired(false)
+                    .isDeleted(false)
                     .build());
             coupon.reduce();
 
