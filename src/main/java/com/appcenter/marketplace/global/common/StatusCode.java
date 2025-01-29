@@ -31,7 +31,7 @@ public enum StatusCode {
     FAVORITE_CREATE(CREATED,"찜 생성(취소) 완료"),
 
     // Cheer
-    CHEER_SUCCESS(OK, "공감 확인(취소) 완료"),
+    CHEER_SUCCESS(OK, "공감 확인 완료"),
 
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
@@ -67,7 +67,9 @@ public enum StatusCode {
 
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
-    COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다.");
+    COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
+    TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다.");
+
 
 
     private final HttpStatus status;
