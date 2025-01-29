@@ -51,7 +51,7 @@ public class Market extends BaseEntity {
     @JoinColumn(name = "local_government_id", nullable = false)
     private Local local;
 
-    @Column(nullable = false)
+    @Column(name= "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Builder
