@@ -37,6 +37,8 @@ public class QMarket extends EntityPathBase<Market> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final com.appcenter.marketplace.domain.local.QLocal local;
 
     //inherited
