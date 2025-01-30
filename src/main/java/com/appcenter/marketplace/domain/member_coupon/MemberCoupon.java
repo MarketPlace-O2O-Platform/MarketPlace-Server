@@ -33,23 +33,15 @@ public class MemberCoupon extends BaseEntity {
     @JoinColumn(name = "coupon_id", nullable = false)
     private Coupon coupon;
 
-    @Column(name= "is_deleted", nullable = false)
-    private Boolean isDeleted;
-
     @Builder
-    public MemberCoupon(Member member, Coupon coupon, Boolean isUsed, Boolean isExpired, Boolean isDeleted) {
+    public MemberCoupon(Member member, Coupon coupon, Boolean isUsed, Boolean isExpired) {
         this.member = member;
         this.coupon = coupon;
         this.isUsed = isUsed;
         this.isExpired = isExpired;
-        this.isDeleted = isDeleted;
     }
 
     public void usedToggle() {
         this.isUsed = !this.isUsed;
-    }
-
-    public void deleteMemberCoupon() {
-        this.isDeleted = true;
     }
 }

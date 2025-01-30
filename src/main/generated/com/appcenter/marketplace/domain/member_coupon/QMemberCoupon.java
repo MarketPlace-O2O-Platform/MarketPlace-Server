@@ -31,8 +31,6 @@ public class QMemberCoupon extends EntityPathBase<MemberCoupon> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isDeleted = createBoolean("isDeleted");
-
     public final BooleanPath isExpired = createBoolean("isExpired");
 
     public final BooleanPath isUsed = createBoolean("isUsed");

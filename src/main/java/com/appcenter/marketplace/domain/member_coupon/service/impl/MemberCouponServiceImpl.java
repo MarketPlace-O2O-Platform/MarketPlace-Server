@@ -93,7 +93,13 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     // 발급 쿠폰 3일뒤 만료 처리
     @Transactional
+    public void deleteCoupon(Long memberCouponId) {
+        memberCouponRepository.deleteById(memberCouponId);
+    }
+
+    // 발급 쿠폰 3일뒤 만료 처리
     @Override
+    @Transactional
     public void check3DaysCoupons() {
         memberCouponRepository.check3DaysCoupons();
     }
