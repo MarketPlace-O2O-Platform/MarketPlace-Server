@@ -14,18 +14,17 @@ import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponServic
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberCouponServiceImpl implements MemberCouponService {
 
     private final MemberCouponRepository memberCouponRepository;
@@ -50,7 +49,6 @@ public class MemberCouponServiceImpl implements MemberCouponService {
                     .coupon(coupon)
                     .isUsed(false)
                     .isExpired(false)
-                    .isDeleted(false)
                     .build());
             coupon.reduce();
 
@@ -91,7 +89,12 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return IssuedCouponRes.toDto(memberCoupon);
     }
 
-    // 발급 쿠폰 3일뒤 만료 처리
+    @Override
+    public List<MemberCoupon> getMemberCoupons(List<Long> couponIds) {
+        return memberCouponRepository.findAllByCouponIdIn(couponIds);
+    }
+
+    @Override
     @Transactional
     public void deleteCoupon(Long memberCouponId) {
         memberCouponRepository.deleteById(memberCouponId);
