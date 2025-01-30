@@ -1,8 +1,11 @@
 package com.appcenter.marketplace.domain.coupon.service;
 
+import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.coupon.dto.req.CouponReq;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponRes;
+
+import java.util.List;
 
 public interface CouponOwnerService {
 
@@ -23,4 +26,6 @@ public interface CouponOwnerService {
 
     // 쿠폰 삭제 메서드
     void deleteCoupon(Long couponId);
+
+    List<Coupon> getCoupons(Long marketId);
 }

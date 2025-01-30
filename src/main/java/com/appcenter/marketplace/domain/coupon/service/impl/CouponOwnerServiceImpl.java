@@ -69,6 +69,11 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
         coupon.deleteCoupon();
     }
 
+    @Override
+    public List<Coupon> getCoupons(Long marketId) {
+        return couponRepository.findByMarketId(marketId);
+    }
+
 
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
