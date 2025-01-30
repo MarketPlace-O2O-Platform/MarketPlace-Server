@@ -49,4 +49,7 @@ public class MemberCoupon extends BaseEntity {
         this.isUsed = !this.isUsed;
     }
 
+    public void deleteMemberCoupon() {
+        this.isDeleted = true;
+    }
 }
