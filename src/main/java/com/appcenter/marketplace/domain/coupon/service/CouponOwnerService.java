@@ -25,7 +25,9 @@ public interface CouponOwnerService {
     void updateCouponHidden(Long couponId);
 
     // 쿠폰 삭제 메서드
-    void deleteCoupon(Long couponId);
+    void softDeleteCoupon(Long couponId);
+    void hardDeleteCoupon(Long couponId);
 
     List<Coupon> getCoupons(Long marketId);
+
 }
