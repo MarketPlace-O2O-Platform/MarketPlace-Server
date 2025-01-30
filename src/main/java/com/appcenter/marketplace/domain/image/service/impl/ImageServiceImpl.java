@@ -45,6 +45,7 @@ public class ImageServiceImpl implements ImageService {
                     .sequence(i + 1)
                     .name(imageFileName)
                     .market(market)
+                    .isDeleted(false)
                     .build();
             imageRepository.save(image);
 
@@ -110,6 +111,7 @@ public class ImageServiceImpl implements ImageService {
                             .sequence(sequence)
                             .name(imageFileName)
                             .market(market)
+                            .isDeleted(false)
                             .build();
                     imageRepository.save(image);
 
