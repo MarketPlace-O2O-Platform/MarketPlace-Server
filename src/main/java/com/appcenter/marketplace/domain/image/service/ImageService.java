@@ -14,4 +14,5 @@ public interface ImageService {
                      List<MultipartFile> multipartFileList);
 
     void deleteAllImages(Long marketId);
+    void softDeleteImage(Long marketId);
 }

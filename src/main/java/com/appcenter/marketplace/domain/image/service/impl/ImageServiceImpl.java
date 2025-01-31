@@ -145,7 +145,15 @@ public class ImageServiceImpl implements ImageService {
             if (!file.delete())
                 throw new CustomException(FILE_DELETE_INVALID);
         }
+    }
 
+    @Override
+    public void softDeleteImage(Long marketId) {
+        List<Image> images = imageRepository.findAllByMarket_Id(marketId);
+
+        for (Image image: images){
+            image.deleteImage();
+        }
     }
 
     private Image findById(Long id){
