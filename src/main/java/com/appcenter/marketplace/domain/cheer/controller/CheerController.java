@@ -18,7 +18,8 @@ public class CheerController {
 
     private final CheerService cheerService;
 
-    @Operation(summary = "공감탭 매장 공감하기", description = "임시 매장을 공감합니다. ")
+    @Operation(summary = "공감탭 매장 공감하기", description = "임시 매장을 공감합니다. <br>" +
+            "공감권은 매일 1개씩 충전됩니다. 따라서, 1개의 매장을 공감하게 되면, 더이상 공감할 수 없습니다.( 에러 처리 (409) : 공감권이 소진되었습니다)")
     @PostMapping
     public ResponseEntity<CommonResponse<Object>> createCheer(
             @RequestParam Long memberId,

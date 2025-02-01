@@ -30,6 +30,10 @@ public class CheerServiceImpl implements CheerService {
         TempMarket tempMarket = tempMarketRepository.findById(marketId).orElseThrow(()-> new CustomException(MARKET_NOT_EXIST));
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CustomException(MEMBER_NOT_EXIST));
 
+        if(member.getCheerTicket() == 0){
+            throw new CustomException(TICKET_SOLD_OUT);
+        }
+
         Optional<Cheer> isCheer = cheerRepository.findByMemberIdAndTempMarketId(memberId, marketId);
 
         if(!isCheer.isPresent()){

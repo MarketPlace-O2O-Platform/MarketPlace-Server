@@ -35,7 +35,7 @@ public class MemberCouponController {
     @Operation(summary = "회원의 쿠폰 리스트", description = "type은 'ISSUED(사용가능한)', 'EXPIRED(기간 만료된)', 'USED(사용 완료된)' 중에서 작성해주시면 됩니다. <br>" +
             "쿠폰 리스트를 조회하면 기본적으로 조회되는 리스트는 ISSUED로 사용가능한 쿠폰 리스트입니다.<br> " +
             "무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다." )
-    @GetMapping("/valid")
+    @GetMapping
     public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getCouponList(
                                                                                         @RequestParam(name="type", defaultValue = "ISSUED") MemberCouponType memberCouponType,
                                                                                         @RequestParam(name="memberId")Long memberId,

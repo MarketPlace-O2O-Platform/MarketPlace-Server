@@ -22,6 +22,9 @@ public class MemberCoupon extends BaseEntity {
     @Column(nullable = false)
     private Boolean isUsed;
 
+    @Column(nullable = false)
+    private Boolean isExpired;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -31,10 +34,11 @@ public class MemberCoupon extends BaseEntity {
     private Coupon coupon;
 
     @Builder
-    public MemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+    public MemberCoupon(Member member, Coupon coupon, Boolean isUsed, Boolean isExpired) {
         this.member = member;
         this.coupon = coupon;
         this.isUsed = isUsed;
+        this.isExpired = isExpired;
     }
 
     public void usedToggle() {
