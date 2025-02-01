@@ -148,6 +148,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public void softDeleteImage(Long marketId) {
         List<Image> images = imageRepository.findAllByMarket_Id(marketId);
 

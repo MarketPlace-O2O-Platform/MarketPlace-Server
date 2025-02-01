@@ -40,5 +40,5 @@ public class Image extends BaseEntity {
 
     public void updateSequence(Integer sequence){ this.sequence = sequence;}
 
-    public void deleteImage(){ isDeleted = true;}
+    public void deleteImage(){ this.isDeleted = true;}
 }
