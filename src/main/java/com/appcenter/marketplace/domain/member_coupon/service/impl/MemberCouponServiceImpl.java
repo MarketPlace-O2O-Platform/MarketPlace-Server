@@ -90,11 +90,6 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     }
 
     @Override
-    public List<MemberCoupon> getMemberCoupons(List<Long> couponIds) {
-        return memberCouponRepository.findAllByCouponIdIn(couponIds);
-    }
-
-    @Override
     @Transactional
     public void hardDeleteCoupon(List<Long> couponIds) {
         memberCouponRepository.deleteAllByCouponIds(couponIds);
