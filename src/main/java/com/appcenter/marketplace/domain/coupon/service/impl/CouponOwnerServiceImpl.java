@@ -66,7 +66,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     public void softDeleteCoupon(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         // 소프트 딜리트 적용
-        coupon.deleteCoupon();
+        coupon.softDeleteCoupon();
     }
 
     @Override

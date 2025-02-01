@@ -13,6 +13,6 @@ public interface ImageService {
     void UpdateImage(Market market, MarketImageUpdateReq marketImageUpdateReq,
                      List<MultipartFile> multipartFileList);
 
-    void deleteAllImages(Long marketId);
+    void hardDeleteAllImages(Long marketId);
     void softDeleteImage(Long marketId);
 }

@@ -80,5 +80,5 @@ public class Market extends BaseEntity {
     public void updateThumbnailPath(String thumbnail){
         this.thumbnail= thumbnail;
     }
-    public void deleteMarket(){this.isDeleted= true;}
+    public void softDeleteMarket(){this.isDeleted= true;}
 }

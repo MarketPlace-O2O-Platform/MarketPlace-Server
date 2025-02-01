@@ -14,12 +14,9 @@ import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.MarketOwnerService;
 import com.appcenter.marketplace.domain.market.service.MarketService;
-import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -83,7 +80,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
     @Override
     @Transactional
-    public void deleteMarket(Long marketId) {
+    public void softDeleteMarket(Long marketId) {
 
         Market market=findMarketByMarketId(marketId);
 
@@ -102,7 +99,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
 
         // 매장 삭제
         imageService.softDeleteImage(marketId);
-        market.deleteMarket();
+        market.softDeleteMarket();
     }
 
     // 카테고리 조회

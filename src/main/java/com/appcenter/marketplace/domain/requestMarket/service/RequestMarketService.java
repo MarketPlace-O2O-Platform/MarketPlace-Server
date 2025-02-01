@@ -13,7 +13,7 @@ public interface RequestMarketService {
 
     boolean existRequestMarket(String marketName);
 
-    void deleteRequestMarket(Long marketId);
+    void hardDeleteRequestMarket(Long marketId);
 
     RequestMarket getRequestMarketName(String marketName);
 }

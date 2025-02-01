@@ -134,7 +134,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void deleteAllImages(Long marketId) {
+    public void hardDeleteAllImages(Long marketId) {
         List<Image> images= imageRepository.findAllByMarket_Id(marketId);
 
         // delete 쿼리 한꺼번에 실행
@@ -153,7 +153,7 @@ public class ImageServiceImpl implements ImageService {
         List<Image> images = imageRepository.findAllByMarket_Id(marketId);
 
         for (Image image: images){
-            image.deleteImage();
+            image.softDeleteImage();
         }
     }
 
