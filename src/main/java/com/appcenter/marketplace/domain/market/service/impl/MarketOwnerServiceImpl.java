@@ -18,6 +18,8 @@ import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     @Override
     @Transactional
     public void deleteMarket(Long marketId) {
+
         Market market=findMarketByMarketId(marketId);
 
         // 각 매장의 생성된 쿠폰 일괄 조회
@@ -91,34 +94,13 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
             couponIds.add(coupon.getId());
         }
 
-        // 해당 매장에서 발급 받은 전체 쿠폰 조회 ( in-Memory 방식)
-        List<MemberCoupon> memberCouponList = memberCouponService.getMemberCoupons(couponIds);
+        // memberCoupon 삭제
+        memberCouponService.hardDeleteCoupon(couponIds);
 
-        Map<Long, List<MemberCoupon>> memberCouponMap = new HashMap<>();
-        for(MemberCoupon memberCoupon: memberCouponList){
-            // key: couponId, value: List<MemberCoupon>
-            Long couponId = memberCoupon.getCoupon().getId();
+        // coupon 삭제
+        couponOwnerService.hardDeleteCoupon(market.getId());
 
-            // 해당 쿠폰의 memberCoupon 리스트 추가하고, 리스트가 없으면 새로운 리스트 생성
-            if(!memberCouponMap.containsKey(couponId)){
-                memberCouponMap.put(couponId, new ArrayList<>());
-            }
-            memberCouponMap.get(couponId).add(memberCoupon);
-        }
-
-        for (Coupon coupon : couponList) {
-            // 쿠폰은 있고, 발급된 쿠폰이 없으면 새로운 리스트 형성
-            List<MemberCoupon>  memberCoupons = memberCouponMap.getOrDefault(coupon.getId(), new ArrayList<>());
-
-            for (MemberCoupon memberCoupon : memberCoupons) {
-                // 발급 쿠폰 삭제 (hardDelete)
-                memberCouponService.deleteCoupon(memberCoupon.getId());
-            }
-
-            // 생성 쿠폰 삭제 (hardDelete)
-            couponOwnerService.hardDeleteCoupon(coupon.getId());
-        }
-        //매장 삭제 ( softDelete)
+        // 매장 삭제
         imageService.softDeleteImage(marketId);
         market.deleteMarket();
     }
