@@ -78,7 +78,7 @@ public class TempMarketAdminController {
     public ResponseEntity<CommonResponse<Object>> deleteMarket(
             @PathVariable Long tempMarketId
     ){
-        tempMarketAdminService.deleteMarket(tempMarketId);
+        tempMarketAdminService.hardDeleteMarket(tempMarketId);
         return ResponseEntity.ok(CommonResponse.from(MARKET_DELETE.getMessage()));
     }
 

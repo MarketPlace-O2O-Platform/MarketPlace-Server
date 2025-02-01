@@ -19,10 +19,10 @@ public class MemberCoupon extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "is_used", nullable = false)
     private Boolean isUsed;
 
-    @Column(nullable = false)
+    @Column(name="is_expired", nullable = false)
     private Boolean isExpired;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,5 +44,4 @@ public class MemberCoupon extends BaseEntity {
     public void usedToggle() {
         this.isUsed = !this.isUsed;
     }
-
 }

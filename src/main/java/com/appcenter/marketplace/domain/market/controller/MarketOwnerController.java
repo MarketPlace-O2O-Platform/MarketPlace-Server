@@ -63,7 +63,7 @@ public class MarketOwnerController {
     @Operation(summary = "사장님 매장 삭제", description = "사장님이 생성한 매장을 삭제합니다. ")
     @DeleteMapping("/{marketId}")
     public ResponseEntity<CommonResponse<Object>> deleteMarket(@PathVariable Long marketId){
-        marketOwnerService.deleteMarket(marketId);
+        marketOwnerService.softDeleteMarket(marketId);
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_DELETE.getMessage()));
     }

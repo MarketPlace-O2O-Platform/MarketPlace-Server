@@ -64,7 +64,7 @@ public class CouponOwnerController {
                                         "<br> 삭제는 소프트 딜리트로 구현됩니다.")
     @DeleteMapping("/coupons/{couponId}")
     public ResponseEntity<CommonResponse<Object>> deleteCoupon(@PathVariable Long couponId) {
-        couponService.deleteCoupon(couponId);
+        couponService.softDeleteCoupon(couponId);
         return ResponseEntity.status(COUPON_DELETE.getStatus()).body(CommonResponse.from(COUPON_DELETE.getMessage()));
     }
 }

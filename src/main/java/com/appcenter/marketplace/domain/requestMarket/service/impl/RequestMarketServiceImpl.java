@@ -48,7 +48,7 @@ public class RequestMarketServiceImpl implements RequestMarketService {
     }
 
     @Override
-    public void deleteRequestMarket(Long marketId) {
+    public void hardDeleteRequestMarket(Long marketId) {
         requestMarketRepository.deleteById(marketId);
     }
 

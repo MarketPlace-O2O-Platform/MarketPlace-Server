@@ -27,12 +27,18 @@ public class Image extends BaseEntity {
     @JoinColumn( name = "market_id", nullable = false)
     private Market market;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     @Builder
-    public Image(Integer sequence, String name, Market market) {
+    public Image(Integer sequence, String name, Market market, Boolean isDeleted) {
         this.sequence = sequence;
         this.name = name;
         this.market = market;
+        this.isDeleted = isDeleted;
     }
 
     public void updateSequence(Integer sequence){ this.sequence = sequence;}
+
+    public void softDeleteImage(){ this.isDeleted = true;}
 }
