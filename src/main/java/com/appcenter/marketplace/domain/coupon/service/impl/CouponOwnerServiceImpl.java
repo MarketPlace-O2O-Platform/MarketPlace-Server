@@ -71,8 +71,8 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    public void hardDeleteCoupon(Long couponId) {     Coupon coupon = findCouponById(couponId);
-       couponRepository.deleteById(couponId);
+    public void hardDeleteCoupon(Long marketId) {
+       couponRepository.deleteAllByMarketId(marketId);
     }
 
 
