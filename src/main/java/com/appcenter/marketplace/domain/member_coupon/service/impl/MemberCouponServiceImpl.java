@@ -96,8 +96,8 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
     @Override
     @Transactional
-    public void deleteCoupon(Long memberCouponId) {
-        memberCouponRepository.deleteById(memberCouponId);
+    public void hardDeleteCoupon(List<Long> couponIds) {
+        memberCouponRepository.deleteAllByCouponIds(couponIds);
     }
 
     // 발급 쿠폰 3일뒤 만료 처리
