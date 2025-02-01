@@ -31,6 +31,8 @@ public class QMemberCoupon extends EntityPathBase<MemberCoupon> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isExpired = createBoolean("isExpired");
+
     public final BooleanPath isUsed = createBoolean("isUsed");
 
     public final com.appcenter.marketplace.domain.member.QMember member;

@@ -30,15 +30,48 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     @Override
     public List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
         // 만료되기 전의 쿠폰만 조회가 가능합니다.
-        return findCouponsByMemberId(memberId, false, memberCouponId, size);
+        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
+                        coupon.id,
+                        coupon.name,
+                        coupon.description,
+                        coupon.deadLine,
+                        memberCoupon.isUsed))
+                .from(coupon)
+                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+                .where(ltMemberCouponId(memberCouponId)
+                        .and(memberCoupon.member.id.eq(memberId))
+                        .and(memberCoupon.isUsed.eq(false))
+                        .and(memberCoupon.isExpired.eq(false))
+                        .and(memberCoupon.coupon.deadLine.after(LocalDateTime.now())))
+                .orderBy(memberCoupon.id.desc())
+                .limit(size+1)
+                .fetch();
+
     }
 
     @Override
     public List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
-        // 발급 받은 쿠폰 중, 기간이 만료된 쿠폰만 조회합니다.
-        return findCouponsByMemberId(memberId, true,memberCouponId, size);
+        // 발급 받은 쿠폰 중,
+        // 기간 만료 + 3일이 지난 쿠폰 을 조회합니다.
+        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
+                        coupon.id,
+                        coupon.name,
+                        coupon.description,
+                        coupon.deadLine,
+                        memberCoupon.isUsed))
+                .from(coupon)
+                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+                .where(ltMemberCouponId(memberCouponId)
+                        .and(memberCoupon.member.id.eq(memberId))
+                        .and(memberCoupon.isUsed.eq(false))
+                        .and(memberCoupon.isExpired.eq(true)))
+                .orderBy(memberCoupon.id.desc())
+                .limit(size+1)
+                .fetch();
+
     }
 
+    // 사용완료된 쿠폰 조회
     @Override
     public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size ) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
@@ -57,25 +90,26 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
                 .fetch();
     }
 
-    private List<IssuedCouponRes> findCouponsByMemberId(Long memberId, boolean isExpired,Long memberCouponId, Integer size) {
-        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
-                        coupon.id,
-                        coupon.name,
-                        coupon.description,
-                        coupon.deadLine,
-                        memberCoupon.isUsed))
-                .from(coupon)
-                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
-                .where(ltMemberCouponId(memberCouponId)
-                        .and(memberCoupon.member.id.eq(memberId))
-                        .and(memberCoupon.isUsed.eq(false))
-                        .and(isExpired
-                                ? memberCoupon.coupon.deadLine.before(LocalDateTime.now())
-                                : memberCoupon.coupon.deadLine.after(LocalDateTime.now())))
-                .orderBy(memberCoupon.id.desc())
-                .limit(size+1)
-                .fetch();
+    // 3일 후 유효한지 체크
+    @Override
+    public void check3DaysCoupons(){
+        jpaQueryFactory
+                .update(memberCoupon)
+                .set(memberCoupon.isExpired, true)
+                .where(memberCoupon.createdAt.before(LocalDateTime.now().minusDays(3))
+                        .and(memberCoupon.isUsed.eq(false)))
+                .execute();
+    }
 
+    // 쿠폰 기간이 만료되었는지 체크
+    @Override
+    public void checkExpiredCoupons(){
+         jpaQueryFactory
+                .update(memberCoupon)
+                .set(memberCoupon.isExpired, true)
+                .where(memberCoupon.coupon.deadLine.before(LocalDateTime.now())
+                        .and(memberCoupon.isUsed.eq(false)))
+                .execute();
     }
 
     private BooleanBuilder ltMemberCouponId(Long memberCouponId){

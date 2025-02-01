@@ -8,6 +8,8 @@ import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.INVALID_STUDENT
 import static com.appcenter.marketplace.global.common.StatusCode.UNAUTHORIZED_LOGIN_ERROR;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -44,6 +47,12 @@ public class MemberServiceImpl implements MemberService {
     public MemberLoginRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
         return MemberLoginRes.toDto(member);
+    }
+
+    @Override
+    @Transactional
+    public long resetCheerTickets() {
+            return memberRepository.resetCheerTickets();
     }
 
     // 학번 로그인 검증 및 형변환
