@@ -45,6 +45,7 @@ public class ImageServiceImpl implements ImageService {
                     .sequence(i + 1)
                     .name(imageFileName)
                     .market(market)
+                    .isDeleted(false)
                     .build();
             imageRepository.save(image);
 
@@ -110,6 +111,7 @@ public class ImageServiceImpl implements ImageService {
                             .sequence(sequence)
                             .name(imageFileName)
                             .market(market)
+                            .isDeleted(false)
                             .build();
                     imageRepository.save(image);
 
@@ -132,7 +134,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void deleteAllImages(Long marketId) {
+    public void hardDeleteAllImages(Long marketId) {
         List<Image> images= imageRepository.findAllByMarket_Id(marketId);
 
         // delete 쿼리 한꺼번에 실행
@@ -143,7 +145,16 @@ public class ImageServiceImpl implements ImageService {
             if (!file.delete())
                 throw new CustomException(FILE_DELETE_INVALID);
         }
+    }
 
+    @Override
+    @Transactional
+    public void softDeleteImage(Long marketId) {
+        List<Image> images = imageRepository.findAllByMarket_Id(marketId);
+
+        for (Image image: images){
+            image.softDeleteImage();
+        }
     }
 
     private Image findById(Long id){

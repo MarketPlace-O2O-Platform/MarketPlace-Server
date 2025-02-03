@@ -53,7 +53,7 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         // 요청 매장의 이름(unique)가 일치하는 매장만 삭제
         if(requestMarketService.existRequestMarket(market.getName())){
             RequestMarket requestMarket = requestMarketService.getRequestMarketName(market.getName());
-            requestMarketService.deleteRequestMarket(requestMarket.getId());
+            requestMarketService.hardDeleteRequestMarket(requestMarket.getId());
         }
 
         return TempMarketDetailRes.toDto(market);
@@ -106,7 +106,7 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
 
     @Override
     @Transactional
-    public void deleteMarket(Long marketId) {
+    public void hardDeleteMarket(Long marketId) {
         TempMarket tempMarket = findMarket(marketId);
         tempMarketRepository.deleteById(tempMarket.getId());
     }

@@ -79,7 +79,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId))
+                .where(ltMarketId(marketId)
+                        .and(market.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -108,7 +109,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
+                .where(ltMarketId(marketId)
+                        .and(market.isDeleted.eq(false))
+                        .and(category.major.stringValue().eq(major)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -137,7 +140,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId))
+                .where(ltMarketId(marketId)
+                        .and(market.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -167,7 +171,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId).and(category.major.stringValue().eq(major)))
+                .where(ltMarketId(marketId)
+                        .and(market.isDeleted.eq(false))
+                        .and(category.major.stringValue().eq(major)))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -197,7 +203,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltFavoriteModifiedAt(lastModifiedAt)) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
+                .where(ltFavoriteModifiedAt(lastModifiedAt) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
+                        .and(market.isDeleted.eq(false)))
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();

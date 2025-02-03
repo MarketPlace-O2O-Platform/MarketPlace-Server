@@ -6,8 +6,6 @@ import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketHiddenRes;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 public interface TempMarketAdminService {
     TempMarketDetailRes createMarket(TempMarketReq marketReq, MultipartFile multipartFile);
 
@@ -19,7 +17,7 @@ public interface TempMarketAdminService {
 
     TempMarketHiddenRes toggleHidden(Long marketId);
 
-    void deleteMarket(Long marketId);
+    void hardDeleteMarket(Long marketId);
 
 
 }

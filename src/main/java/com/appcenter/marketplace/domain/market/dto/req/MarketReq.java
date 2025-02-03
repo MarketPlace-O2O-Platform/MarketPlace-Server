@@ -49,6 +49,7 @@ public class MarketReq {
                 .address(address)
                 .category(category)
                 .local(local)
+                .isDeleted(false)
                 .build();
     }
 }

@@ -15,6 +15,7 @@ public interface MarketOwnerService {
 
     MarketDetailsRes updateMarketImage (Long marketId, MarketImageUpdateReq marketImageUpdateReq,
                                         List<MultipartFile> multiPartFileList);
-    void deleteMarket(Long marketId);
+
+    void softDeleteMarket(Long marketId);
 
 }
