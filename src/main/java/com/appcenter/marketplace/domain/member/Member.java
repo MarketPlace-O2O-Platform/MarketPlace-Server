@@ -1,10 +1,7 @@
 package com.appcenter.marketplace.domain.member;
 
 import com.appcenter.marketplace.global.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +20,15 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
-    public Member (Long id, Integer cheerTicket) {
+    public Member (Long id, Integer cheerTicket, Role role) {
         this.id = id;
         this.cheerTicket = cheerTicket;
+        this.role = role;
     }
 
     public void reduceTicket() {

@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.member.dto.req;
 
 import com.appcenter.marketplace.domain.member.Member;
+import com.appcenter.marketplace.domain.member.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class MemberLoginReq {
         return Member.builder()
                 .id(studentId)
                 .cheerTicket(1)
+                .role(Role.ROLE_USER)
                 .build();
     }
 }
