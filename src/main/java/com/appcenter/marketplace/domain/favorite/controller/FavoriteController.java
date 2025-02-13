@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +26,8 @@ public class FavoriteController {
     @Operation(summary = "매장 찜하기", description = "매장 찜이 없으면 생성합니다. 있으면 삭제합니다.<br>" +
         "소프트 딜리트를 적용합니다.")
     @PostMapping
-    public ResponseEntity<CommonResponse<Object>> createCoupon(@RequestParam Long memberId, @RequestParam Long marketId) {
+    public ResponseEntity<CommonResponse<Object>> createCoupon(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long marketId) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         favoriteService.createOrDeleteFavorite(memberId,marketId);
         return ResponseEntity.status(FAVORITE_CREATE.getStatus()).body(CommonResponse.from(FAVORITE_CREATE.getMessage()));
     }

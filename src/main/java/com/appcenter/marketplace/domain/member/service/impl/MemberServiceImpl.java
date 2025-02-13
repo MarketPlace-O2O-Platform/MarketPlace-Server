@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
+import com.appcenter.marketplace.global.jwt.JwtTokenProvider;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,22 +25,23 @@ public class MemberServiceImpl implements MemberService {
 
     private final InuLoginRepository inuLoginRepository;
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     @Transactional
-    public MemberLoginRes login(MemberLoginReq memberLoginReq) {
+    public String login(MemberLoginReq memberLoginReq) {
         Long studentId = validateAndParseStudentId(memberLoginReq);
-
+//        Long studentId = Long.parseLong(memberLoginReq.getStudentId()); // 로컬 테스트 시
         Member existMember = memberRepository.findById(studentId).orElse(null);
 
         // 회원 정보 반환
         if( existMember != null){
-            return MemberLoginRes.toDto(existMember);
+            return jwtTokenProvider.createAccessToken(existMember.getId(), existMember.getRole().name());
         }
 
         // 회원 추가
         Member newMember = memberRepository.save(memberLoginReq.toEntity(studentId));
-        return MemberLoginRes.toDto(newMember);
+        return jwtTokenProvider.createAccessToken(newMember.getId(), newMember.getRole().name());
     }
 
     @Override

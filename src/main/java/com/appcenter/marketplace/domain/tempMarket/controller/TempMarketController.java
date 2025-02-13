@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +31,12 @@ public class TempMarketController {
             "'count'는 기본 10개씩 입니다. API를 조회할 시 불러와지는 매장의 갯수입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> getTempMarket(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
             @RequestParam(required = false, name = "category") String category,
             @RequestParam(defaultValue = "10", name = "count") Integer size
     ) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(MARKET_FOUND.getStatus())
                 .body(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getMarketList(memberId, tempMarketId, size, category)));
     }
@@ -44,11 +47,12 @@ public class TempMarketController {
             "'count'는 기본 10개씩입니다. API를 조회할 시 불러와지는 매장의 갯수입니다.")
     @GetMapping("/cheer")
     public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> getTempMarketPage(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(required = false, name = "lastPageIndex") Long tempMarketId,
             @RequestParam(required = false, name = "lastCheerCount") Integer cheerCount,
             @RequestParam(defaultValue = "10", name = "count") Integer size
     ) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(MARKET_FOUND.getStatus())
                 .body(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketService.getUpcomingNearMarketList(memberId, tempMarketId, cheerCount, size)));
     }
@@ -58,12 +62,13 @@ public class TempMarketController {
                     "최신순으로 보여줍니다.")
     @GetMapping("/search")
     public ResponseEntity<CommonResponse<TempMarketPageRes<TempMarketRes>>> searchMarket(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
             @RequestParam String name)
     {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,tempMarketService.searchMarket(memberId, marketId, size,name)));
