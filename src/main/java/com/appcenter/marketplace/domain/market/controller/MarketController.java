@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -38,12 +40,13 @@ public class MarketController {
                     "최신순으로 보여줍니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(required = false, name = "category") String major,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size)
     {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMarketPage(memberId, marketId,size,major)));
@@ -55,13 +58,14 @@ public class MarketController {
                     "최신순으로 보여줍니다.")
     @GetMapping("/map")
     public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(required = false, name = "category") String major,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
             @RequestParam String address)
     {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMarketPageByAddress(memberId, marketId, size, major, address)));
@@ -89,10 +93,12 @@ public class MarketController {
                     "최신 찜 순으로 보여줍니다.")
     @GetMapping("/my-favorite")
     public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMemberFavoriteMarketList(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "페이지의 마지막 favoriteModifiedAt (e.g. 2024-11-25 11:19:26.378948 )")
             @RequestParam(required = false, name = "lastModifiedAt") LocalDateTime lastModifiedAt,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
+
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMyFavoriteMarketPage(memberId,lastModifiedAt,size)));

@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.domain.member_coupon.MemberCouponType.*;
@@ -26,8 +28,9 @@ public class MemberCouponController {
     @Operation(summary = "회원 쿠폰 발급", description = "회원은 해당 marketId로 유효한 쿠폰을 발급받을 수 있습니다. " +
                                              "<br> '유효한 쿠폰'은 공개처리가 된 쿠폰, 만료되지 않은 쿠폰을 뜻합니다." )
     @PostMapping("/{couponId}")
-    public ResponseEntity<CommonResponse<Object>> issuedCoupon(@RequestParam(name="memberId") Long memberId,
+    public ResponseEntity<CommonResponse<Object>> issuedCoupon(@AuthenticationPrincipal UserDetails userDetails,
                                                @PathVariable(name="couponId") Long couponId) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         memberCouponService.issuedCoupon(memberId, couponId);
         return ResponseEntity.status(COUPON_ISSUED.getStatus()).body(CommonResponse.from(COUPON_ISSUED.getMessage()));
     }
@@ -37,10 +40,11 @@ public class MemberCouponController {
             "무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다." )
     @GetMapping
     public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getCouponList(
+                                                                                        @AuthenticationPrincipal UserDetails userDetails,
                                                                                         @RequestParam(name="type", defaultValue = "ISSUED") MemberCouponType memberCouponType,
-                                                                                        @RequestParam(name="memberId")Long memberId,
                                                                                         @RequestParam(name="memberCouponId", required = false) Long memberCouponId,
                                                                                         @RequestParam(name="size", defaultValue = "10")Integer size) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(COUPON_FOUND.getStatus())
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId, memberCouponType, memberCouponId, size)));
     }

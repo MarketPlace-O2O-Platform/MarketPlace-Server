@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.global.common.StatusCode.CHEER_SUCCESS;
@@ -22,9 +24,10 @@ public class CheerController {
             "공감권은 매일 1개씩 충전됩니다. 따라서, 1개의 매장을 공감하게 되면, 더이상 공감할 수 없습니다.( 에러 처리 (409) : 공감권이 소진되었습니다)")
     @PostMapping
     public ResponseEntity<CommonResponse<Object>> createCheer(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam Long tempMarketId
     ){
+        Long memberId = Long.parseLong(userDetails.getUsername());
         cheerService.cheerTempMarket(memberId, tempMarketId);
         return ResponseEntity.ok(CommonResponse.from(CHEER_SUCCESS.getMessage()));
     }
