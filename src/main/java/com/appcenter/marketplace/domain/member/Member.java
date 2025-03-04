@@ -23,10 +23,14 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
+    @Column(name = "fcm_token",nullable = true)
+    private String fcmToken;
+
     @Builder
-    public Member (Long id, Integer cheerTicket) {
+    public Member (Long id, Integer cheerTicket, String fcmToken) {
         this.id = id;
         this.cheerTicket = cheerTicket;
+        this.fcmToken= fcmToken;
     }
 
     public void reduceTicket() {
