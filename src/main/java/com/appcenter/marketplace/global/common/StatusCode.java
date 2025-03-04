@@ -37,6 +37,9 @@ public enum StatusCode {
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
     MEMBER_FOUND(OK, "회원 조회 완료"),
 
+    // FCM
+    FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
+
 
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
@@ -68,8 +71,10 @@ public enum StatusCode {
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
-    TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다.");
+    TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다."),
 
+    /* 503 UNAVAILABLE : 서비스 이용 불가  */
+    FCM_UNAVAILABLE(SERVICE_UNAVAILABLE, "알림 기능을 이용할 수 없습니다.");
 
 
     private final HttpStatus status;
