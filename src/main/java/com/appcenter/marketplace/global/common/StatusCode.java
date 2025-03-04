@@ -36,6 +36,8 @@ public enum StatusCode {
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
     MEMBER_FOUND(OK, "회원 조회 완료"),
+    MEMBER_FCM_PERMIT(OK,"회원 FCM 알림 허용"),
+    MEMBER_FCM_DENY(OK,"회원 FCM 알림 거부"),
 
     // FCM
     FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),

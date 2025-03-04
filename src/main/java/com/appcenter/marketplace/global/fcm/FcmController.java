@@ -12,7 +12,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_DELETE;
 @Tag(name = "[알림TEST]", description = "[사장님,관리자] 알림 전송")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/notification")
+@RequestMapping("/api/notifications")
 public class FcmController {
     private final FcmService fcmService;
 

@@ -1,15 +1,14 @@
 package com.appcenter.marketplace.domain.member.service.impl;
 
 import com.appcenter.marketplace.domain.member.Member;
-import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
+import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +52,18 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public long resetCheerTickets() {
             return memberRepository.resetCheerTickets();
+    }
+
+    @Override
+    public void permitFcm(Long memberId, String fcmToken) {
+        Member member = findMemberByMemberId(memberId);
+        member.permitFcmToken(fcmToken);
+    }
+
+    @Override
+    public void denyFcm(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.denyFcmToken();
     }
 
     // 학번 로그인 검증 및 형변환

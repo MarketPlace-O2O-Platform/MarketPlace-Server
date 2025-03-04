@@ -36,5 +36,11 @@ public class Member extends BaseEntity {
     public void reduceTicket() {
         this.cheerTicket--;
     }
+
+    public void denyFcmToken() { this.fcmToken=null; }
+
+    public void permitFcmToken(String fcmToken){
+        this.fcmToken=fcmToken;
+    }
 }
 

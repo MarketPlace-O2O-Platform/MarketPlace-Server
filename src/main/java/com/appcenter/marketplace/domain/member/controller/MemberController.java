@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.member.controller;
 
 
+import com.appcenter.marketplace.domain.member.dto.req.MemberFcmReq;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 import com.appcenter.marketplace.domain.member.service.MemberService;
@@ -12,8 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.global.common.StatusCode.MEMBER_FOUND;
-import static com.appcenter.marketplace.global.common.StatusCode.MEMBER_LOGIN_SUCCESS;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Tag(name = "[회원]", description = "[회원] 로그인 및 학번 조회")
 @RestController
@@ -35,5 +35,23 @@ public class MemberController {
     public ResponseEntity<CommonResponse<MemberLoginRes>> getMember(@PathVariable Long memberId){
         return ResponseEntity.status(MEMBER_FOUND.getStatus())
                 .body(CommonResponse.from(MEMBER_FOUND.getMessage(),memberService.getMember(memberId)));
+    }
+
+    @Operation(summary = "학생 알림 허용", description = "학생의 FCM 알림을 허용합니다.")
+    @PatchMapping("/notification/permit")
+    public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails,@RequestBody MemberFcmReq memberFcmReq) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        memberService.permitFcm(memberId, memberFcmReq.getFcmToken());
+        return ResponseEntity.status(MEMBER_FCM_PERMIT.getStatus())
+                .body(CommonResponse.from(MEMBER_FCM_PERMIT.getMessage()));
+    }
+
+    @Operation(summary = "학생 알림 거부", description = "학생의 FCM 알림을 거부합니다.")
+    @PatchMapping("/notification/deny")
+    public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        memberService.denyFcm(memberId);
+        return ResponseEntity.status(MEMBER_FCM_DENY.getStatus())
+                .body(CommonResponse.from(MEMBER_FCM_DENY.getMessage()));
     }
 }
