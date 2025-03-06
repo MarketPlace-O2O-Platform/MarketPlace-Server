@@ -30,7 +30,7 @@ public class BetaMarket extends BaseEntity {
     @Column(name="coupon_detail",nullable = false)
     private String couponDetail;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,7 +45,7 @@ public class BetaMarket extends BaseEntity {
         this.category = category;
     }
 
-    public void updateimage(String image){
+    public void updateImage(String image){
         this.image= image;
     }
 }

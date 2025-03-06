@@ -28,7 +28,6 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_SAVE_INVAL
 public class BetaMarketMarketServiceImpl implements BetaMarketService {
     private final BetaMarketRepository betaMarketRepository;
     private final CategoryRepository categoryRepository;
-    private final BetaMarketService betaMarketService;
 
     @Value("${image.upload.path}")
     private String uploadFolder;
@@ -43,7 +42,7 @@ public class BetaMarketMarketServiceImpl implements BetaMarketService {
 
         String imageFileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
 
-        betaMarket.updateimage(imageFileName);
+        betaMarket.updateImage(imageFileName);
 
         try{
             File uploadFile = new File(uploadFolder + imageFileName);
