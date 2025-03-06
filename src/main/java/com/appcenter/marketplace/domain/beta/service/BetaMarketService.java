@@ -1,10 +1,10 @@
 package com.appcenter.marketplace.domain.beta.service;
 
-import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
+import com.appcenter.marketplace.domain.beta.dto.req.BetaMarketReq;
+import com.appcenter.marketplace.domain.beta.dto.res.BetaMarketRes;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface BetaMarketService {
 
-    MarketDetailsRes createBetaMarket(BetaMarketReq betaMarketReq, MultipartFile multiPartFile);
+    BetaMarketRes createBetaMarket(BetaMarketReq betaMarketReq, MultipartFile multiPartFile);
 }

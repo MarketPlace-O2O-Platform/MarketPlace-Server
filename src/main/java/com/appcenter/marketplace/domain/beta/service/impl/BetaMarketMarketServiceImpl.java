@@ -1,11 +1,12 @@
 package com.appcenter.marketplace.domain.beta.service.impl;
 
 import com.appcenter.marketplace.domain.beta.BetaMarket;
+import com.appcenter.marketplace.domain.beta.dto.req.BetaMarketReq;
+import com.appcenter.marketplace.domain.beta.dto.res.BetaMarketRes;
 import com.appcenter.marketplace.domain.beta.repository.BetaMarketRepository;
 import com.appcenter.marketplace.domain.beta.service.BetaMarketService;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
-import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class BetaMarketMarketServiceImpl implements BetaMarketService {
 
     @Override
     @Transactional
-    public MarketDetailsRes createBetaMarket(BetaMarketReq betaMarketReq, MultipartFile multipartFile){
+    public BetaMarketRes createBetaMarket(BetaMarketReq betaMarketReq, MultipartFile multipartFile){
         Category category=findCategoryByMajor(betaMarketReq.getMajor());
 
         BetaMarket betaMarket=betaMarketRepository.save(betaMarketReq.toEntity(category));
@@ -52,7 +53,7 @@ public class BetaMarketMarketServiceImpl implements BetaMarketService {
             throw new CustomException(FILE_SAVE_INVALID);
         }
 
-        return betaMarketService.getBetaMarketDetails(betaMarket.getId());
+        return BetaMarketRes.of(betaMarket);
     }
 
     // 카테고리 조회
