@@ -30,12 +30,6 @@ public class BetaMarket extends BaseEntity {
     @Column(name="coupon_detail",nullable = false)
     private String couponDetail;
 
-    @Column(name = "dead_line",nullable = false)
-    private LocalDateTime deadLine;
-
-    @Column(nullable = false)
-    private Integer stock;
-
     @Column(nullable = false)
     private String image;
 
@@ -48,8 +42,10 @@ public class BetaMarket extends BaseEntity {
         this.marketName = marketName;
         this.couponName = couponName;
         this.couponDetail = couponDetail;
-        this.deadLine = deadLine;
-        this.stock = stock;
         this.category = category;
+    }
+
+    public void updateimage(String image){
+        this.image= image;
     }
 }
