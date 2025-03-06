@@ -1,16 +1,12 @@
 package com.appcenter.marketplace.domain.beta.service.impl;
 
 import com.appcenter.marketplace.domain.beta.BetaMarket;
+import com.appcenter.marketplace.domain.beta.repository.BetaMarketRepository;
 import com.appcenter.marketplace.domain.beta.service.BetaMarketService;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
-import com.appcenter.marketplace.domain.image.ImageRepository;
-import com.appcenter.marketplace.domain.image.service.ImageService;
-import com.appcenter.marketplace.domain.local.Local;
-import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.global.common.Major;
-import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
-import static com.appcenter.marketplace.global.common.StatusCode.*;
+import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.FILE_SAVE_INVALID;
 
 @Transactional(readOnly = true)
 @Service
