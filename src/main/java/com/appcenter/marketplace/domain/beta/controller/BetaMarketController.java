@@ -26,7 +26,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_CREATE;
 public class BetaMarketController {
     private final BetaMarketService betaMarketService;
 
-    @Operation(summary = "베타 매장 생성", description = "1개의 베타 버전 매장을 생성합니다. <br>" +
+    @Operation(summary = "베타 매장 생성", description = "1개의 베타 버전 매장을 생성합니다. 생성 시 모든 유저에게 쿠폰을 제공합니다. <br>" +
             "이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<BetaMarketRes>> createMarket(

@@ -31,7 +31,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_SAVE_INVAL
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class BetaMarketMarketServiceImpl implements BetaMarketService {
+public class BetaMarketServiceImpl implements BetaMarketService {
     private final BetaMarketRepository betaMarketRepository;
     private final BetaCouponRepository betaCouponRepository;
     private final CategoryRepository categoryRepository;
