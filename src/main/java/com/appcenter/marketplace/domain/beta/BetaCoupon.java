@@ -22,9 +22,6 @@ public class BetaCoupon extends BaseEntity {
     @Column(name = "is_used", nullable = false)
     private Boolean isUsed;
 
-    @Column(name="is_expired", nullable = false)
-    private Boolean isExpired;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -34,9 +31,8 @@ public class BetaCoupon extends BaseEntity {
     private BetaMarket betaMarket;
 
     @Builder
-    public BetaCoupon(Boolean isUsed, Boolean isExpired, Member member, BetaMarket betaMarket) {
+    public BetaCoupon(Boolean isUsed, Member member, BetaMarket betaMarket) {
         this.isUsed = isUsed;
-        this.isExpired = isExpired;
         this.member = member;
         this.betaMarket = betaMarket;
     }
