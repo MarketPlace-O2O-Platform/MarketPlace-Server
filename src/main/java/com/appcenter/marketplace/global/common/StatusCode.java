@@ -37,8 +37,6 @@ public enum StatusCode {
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
     MEMBER_FOUND(OK, "회원 조회 완료"),
 
-
-
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
     INVALID_STUDENT_ID(BAD_REQUEST,"유효하지 않은 학번입니다."),
@@ -53,6 +51,7 @@ public enum StatusCode {
 
     /* 401 UNAUTHORIZED : 비인증 사용자 */
     UNAUTHORIZED_LOGIN_ERROR(UNAUTHORIZED, "학번 또는 비밀번호가 올바르지 않습니다."),
+    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 
     /* 403 FORBIDDEN : 권한 없음 */
 
@@ -69,8 +68,6 @@ public enum StatusCode {
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
     TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다.");
-
-
 
     private final HttpStatus status;
     private final String message;
