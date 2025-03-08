@@ -12,7 +12,6 @@ import java.util.List;
 import static com.appcenter.marketplace.domain.beta.QBetaCoupon.betaCoupon;
 import static com.appcenter.marketplace.domain.beta.QBetaMarket.betaMarket;
 import static com.appcenter.marketplace.domain.category.QCategory.category;
-import static com.appcenter.marketplace.domain.member.QMember.member;
 
 @RequiredArgsConstructor
 public class BetaCouponCustomImpl implements BetaCouponCustom{
@@ -28,10 +27,9 @@ public class BetaCouponCustomImpl implements BetaCouponCustom{
                         betaMarket.couponDetail,
                         betaMarket.image,
                         betaCoupon.isUsed))
-                .from(member)
-                .leftJoin(betaCoupon).on(member.eq(betaCoupon.member))
-                .leftJoin(betaMarket).on(betaCoupon.betaMarket.eq(betaMarket))
-                .where(member.id.eq(memberId)
+                .from(betaCoupon)
+                .innerJoin(betaCoupon.betaMarket, betaMarket)
+                .where(betaCoupon.member.id.eq(memberId)
                         .and(ltBetaCouponId(betaCouponId)))
                 .orderBy(betaCoupon.id.desc())
                 .limit(size + 1)
@@ -48,11 +46,10 @@ public class BetaCouponCustomImpl implements BetaCouponCustom{
                         betaMarket.couponDetail,
                         betaMarket.image,
                         betaCoupon.isUsed))
-                .from(member)
-                .leftJoin(betaCoupon).on(member.eq(betaCoupon.member))
-                .leftJoin(betaMarket).on(betaCoupon.betaMarket.eq(betaMarket))
+                .from(betaCoupon)
+                .innerJoin(betaMarket).on(betaCoupon.betaMarket.eq(betaMarket))
                 .innerJoin(category).on(betaMarket.category.eq(category))
-                .where(member.id.eq(memberId)
+                .where(betaCoupon.member.id.eq(memberId)
                         .and(ltBetaCouponId(betaCouponId))
                         .and(category.major.stringValue().eq(major)))
                 .orderBy(betaCoupon.id.desc())

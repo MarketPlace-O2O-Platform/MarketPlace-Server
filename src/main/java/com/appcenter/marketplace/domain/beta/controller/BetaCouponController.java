@@ -4,17 +4,16 @@ package com.appcenter.marketplace.domain.beta.controller;
 import com.appcenter.marketplace.domain.beta.dto.res.BetaCouponPageRes;
 import com.appcenter.marketplace.domain.beta.dto.res.BetaCouponRes;
 import com.appcenter.marketplace.domain.beta.service.BetaCouponService;
+import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
+import static com.appcenter.marketplace.global.common.StatusCode.COUPON_USED;
 
 @Tag(name = "[베타 버전 쿠폰]", description = "[베타] 쿠폰 관리")
 @RestController
@@ -36,5 +35,12 @@ public class BetaCouponController {
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(COUPON_FOUND.getStatus())
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(),betaCouponService.getBetaCouponList(memberId, betaCouponId, major, size)));
+    }
+
+    @Operation(summary = "회원 쿠폰 사용처리", description = "회원은 발급받은 betaCouponId로 사용처리를 할 수 있습니다." )
+    @PutMapping
+    public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@RequestParam(name="memberCouponId") Long couponId){
+        return ResponseEntity.status(COUPON_USED.getStatus())
+                .body(CommonResponse.from(COUPON_USED.getMessage(),memberCouponService.updateCoupon(couponId)));
     }
 }
