@@ -37,10 +37,14 @@ public class BetaCouponController {
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(),betaCouponService.getBetaCouponList(memberId, betaCouponId, major, size)));
     }
 
-    @Operation(summary = "회원 쿠폰 사용처리", description = "회원은 발급받은 betaCouponId로 사용처리를 할 수 있습니다." )
-    @PutMapping
-    public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@RequestParam(name="memberCouponId") Long couponId){
+    @Operation(summary = "베타 쿠폰 사용처리", description = "회원의 발급 받은 베타 쿠폰을 사용처리 합니다." )
+    @PutMapping("/{betaCouponId}")
+    public ResponseEntity<CommonResponse<Object>> updateCoupon(
+            @PathVariable Long betaCouponId){
+
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        betaCouponService.useBetaCoupon(betaCouponId);
         return ResponseEntity.status(COUPON_USED.getStatus())
-                .body(CommonResponse.from(COUPON_USED.getMessage(),memberCouponService.updateCoupon(couponId)));
+                .body(CommonResponse.from(COUPON_USED.getMessage()));
     }
 }
