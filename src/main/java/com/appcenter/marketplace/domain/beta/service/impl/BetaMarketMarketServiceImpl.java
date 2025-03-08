@@ -60,7 +60,7 @@ public class BetaMarketMarketServiceImpl implements BetaMarketService {
             throw new CustomException(FILE_SAVE_INVALID);
         }
 
-        sendCouponsToAllUsers(betaMarket);
+        sendCouponsToAllMembers(betaMarket);
 
         return BetaMarketRes.of(betaMarket);
     }
@@ -75,7 +75,7 @@ public class BetaMarketMarketServiceImpl implements BetaMarketService {
         else throw new CustomException(CATEGORY_NOT_EXIST);
     }
 
-    public void sendCouponsToAllUsers(BetaMarket betaMarket) {
+    public void sendCouponsToAllMembers(BetaMarket betaMarket) {
         List<Member> memberList= memberRepository.findAll();
         List<BetaCoupon> betaCouponList = new ArrayList<>();
 
