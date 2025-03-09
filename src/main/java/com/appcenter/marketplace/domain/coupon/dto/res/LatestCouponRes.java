@@ -27,6 +27,6 @@ public class LatestCouponRes {
         this.thumbnail = thumbnail;
         this.isAvailable = isAvailable;
         this.isMemberIssued = isMemberIssued;
-        CouponCreatedAt = couponCreatedAt;
+        this.CouponCreatedAt = couponCreatedAt;
     }
 }
