@@ -4,12 +4,13 @@ package com.appcenter.marketplace.domain.beta.controller;
 import com.appcenter.marketplace.domain.beta.dto.res.BetaCouponPageRes;
 import com.appcenter.marketplace.domain.beta.dto.res.BetaCouponRes;
 import com.appcenter.marketplace.domain.beta.service.BetaCouponService;
-import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
@@ -41,8 +42,6 @@ public class BetaCouponController {
     @PutMapping("/{betaCouponId}")
     public ResponseEntity<CommonResponse<Object>> updateCoupon(
             @PathVariable Long betaCouponId){
-
-        Long memberId = Long.parseLong(userDetails.getUsername());
         betaCouponService.useBetaCoupon(betaCouponId);
         return ResponseEntity.status(COUPON_USED.getStatus())
                 .body(CommonResponse.from(COUPON_USED.getMessage()));
