@@ -18,7 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-src/main/resources/*
+src/main/resources/**
 application.properties
 application-dev.properties
 application-prod.properties
