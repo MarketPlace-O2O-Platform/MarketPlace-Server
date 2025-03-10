@@ -17,7 +17,9 @@ import java.util.List;
 public class ImageConfig implements WebMvcConfigurer{
 
     @Value("${image.upload.path}")
-    private String uploadFolder;
+    private String imageUploadFolder;
+    @Value("${tempImage.upload.path}")
+    private String tempImageUploadFolder;
     private final OctetStreamReadMsgConverter octetStreamReadMsgConverter;
 
 
@@ -28,7 +30,10 @@ public class ImageConfig implements WebMvcConfigurer{
         registry.addResourceHandler("/image/**")
                 // 윈도우는 file:/, 리눅스는 file:/// 이다. 도커에서 실행할경우 file:/이다.
                 // 리눅스에선 URI형식이 첫 번째 /는 URI의 스킴을 나타내고, 두 번째 /는 리눅스의 파일 시스템 루트를 나타낸다.
-                .addResourceLocations("file:"+ uploadFolder);
+                .addResourceLocations("file:"+ imageUploadFolder);
+
+        registry.addResourceHandler("/image/tempMarket/**")
+                .addResourceLocations("file:"+ tempImageUploadFolder);
 
     }
 
