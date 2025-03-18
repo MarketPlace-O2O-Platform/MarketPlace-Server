@@ -14,6 +14,21 @@ services:
       volumes:
         - mysql_data:/var/lib/mysql
 
+    controller:
+      image: ngrinder/controller:3.5.5-p1
+      restart: always
+      ports:
+        - "9000:80"
+        - "16001:16001"
+        - "12000-12009:12000-12009"
+      volumes:
+        - ./ngrinder-controller:/opt/ngrinder-controller
+    agent:
+      image: ngrinder/agent:3.5.5-p1
+      restart: always
+      links:
+        - controller
+
 
 volumes:
     mysql_data:
