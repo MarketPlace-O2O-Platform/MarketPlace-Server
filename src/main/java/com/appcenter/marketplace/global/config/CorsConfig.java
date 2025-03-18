@@ -9,7 +9,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsConfig implements WebMvcConfigurer {
 
     @Value("${cors.web.url}")
-    private String webUrl;
+    private String localUrl;
+
+    @Value("${cors.web.prod.url}")
+    private String prodUrl;
 
     @Value("${cors.server.url}")
     private String serverUrl;
@@ -17,7 +20,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(webUrl,serverUrl)
+                .allowedOriginPatterns(localUrl,prodUrl, serverUrl)
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
