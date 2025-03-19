@@ -15,6 +15,38 @@ services:
         - mysql_data:/var/lib/mysql
 
 
+    prometheus:
+      image: prom/prometheus:latest
+      container_name: prometheus-kurrumi
+      ports:
+        - "9092:9090"
+      volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+
+    grafana:
+      image: grafana/grafana:latest
+      container_name: grafana-kurrumi
+      user: "$UID:$GID"
+      ports:
+        - "3002:3000"
+      volumes:
+        - ./grafana-data:/var/lib/grafana
+      depends_on:
+        - prometheus
+
+    redis:
+      image: redis:7
+      container_name: redis
+      ports:
+        - "6379:6379"
+      environment:
+        TZ: "Asia/Seoul"
+      volumes:
+        - redis_data:/data
+
+
 volumes:
     mysql_data:
+    redis_data:
 
