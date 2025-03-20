@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.sentry.jvm.gradle' version '5.3.0'
 }
 
 group = 'com.appcenter'
@@ -16,6 +17,23 @@ java {
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+	}
+}
+
+sentry {
+	includeSourceContext = true
+
+	org = "623aa311c8ea"
+	projectName = "java-spring-boot"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
+	additionalSourceDirsForSourceContext = [
+			"src/main/java",       // 기본 자바 소스 디렉터리
+			"src/main/generated"
+	]
+	includeDependenciesReport = true
+
+	autoInstallation {
+		enabled = true
 	}
 }
 
@@ -59,13 +77,16 @@ dependencies {
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	// Sentry
+	implementation 'io.sentry:sentry-logback:8.3.0'
+	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:8.3.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 // QueryDSL 설정부
-def generated = 'src/main/generated'
+def generated = 'src/main/querydsl'
 
 // java source set 에 querydsl QClass 위치 추가
 sourceSets {
