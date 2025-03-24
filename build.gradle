@@ -20,21 +20,34 @@ configurations {
 	}
 }
 
+def queryDslDir = 'src/main/generated/queryDsl'
+def sentryDir = 'src/main/generated/sentry'
+
+
 sentry {
 	includeSourceContext = true
 
-	org = "623aa311c8ea"
-	projectName = "java-spring-boot"
+	org = "d3dbe7a77dc7"
+	projectName = "currumi-project"
 	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 	additionalSourceDirsForSourceContext = [
 			"src/main/java",       // 기본 자바 소스 디렉터리
-			"src/main/generated"
+			sentryDir
 	]
 	includeDependenciesReport = true
 
 	autoInstallation {
 		enabled = true
 	}
+}
+
+// Sentry 태스크 의존성 추가
+tasks.named('generateSentryBundleIdJava') {
+	dependsOn(':compileJava')
+}
+
+tasks.named('sentryCollectSourcesJava') {
+	dependsOn(':compileJava',':compileTestJava')
 }
 
 repositories {
@@ -86,19 +99,20 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 // QueryDSL 설정부
-def generated = 'src/main/querydsl'
+//def generated = 'src/main/generated'
 
 // java source set 에 querydsl QClass 위치 추가
 sourceSets {
-	main.java.srcDirs += [ generated ]
+	main.java.srcDirs += [ queryDslDir ]
 }
 
 // querydsl QClass 파일 생성 위치를 지정
 tasks.withType(JavaCompile) {
-	options.getGeneratedSourceOutputDirectory().set(file(generated))
+	options.getGeneratedSourceOutputDirectory().set(file(queryDslDir))
 }
 
 // gradle clean시, 기본작업 후 QClass 디렉토리 삭제
 clean.doLast {
-	file(generated).deleteDir()
+	file(queryDslDir).deleteDir()
+	file(sentryDir).deleteDir()
 }
