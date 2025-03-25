@@ -5,9 +5,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_DELETE;
+import static com.appcenter.marketplace.global.common.StatusCode.FCM_SEND_SUCCESS;
 
 @Tag(name = "[알림TEST]", description = "[사장님,관리자] 알림 전송")
 @RestController
@@ -21,6 +24,6 @@ public class FcmController {
     public ResponseEntity<CommonResponse<Object>> sendFcmMessage(@RequestBody FcmRequest fcmRequest){
         fcmService.sendFcmMessage(fcmRequest);
         return ResponseEntity
-                .ok(CommonResponse.from(MARKET_DELETE.getMessage()));
+                .ok(CommonResponse.from(FCM_SEND_SUCCESS.getMessage()));
     }
 }

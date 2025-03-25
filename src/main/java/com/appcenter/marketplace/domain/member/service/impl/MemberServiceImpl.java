@@ -16,6 +16,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.INVALID_STUDENT
 import static com.appcenter.marketplace.global.common.StatusCode.UNAUTHORIZED_LOGIN_ERROR;
 
 
+@Transactional(readOnly = true)
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional
     public MemberLoginRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
         return MemberLoginRes.toDto(member);
@@ -55,12 +55,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public void permitFcm(Long memberId, String fcmToken) {
         Member member = findMemberByMemberId(memberId);
         member.permitFcmToken(fcmToken);
     }
 
     @Override
+    @Transactional
     public void denyFcm(Long memberId) {
         Member member = findMemberByMemberId(memberId);
         member.denyFcmToken();

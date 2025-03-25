@@ -22,7 +22,7 @@ src/main/resources/*
 application.properties
 application-dev.properties
 application-prod.properties
-local/.env
+local/**
 .idea
 *.iws
 *.iml
