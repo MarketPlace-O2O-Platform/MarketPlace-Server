@@ -8,15 +8,18 @@ import lombok.Getter;
 @Getter
 public class MemberLoginRes {
     private final Long studentId;
+    private final Integer cheerTicket;
 
     @Builder
-    public MemberLoginRes(Long studentId) {
+    public MemberLoginRes(Long studentId, Integer cheerTicket) {
         this.studentId = studentId;
+        this.cheerTicket = cheerTicket;
     }
 
     public static MemberLoginRes toDto(Member member) {
         return MemberLoginRes.builder()
                 .studentId(member.getId())
+                .cheerTicket(member.getCheerTicket())
                 .build();
     }
 }
