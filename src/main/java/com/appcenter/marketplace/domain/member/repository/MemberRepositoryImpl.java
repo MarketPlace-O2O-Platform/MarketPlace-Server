@@ -13,7 +13,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     public long resetCheerTickets() {
         return jpaQueryFactory
                 .update(member)
-                .set(member.cheerTicket, 1)
+                .set(member.cheerTicket, 1000) //1로 수정 예정
                 .execute();
     }
 }
