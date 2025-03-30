@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.global.fcm;
 
 import com.appcenter.marketplace.global.common.CommonResponse;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class FcmController {
 
     @Operation(summary = "[TEST] 개인 알림 전송", description = "개인 회원에게 알림 메시지 전송")
     @PostMapping
-    public ResponseEntity<CommonResponse<Object>> sendFcmMessage(@RequestBody FcmRequest fcmRequest){
+    public ResponseEntity<CommonResponse<Object>> sendFcmMessage(@RequestBody FcmRequest fcmRequest) throws FirebaseMessagingException{
         fcmService.sendFcmMessage(fcmRequest);
         return ResponseEntity
                 .ok(CommonResponse.from(FCM_SEND_SUCCESS.getMessage()));

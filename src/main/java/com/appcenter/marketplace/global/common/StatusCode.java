@@ -41,6 +41,9 @@ public enum StatusCode {
 
     // FCM
     FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
+    FCM_SEND_FAIL(INTERNAL_SERVER_ERROR, "알림 메시지 전송에 실패하였습니다."),
+    FCM_SUBSCRIBE_FAIL(INTERNAL_SERVER_ERROR,"FCM 구독 요청이 실패했습니다."),
+    FCM_UNSUBSCRIBE_FAIL(INTERNAL_SERVER_ERROR,"FCM 구독 해제 요청이 실패했습니다."),
 
 
 

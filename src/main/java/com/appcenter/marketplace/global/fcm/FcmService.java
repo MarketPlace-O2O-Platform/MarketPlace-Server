@@ -3,6 +3,7 @@ package com.appcenter.marketplace.global.fcm;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
     private final MemberRepository memberRepository;
 
-    public void sendFcmMessage(FcmRequest fcmRequest){
+    public void sendFcmMessage(FcmRequest fcmRequest) throws FirebaseMessagingException {
         Optional<Member> member= memberRepository.findById(fcmRequest.memberId);
 
         if(member.isPresent()){
@@ -35,7 +36,7 @@ public class FcmService {
                         .build();
 
                 // 비동기 메시지 전송
-                firebaseMessaging.sendAsync(message);
+                firebaseMessaging.send(message);
             }
         }
     }
