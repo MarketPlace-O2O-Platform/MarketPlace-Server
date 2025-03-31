@@ -17,7 +17,7 @@ public class TempMarketRes {
     private final String thumbnail;
     private Integer cheerCount;
     private final Boolean isCheer;
-    private LocalDateTime createdAt;
+    private Integer dueDate;
 
     @QueryProjection
     public TempMarketRes(Long marketId, String marketName, String thumbnail, Integer cheerCount, Boolean isCheer, LocalDateTime createdAt) {
@@ -26,11 +26,10 @@ public class TempMarketRes {
         this.thumbnail = thumbnail;
         this.cheerCount = cheerCount;
         this.isCheer = isCheer;
-        this.createdAt = createdAt;
+        this.dueDate = this.getDueDate(createdAt);
     }
 
-    @JsonProperty("dueDate")
-    public Integer getDueDate() {
+    public Integer getDueDate(LocalDateTime createdAt) {
         if ( createdAt == null ) {
             return null;
         }
