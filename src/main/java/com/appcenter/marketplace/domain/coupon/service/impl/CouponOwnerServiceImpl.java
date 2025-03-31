@@ -8,20 +8,15 @@ import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
-import com.appcenter.marketplace.global.common.StatusCode;
-import com.appcenter.marketplace.global.config.AsyncConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
-import com.google.api.core.ApiFuture;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -31,10 +26,9 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 @RequiredArgsConstructor
 public class CouponOwnerServiceImpl implements CouponOwnerService {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final CouponRepository couponRepository;
     private final MarketRepository marketRepository;
-    private final FirebaseMessaging firebaseMessaging;
-    private final AsyncConfig asyncConfig;
 
     @Override
     @Transactional
@@ -42,28 +36,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
         Market market = findMarketById(marketId);
         Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
 
-        Message message = Message.builder()
-                .setNotification(
-                        Notification.builder()
-                                .setTitle(coupon.getName())
-                                .setBody(coupon.getDescription())
-                                .build()
-                )
-                .setTopic("market-"+ market.getId())
-                .build();
-
-
-        ApiFuture<String> apiFuture= firebaseMessaging.sendAsync(message);
-
-        apiFuture.addListener(() ->{
-            try{
-                String response = apiFuture.get();
-                log.info("토픽 구독 성공: {}", response);
-            } catch (ExecutionException | InterruptedException e) {
-                log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
-                throw new CustomException(StatusCode.FCM_SEND_FAIL);
-            }
-        }, asyncConfig.getFcmExecutor());
+        eventPublisher.publishEvent(new SendNewCouponFcmEvent(market,coupon));
 
         return CouponRes.toDto(coupon);
     }
