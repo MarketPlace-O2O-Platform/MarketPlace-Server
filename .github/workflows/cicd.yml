@@ -17,7 +17,7 @@ jobs:
         # .gitignore에 있는 properties파일 추가
       - name: Add prod_properties
         run: |
-          mkdir ./src/main/resources
+          mkdir -p ./src/main/resources
           touch ./src/main/resources/application.properties
           echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application.properties
           touch .env
