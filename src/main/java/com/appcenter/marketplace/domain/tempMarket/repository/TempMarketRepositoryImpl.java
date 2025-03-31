@@ -3,7 +3,9 @@ package com.appcenter.marketplace.domain.tempMarket.repository;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.QTempMarketRes;
 import com.appcenter.marketplace.domain.tempMarket.dto.res.TempMarketRes;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.core.instrument.step.StepMeterRegistry;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
@@ -24,7 +26,8 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                         tempMarket.name,
                         tempMarket.thumbnail,
                         tempMarket.cheerCount,
-                        cheer.id.isNotNull()))
+                        cheer.id.isNotNull(),
+                        tempMarket.createdAt))  // queryDsl로 계산 x -> INTERVAL 예약어를 사용하려 했으나, hibernate에서 사용하지 못함.
                 .from(tempMarket)
                 .leftJoin(cheer).on(tempMarket.eq(cheer.tempMarket)
                         .and(cheer.member.id.eq(memberId)))
@@ -44,7 +47,8 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                         tempMarket.name,
                         tempMarket.thumbnail,
                         tempMarket.cheerCount,
-                        cheer.id.isNotNull()))
+                        cheer.id.isNotNull(),
+                        tempMarket.createdAt))
                 .from(tempMarket)
                 .leftJoin(cheer).on(tempMarket.eq(cheer.tempMarket)
                                 .and(cheer.member.id.eq(memberId)))
@@ -66,7 +70,8 @@ public class TempMarketRepositoryImpl implements TempMarketRepositoryCustom {
                         tempMarket.name,
                         tempMarket.thumbnail,
                         tempMarket.cheerCount,
-                        cheer.id.isNotNull()))
+                        cheer.id.isNotNull(),
+                        tempMarket.createdAt))
                 .from(tempMarket)
                 .leftJoin(cheer).on(tempMarket.eq(cheer.tempMarket)
                                 .and(cheer.member.id.eq(memberId)))
