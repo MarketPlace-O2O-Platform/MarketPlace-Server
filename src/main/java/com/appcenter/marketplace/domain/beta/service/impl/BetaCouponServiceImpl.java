@@ -37,6 +37,7 @@ public class BetaCouponServiceImpl implements BetaCouponService {
     }
 
     @Override
+    @Transactional
     public void useBetaCoupon(Long betaCouponId) {
         Optional<BetaCoupon> betaCouponObject= betaCouponRepository.findById(betaCouponId);
         if(betaCouponObject.isPresent()){

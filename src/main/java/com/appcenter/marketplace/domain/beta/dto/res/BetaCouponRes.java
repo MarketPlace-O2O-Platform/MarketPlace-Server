@@ -11,15 +11,15 @@ public class BetaCouponRes {
     private final String couponName;
     private final String couponDetail;
     private final String image;
-    private final Boolean isAvailable;
+    private final Boolean isUsed;
 
     @QueryProjection
-    public BetaCouponRes(Long betaCouponId, String marketName, String couponName, String couponDetail, String image, Boolean isAvailable) {
+    public BetaCouponRes(Long betaCouponId, String marketName, String couponName, String couponDetail, String image, Boolean isUsed) {
         this.betaCouponId = betaCouponId;
         this.marketName = marketName;
         this.couponName = couponName;
         this.couponDetail = couponDetail;
         this.image = image;
-        this.isAvailable = isAvailable;
+        this.isUsed = isUsed;
     }
 }

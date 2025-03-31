@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.global.exception;
 
 import com.appcenter.marketplace.global.common.ErrorResponse;
+import io.sentry.Sentry;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +25,8 @@ public class ExceptionControllerAdvice {
                 .message(INPUT_VALUE_INVALID.getMessage())
                 .validationErrors(ErrorResponse.ValidationError.from(e.getBindingResult()))
                 .build();
+        Sentry.captureException(e);
+
         return ResponseEntity.status(INPUT_VALUE_INVALID.getStatus())
                 .body(errorResponse);
     }
@@ -34,6 +37,8 @@ public class ExceptionControllerAdvice {
         ErrorResponse errorResponse= ErrorResponse.builder()
                 .message(DATA_INTEGRITY_VIOLATION.getMessage())
                 .build();
+        Sentry.captureException(e);
+
         return ResponseEntity.status(DATA_INTEGRITY_VIOLATION.getStatus())
                 .body(errorResponse);
     }
@@ -44,6 +49,8 @@ public class ExceptionControllerAdvice {
         ErrorResponse errorResponse= ErrorResponse.builder()
                 .message(MULTI_PART_FILE_INVALID.getMessage())
                 .build();
+        Sentry.captureException(e);
+
         return ResponseEntity.status(MULTI_PART_FILE_INVALID.getStatus())
                 .body(errorResponse);
     }
@@ -55,6 +62,8 @@ public class ExceptionControllerAdvice {
         ErrorResponse errorResponse=ErrorResponse.builder()
                 .message(e.getStatusCode().getMessage())
                 .build();
+        Sentry.captureException(e);
+
         return ResponseEntity.status(e.getStatusCode().getStatus())
                 .body(errorResponse);
     }
