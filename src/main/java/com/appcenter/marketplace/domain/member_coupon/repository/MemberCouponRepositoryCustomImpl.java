@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.domain.coupon.QCoupon.coupon;
+import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 
 @RequiredArgsConstructor
@@ -32,12 +33,14 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
         // 만료되기 전의 쿠폰만 조회가 가능합니다.
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
+                        coupon.market.thumbnail,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
                         memberCoupon.isUsed))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+                .join(market).on(market.id.eq(coupon.market.id))
                 .where(ltMemberCouponId(memberCouponId)
                         .and(memberCoupon.member.id.eq(memberId))
                         .and(memberCoupon.isUsed.eq(false))
@@ -55,12 +58,14 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
         // 기간 만료 + 3일이 지난 쿠폰 을 조회합니다.
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
+                        coupon.market.thumbnail,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
                         memberCoupon.isUsed))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+                .join(market).on(market.id.eq(coupon.market.id))
                 .where(ltMemberCouponId(memberCouponId)
                         .and(memberCoupon.member.id.eq(memberId))
                         .and(memberCoupon.isUsed.eq(false))
@@ -76,12 +81,14 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size ) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
+                        coupon.market.thumbnail,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
                         memberCoupon.isUsed))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+                .join(market).on(market.id.eq(coupon.market.id))
                 .where(ltMemberCouponId(memberCouponId)
                         .and(memberCoupon.member.id.eq(memberId))
                         .and(memberCoupon.isUsed.eq(true)))
