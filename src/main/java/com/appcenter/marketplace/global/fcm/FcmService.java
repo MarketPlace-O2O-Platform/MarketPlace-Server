@@ -1,20 +1,23 @@
 package com.appcenter.marketplace.global.fcm;
 
+import com.appcenter.marketplace.domain.favorite.Favorite;
+import com.appcenter.marketplace.domain.favorite.repository.FavoriteRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.global.common.StatusCode;
-import com.appcenter.marketplace.global.exception.CustomException;
+import com.appcenter.marketplace.global.exception.FcmException;
 import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
 import com.appcenter.marketplace.global.fcm.event.SubscribeMarketEvent;
 import com.appcenter.marketplace.global.fcm.event.UnSubscribeMarketEvent;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.Collections;
@@ -29,6 +32,7 @@ public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
     private final MemberRepository memberRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public void sendFcmMessage(FcmRequest fcmRequest) throws FirebaseMessagingException {
         Optional<Member> member= memberRepository.findById(fcmRequest.memberId);
@@ -45,15 +49,22 @@ public class FcmService {
                         .setNotification(notification)
                         .build();
 
-                // 비동기 메시지 전송
                 firebaseMessaging.send(message);
             }
         }
     }
 
+
+
     @Async("FcmExecutor")
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void sendNewCouponFcmToSubscriber(SendNewCouponFcmEvent event){
+    @Retryable(
+            recover = "recoverSendNewCouponFcmToSubscriber",
+            retryFor = FirebaseMessagingException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
+    public void sendNewCouponFcmToSubscriber(SendNewCouponFcmEvent event) throws FirebaseMessagingException {
         Message message = Message.builder()
                 .setNotification(
                         Notification.builder()
@@ -61,77 +72,97 @@ public class FcmService {
                                 .setBody(event.getCoupon().getDescription())
                                 .build()
                 )
-                .setTopic("market-"+ event.getMarket().getId())
+                .setTopic("market-" + event.getMarket().getId())
                 .build();
 
-        try{
-            String response= firebaseMessaging.send(message);
+        try {
+            String response = firebaseMessaging.send(message);
             log.info("메세지 발송 성공: {}", response);
-        } catch (FirebaseMessagingException e){
-            log.error("예외 발생: {}", e.getErrorCode());
-            throw new CustomException(StatusCode.FCM_SEND_FAIL);
-        }
+        } catch (FirebaseMessagingException e) {
+            MessagingErrorCode errorCode = e.getMessagingErrorCode();
+            if (errorCode.equals(MessagingErrorCode.INTERNAL) || errorCode.equals(MessagingErrorCode.UNAVAILABLE)) {
+                log.info("FCM 신규 쿠폰 알림 발송 실패");
+                throw e;
+            }
+            else
+                throw new FcmException(StatusCode.FCM_SEND_FAIL);
 
+        }
     }
 
     @Async("FcmExecutor")
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void subscribeMarket(SubscribeMarketEvent event){
+    @Retryable(
+            recover = "recoverSubscribeMarket",
+            retryFor = FirebaseMessagingException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
+    public void subscribeMarket (SubscribeMarketEvent event) throws FirebaseMessagingException{
 
         try {
             FirebaseMessaging
                     .getInstance()
                     .subscribeToTopic(Collections.singletonList(event.getMember().getFcmToken())
                             , ("market-" + event.getMarket().getId().toString()));
-        } catch (FirebaseMessagingException e){
-            throw new CustomException(StatusCode.FCM_SUBSCRIBE_FAIL);
+        } catch (FirebaseMessagingException e) {
+            MessagingErrorCode errorCode = e.getMessagingErrorCode();
+            if (errorCode.equals(MessagingErrorCode.INTERNAL) || errorCode.equals(MessagingErrorCode.UNAVAILABLE)) {
+                log.info("FCM 매장 구독 실패");
+                throw e;
+            }
+            else
+                throw new FcmException(StatusCode.FCM_SUBSCRIBE_FAIL);
         }
-
-//        ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
-//                .getInstance()
-//                .subscribeToTopicAsync(Collections.singletonList(event.getMember().getFcmToken())
-//                        ,("market-"+ event.getMarket().getId().toString()));
-//
-//        apiFuture.addListener(() ->{
-//            try{
-//                TopicManagementResponse response = apiFuture.get();
-//                log.info("토픽 구독 성공: {}", response.getSuccessCount());
-//            } catch (ExecutionException | InterruptedException e) {
-//                log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
-//                throw new CustomException(StatusCode.FCM_SUBSCRIBE_FAIL);
-//            }
-//        }, asyncConfig.getFcmExecutor());
     }
 
     @Async("FcmExecutor")
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void unsubscribeMarket(UnSubscribeMarketEvent event) {
+    @Retryable(
+            recover = "recoverUnSubscribeMarket",
+            retryFor = FirebaseMessagingException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
+    public void unSubscribeMarket(UnSubscribeMarketEvent event) throws FirebaseMessagingException{
 
         try {
             FirebaseMessaging
                     .getInstance()
                     .unsubscribeFromTopic(Collections.singletonList(event.getMember().getFcmToken())
                             , ("market-" + event.getMarket().getId().toString()));
-        } catch (FirebaseMessagingException e){
-            throw new CustomException(StatusCode.FCM_UNSUBSCRIBE_FAIL);
+        } catch (FirebaseMessagingException e) {
+            MessagingErrorCode errorCode = e.getMessagingErrorCode();
+            if (errorCode.equals(MessagingErrorCode.INTERNAL) || errorCode.equals(MessagingErrorCode.UNAVAILABLE)) {
+                log.info("FCM 매장 구독취소 실패");
+                throw e;
+            }
+            else
+                throw new FcmException(StatusCode.FCM_UNSUBSCRIBE_FAIL);
         }
-
-//        ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
-//                .getInstance()
-//                .subscribeToTopicAsync(Collections.singletonList(event.getMember().getFcmToken())
-//                        ,("market-"+ event.getMarket().getId().toString()));
-//
-//
-//        apiFuture.addListener(() ->{
-//            try{
-//                TopicManagementResponse response = apiFuture.get();
-//                log.info("토픽 구독취소 성공: {}", response.getSuccessCount());
-//            } catch (ExecutionException | InterruptedException e) {
-//                log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
-//                throw new CustomException(StatusCode.FCM_UNSUBSCRIBE_FAIL);
-//            }
-//        }, asyncConfig.getFcmExecutor());
     }
 
 
+
+    @Recover
+    public void recoverSendNewCouponFcmToSubscriber(FirebaseMessagingException e, SendNewCouponFcmEvent event){
+        throw new FcmException(StatusCode.FCM_SEND_FAIL);
+    }
+
+    @Recover
+    @Transactional
+    public void recoverSubscribeMarket(FirebaseMessagingException e, SubscribeMarketEvent event){
+        Favorite favorite= favoriteRepository.findByMember_IdAndMarket_Id(event.getMember().getId(),event.getMarket().getId()).get();
+        favorite.toggleIsDeleted();
+        log.info("FCM 매장 구독 실패 -> 매장 찜 철회");
+    }
+
+    @Recover
+    @Transactional
+    public void recoverUnSubscribeMarket(FirebaseMessagingException e, UnSubscribeMarketEvent event){
+        Favorite favorite= favoriteRepository.findByMember_IdAndMarket_Id(event.getMember().getId(),event.getMarket().getId()).get();
+        favorite.toggleIsDeleted();
+        log.info("FCM 매장 구독취소 실패 -> 매장 찜 취소 철회");
+    }
 }
+
