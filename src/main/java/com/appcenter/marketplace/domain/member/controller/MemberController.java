@@ -37,7 +37,7 @@ public class MemberController {
                 .body(CommonResponse.from(MEMBER_FOUND.getMessage(),memberService.getMember(memberId)));
     }
 
-    @Operation(summary = "학생 알림 허용(FCM 토큰 서버 저장)", description = "FCM 토큰을 저장합니다.")
+    @Operation(summary = "FCM 토큰 저장 API", description = "FCM 토큰을 저장합니다.")
     @PatchMapping("/notification/permit")
     public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails,@RequestBody MemberFcmReq memberFcmReq) {
         Long memberId = Long.parseLong(userDetails.getUsername());
@@ -46,7 +46,7 @@ public class MemberController {
                 .body(CommonResponse.from(MEMBER_FCM_PERMIT.getMessage()));
     }
 
-    @Operation(summary = "학생 알림 거부(FCM 토큰 삭제)", description = "FCM 토큰을 삭제합니다.")
+    @Operation(summary = "FCM 토큰 삭제 API", description = "FCM 토큰을 삭제합니다.")
     @PatchMapping("/notification/deny")
     public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails) {
         Long memberId = Long.parseLong(userDetails.getUsername());
