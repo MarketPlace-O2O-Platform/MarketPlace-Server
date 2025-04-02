@@ -27,7 +27,7 @@ def sentryDir = 'src/main/generated/sentry'
 sentry {
 	includeSourceContext = true
 
-	org = "d3dbe7a77dc7"
+	org = "inuappcenter"
 	projectName = "currumi-project"
 	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 	additionalSourceDirsForSourceContext = [
