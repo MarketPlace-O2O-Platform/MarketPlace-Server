@@ -7,4 +7,7 @@ public interface MemberService {
     String login(MemberLoginReq memberLoginReq);
     MemberLoginRes getMember(Long studentId);
     long resetCheerTickets();
+
+    void permitFcm(Long memberId, String fcmToken);
+    void denyFcm(Long memberId);
 }
