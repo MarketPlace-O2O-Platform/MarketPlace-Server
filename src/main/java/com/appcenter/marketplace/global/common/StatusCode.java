@@ -36,6 +36,14 @@ public enum StatusCode {
     // Member
     MEMBER_LOGIN_SUCCESS(OK, "로그인에 성공하였습니다."),
     MEMBER_FOUND(OK, "회원 조회 완료"),
+    MEMBER_FCM_PERMIT(OK,"회원 FCM 알림 허용"),
+    MEMBER_FCM_DENY(OK,"회원 FCM 알림 거부"),
+
+    // FCM
+    FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
+    FCM_SEND_FAIL(INTERNAL_SERVER_ERROR, "알림 메시지 전송에 실패하였습니다."),
+    FCM_SUBSCRIBE_FAIL(INTERNAL_SERVER_ERROR,"FCM 구독 요청이 실패했습니다."),
+    FCM_UNSUBSCRIBE_FAIL(INTERNAL_SERVER_ERROR,"FCM 구독 해제 요청이 실패했습니다."),
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INPUT_VALUE_INVALID(BAD_REQUEST,"유효하지 않은 입력입니다."),
@@ -67,7 +75,11 @@ public enum StatusCode {
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
-    TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다.");
+    TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다."),
+
+    /* 503 UNAVAILABLE : 서비스 이용 불가  */
+    FCM_UNAVAILABLE(SERVICE_UNAVAILABLE, "알림 기능을 이용할 수 없습니다.");
+
 
     private final HttpStatus status;
     private final String message;

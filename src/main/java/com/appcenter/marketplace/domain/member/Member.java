@@ -20,19 +20,29 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
+    @Column(name = "fcm_token",nullable = true)
+    private String fcmToken;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public Member (Long id, Integer cheerTicket, Role role) {
+    public Member (Long id, Integer cheerTicket, Role role, String fcmToken) {
         this.id = id;
         this.cheerTicket = cheerTicket;
         this.role = role;
+        this.fcmToken=fcmToken;
     }
 
     public void reduceTicket() {
         this.cheerTicket--;
+    }
+
+    public void denyFcmToken() { this.fcmToken=null; }
+
+    public void permitFcmToken(String fcmToken){
+        this.fcmToken=fcmToken;
     }
 }
 

@@ -5,7 +5,6 @@ import com.appcenter.marketplace.domain.beta.BetaMarket;
 import com.appcenter.marketplace.domain.beta.repository.BetaCouponRepository;
 import com.appcenter.marketplace.domain.beta.repository.BetaMarketRepository;
 import com.appcenter.marketplace.domain.member.Member;
-import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
@@ -15,7 +14,6 @@ import com.appcenter.marketplace.global.jwt.JwtTokenProvider;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +24,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.INVALID_STUDENT
 import static com.appcenter.marketplace.global.common.StatusCode.UNAUTHORIZED_LOGIN_ERROR;
 
 
+@Transactional(readOnly = true)
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -57,7 +56,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional
     public MemberLoginRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
         return MemberLoginRes.toDto(member);
@@ -67,6 +65,20 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public long resetCheerTickets() {
             return memberRepository.resetCheerTickets();
+    }
+
+    @Override
+    @Transactional
+    public void permitFcm(Long memberId, String fcmToken) {
+        Member member = findMemberByMemberId(memberId);
+        member.permitFcmToken(fcmToken);
+    }
+
+    @Override
+    @Transactional
+    public void denyFcm(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.denyFcmToken();
     }
 
     // 학번 로그인 검증 및 형변환

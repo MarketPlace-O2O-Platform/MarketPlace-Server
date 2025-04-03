@@ -67,6 +67,10 @@ dependencies {
 	implementation 'com.oracle.database.jdbc:ojdbc11'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' //유효성 검사
 	implementation group: 'org.qlrm', name: 'qlrm', version: '4.0.1' // native 쿼리를 dto에 매핑시킬 수 있는 라이브러리
+	implementation 'org.springframework.retry:spring-retry'// 특정 메서드에 재시도 기능을 제공하는 라이브러리
+
+	// FCM 알림 기능을 위한 SDK
+	implementation 'com.google.firebase:firebase-admin:9.4.3'
 
 	// QueryDSL 설정
 	implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"

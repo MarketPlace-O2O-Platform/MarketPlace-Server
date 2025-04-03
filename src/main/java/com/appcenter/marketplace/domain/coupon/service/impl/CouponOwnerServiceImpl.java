@@ -9,7 +9,10 @@ import com.appcenter.marketplace.domain.coupon.service.CouponOwnerService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
+import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +21,12 @@ import java.util.List;
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CouponOwnerServiceImpl implements CouponOwnerService {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final CouponRepository couponRepository;
     private final MarketRepository marketRepository;
 
@@ -30,6 +35,9 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
     public CouponRes createCoupon(CouponReq couponReq, Long marketId) {
         Market market = findMarketById(marketId);
         Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
+
+        eventPublisher.publishEvent(new SendNewCouponFcmEvent(market,coupon));
+
         return CouponRes.toDto(coupon);
     }
 
