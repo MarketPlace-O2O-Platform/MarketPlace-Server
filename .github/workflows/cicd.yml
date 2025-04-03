@@ -24,7 +24,7 @@ jobs:
           echo "${{ secrets.ENV }}" > .env
           mkdir ./src/main/resources/firebase
           touch ./src/main/resources/firebase/currumi-24b29-firebase-adminsdk-fbsvc-d222b2e081.json
-          echo "${{ secretes.FCM_PROPERTIES }}" > ./src/main/resources/firebase/currumi-24b29-firebase-adminsdk-fbsvc-d222b2e081.json
+          echo "${{ secrets.FCM_PROPERTIES }}" > ./src/main/resources/firebase/currumi-24b29-firebase-adminsdk-fbsvc-d222b2e081.json
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
