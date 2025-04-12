@@ -37,6 +37,8 @@ public class QBetaMarket extends EntityPathBase<BetaMarket> {
 
     public final StringPath image = createString("image");
 
+    public final BooleanPath isPromise = createBoolean("isPromise");
+
     public final StringPath marketName = createString("marketName");
 
     //inherited

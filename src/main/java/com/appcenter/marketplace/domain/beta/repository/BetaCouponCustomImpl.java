@@ -26,7 +26,8 @@ public class BetaCouponCustomImpl implements BetaCouponCustom{
                         betaMarket.couponName,
                         betaMarket.couponDetail,
                         betaMarket.image,
-                        betaCoupon.isUsed))
+                        betaCoupon.isUsed,
+                        betaCoupon.betaMarket.isPromise))
                 .from(betaCoupon)
                 .innerJoin(betaCoupon.betaMarket, betaMarket)
                 .where(betaCoupon.member.id.eq(memberId)
@@ -45,7 +46,8 @@ public class BetaCouponCustomImpl implements BetaCouponCustom{
                         betaMarket.couponName,
                         betaMarket.couponDetail,
                         betaMarket.image,
-                        betaCoupon.isUsed))
+                        betaCoupon.isUsed,
+                        betaCoupon.betaMarket.isPromise))
                 .from(betaCoupon)
                 .innerJoin(betaMarket).on(betaCoupon.betaMarket.eq(betaMarket))
                 .innerJoin(category).on(betaMarket.category.eq(category))
