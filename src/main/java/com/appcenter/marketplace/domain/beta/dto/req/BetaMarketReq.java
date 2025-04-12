@@ -21,12 +21,15 @@ public class BetaMarketReq {
     @NotBlank(message = "카테고리 대분류는 필수입력값입니다.")
     private String major;
 
+    private Boolean isPromise;
+
     public BetaMarket toEntity(Category category){
         return BetaMarket.builder()
                 .marketName(marketName)
                 .couponName(couponName)
                 .couponDetail(couponDetail)
                 .category(category)
+                .isPromise(isPromise)
                 .build();
     }
 }
