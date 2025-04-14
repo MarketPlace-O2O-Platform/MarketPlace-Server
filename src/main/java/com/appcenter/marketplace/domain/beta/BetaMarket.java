@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.beta;
 
 
+import com.appcenter.marketplace.domain.beta.dto.req.BetaMarketReq;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -48,6 +49,15 @@ public class BetaMarket extends BaseEntity {
         this.category = category;
         this.isPromise = isPromise;
     }
+
+    public void update(BetaMarketReq betaMarketReq, Category category) {
+        this.marketName = betaMarketReq.getMarketName();
+        this.couponName = betaMarketReq.getCouponName();
+        this.couponDetail = betaMarketReq.getCouponDetail();
+        this.category = category;
+        this.isPromise = betaMarketReq.getIsPromise();
+    }
+
 
     public void updateImage(String image){
         this.image= image;
