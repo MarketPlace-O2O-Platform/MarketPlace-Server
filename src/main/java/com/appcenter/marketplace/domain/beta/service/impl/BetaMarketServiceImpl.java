@@ -58,6 +58,8 @@ public class BetaMarketServiceImpl implements BetaMarketService {
         catch(IOException e){
             throw new CustomException(FILE_SAVE_INVALID);
         }
+        
+        sendCouponsToAllMembers(betaMarket);
 
         return BetaMarketRes.of(betaMarket);
     }
