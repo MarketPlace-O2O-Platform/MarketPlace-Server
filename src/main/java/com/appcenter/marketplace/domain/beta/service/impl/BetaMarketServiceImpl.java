@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.appcenter.marketplace.global.common.StatusCode.CATEGORY_NOT_EXIST;
-import static com.appcenter.marketplace.global.common.StatusCode.FILE_SAVE_INVALID;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -59,6 +58,34 @@ public class BetaMarketServiceImpl implements BetaMarketService {
         catch(IOException e){
             throw new CustomException(FILE_SAVE_INVALID);
         }
+
+        return BetaMarketRes.of(betaMarket);
+    }
+
+    @Override
+    @Transactional
+    public BetaMarketRes updateBetaMarket(Long betaMarketId, BetaMarketReq betaMarketReq, MultipartFile multiPartFile) {
+
+        Category category = findCategoryByMajor(betaMarketReq.getMajor());
+
+        BetaMarket betaMarket=betaMarketRepository.findById(betaMarketId).orElseThrow(
+                () -> new CustomException(MARKET_NOT_EXIST));
+
+        betaMarket.update(betaMarketReq, category);
+
+        String imageFileName = UUID.randomUUID() + "_" + multiPartFile.getOriginalFilename();
+
+        betaMarket.updateImage(imageFileName);
+
+        try{
+            File uploadFile = new File(uploadFolder + imageFileName);
+            multiPartFile.transferTo(uploadFile);
+        }
+        catch(IOException e){
+            throw new CustomException(FILE_SAVE_INVALID);
+        }
+
+        sendCouponsToAllMembers(betaMarket);
 
         return BetaMarketRes.of(betaMarket);
     }
