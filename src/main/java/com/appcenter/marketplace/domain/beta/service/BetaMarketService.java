@@ -7,4 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface BetaMarketService {
 
     BetaMarketRes createBetaMarket(BetaMarketReq betaMarketReq, MultipartFile multiPartFile);
+    BetaMarketRes updateBetaMarket(Long betaMarketId, BetaMarketReq betaMarketReq, MultipartFile multiPartFile);
 }
