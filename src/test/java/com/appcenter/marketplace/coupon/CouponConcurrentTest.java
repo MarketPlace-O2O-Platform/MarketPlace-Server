@@ -67,7 +67,7 @@ public class CouponConcurrentTest {
                 "WELCOME10",                     // couponName
                 "10% 할인 쿠폰입니다",            // description
                 LocalDateTime.now().plusDays(30), // deadLine
-                1000                           // stock
+                5                           // stock
         );
         Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
         couponId=coupon.getId();
