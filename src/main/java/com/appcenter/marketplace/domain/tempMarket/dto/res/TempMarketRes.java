@@ -1,7 +1,6 @@
 package com.appcenter.marketplace.domain.tempMarket.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

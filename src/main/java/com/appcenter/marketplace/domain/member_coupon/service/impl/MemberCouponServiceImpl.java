@@ -11,6 +11,7 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
+import com.appcenter.marketplace.global.annotation.DistributeLock;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,6 @@ import static com.appcenter.marketplace.global.common.StatusCode.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberCouponServiceImpl implements MemberCouponService {
 
     private final MemberCouponRepository memberCouponRepository;
@@ -32,7 +32,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
+    @DistributeLock(key = "'coupon:' + #couponId")
     public void issuedCoupon(Long memberId, Long couponId) {
         Member member = findMemberById(memberId);
         Coupon coupon = findCouponById(couponId);
@@ -84,6 +84,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public IssuedCouponRes getMemberCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
         return IssuedCouponRes.toDto(memberCoupon);

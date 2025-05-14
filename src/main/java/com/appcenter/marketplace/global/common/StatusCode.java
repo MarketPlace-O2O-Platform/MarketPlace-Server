@@ -76,6 +76,7 @@ public enum StatusCode {
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
     TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다."),
+    LOCK_ACQUISITION_TOO_MANY_REQUESTS(TOO_MANY_REQUESTS, "락 획득 시도가 너무 많습니다. 잠시 후 다시 시도하세요."),
 
     /* 503 UNAVAILABLE : 서비스 이용 불가  */
     FCM_UNAVAILABLE(SERVICE_UNAVAILABLE, "알림 기능을 이용할 수 없습니다.");

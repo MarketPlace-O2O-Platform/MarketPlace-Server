@@ -93,6 +93,7 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.redisson:redisson-spring-boot-starter:3.33.0'
 
 	// Sentry
 	implementation 'io.sentry:sentry-logback:8.3.0'
