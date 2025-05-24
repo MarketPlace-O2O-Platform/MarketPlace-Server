@@ -9,7 +9,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "favorite")
+@Table(
+        name = "favorite",
+        indexes = {
+                @Index(name = "idx_is_favorite", columnList = "market_id, member_id, isDeleted")
+        }
+)
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
