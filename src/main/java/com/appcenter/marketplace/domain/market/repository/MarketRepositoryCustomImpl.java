@@ -174,7 +174,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
-                        .and(category.major.stringValue().eq(major)))
+                        .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
