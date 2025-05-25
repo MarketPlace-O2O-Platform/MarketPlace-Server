@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketRes;
 import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.QMarketRes;
+import com.appcenter.marketplace.global.common.Major;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -111,7 +112,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
-                        .and(category.major.stringValue().eq(major)))
+                        .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
