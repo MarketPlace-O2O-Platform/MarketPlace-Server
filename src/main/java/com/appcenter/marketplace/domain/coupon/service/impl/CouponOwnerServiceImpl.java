@@ -12,6 +12,7 @@ import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "CLOSINGCOUPONS", allEntries = true)
     public CouponRes createCoupon(CouponReq couponReq, Long marketId) {
         Market market = findMarketById(marketId);
         Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
@@ -56,6 +58,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "CLOSINGCOUPONS", allEntries = true)
     public CouponRes updateCoupon(CouponReq couponReq, Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.update(couponReq);
@@ -64,6 +67,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "CLOSINGCOUPONS", allEntries = true)
     public void updateCouponHidden(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.updateHidden();
@@ -71,6 +75,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "CLOSINGCOUPONS", allEntries = true)
     public void softDeleteCoupon(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         // 소프트 딜리트 적용
@@ -79,6 +84,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "CLOSINGCOUPONS", allEntries = true)
     public void hardDeleteCoupon(Long marketId) {
        couponRepository.deleteAllByMarketId(marketId);
     }

@@ -2,10 +2,12 @@ package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor(force = true)
 public class ClosingCouponRes {
     private final Long couponId;
     private final String couponName;

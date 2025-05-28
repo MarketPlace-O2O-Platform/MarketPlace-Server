@@ -4,10 +4,10 @@ import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +47,7 @@ public class CouponServiceImpl implements CouponService {
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
+    @Cacheable(value = "CLOSINGCOUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<ClosingCouponRes> getClosingCouponPage(Integer size) {
         return couponRepository.findClosingCouponList(size);
     }
