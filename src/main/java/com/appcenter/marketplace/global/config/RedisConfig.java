@@ -67,6 +67,12 @@ public class RedisConfig {
                         .entryTtl(Duration.ofMinutes(10)) // JWT 인증 관련 유저 캐시는 10분
                         .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                )
+                .withCacheConfiguration(CacheName.POPULAR_COUPONS.name(),
+                        RedisCacheConfiguration.defaultCacheConfig()
+                                .entryTtl(Duration.ofMinutes(5)) // 사용자가 쿠폰 다운받는 순간 데이터가 바뀔 수 있다. 최대한 짧게!
+                                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                 );
     }
 }

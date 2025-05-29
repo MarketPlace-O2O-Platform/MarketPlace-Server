@@ -48,21 +48,21 @@ public class CouponServiceImpl implements CouponService {
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
-    @Cacheable(value = "CLOSINGCOUPONS", key = "#size", unless = "#result.isEmpty()")
+    @Cacheable(value = "CLOSING_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopClosingCouponRes> getTopClosingCoupon(Integer size) {
         return couponRepository.findTopClosingCouponList(size);
     }
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
-    @Cacheable(value = "LATESTCOUPONS", key = "#size", unless = "#result.isEmpty()")
+    @Cacheable(value = "LATEST_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopLatestCouponRes> getTopLatestCoupon(Integer size) {
         return couponRepository.findTopLatestCouponList(size);
     }
 
     // 인기 쿠폰 TOP 조회
     @Override
-    @Cacheable(value = "POPULARCOUPONS", key = "#size", unless = "#result.isEmpty()")
+    @Cacheable(value = "POPULAR_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopPopularCouponRes> getTopPopularCoupon(Integer size) {
         return couponRepository.findTopPopularCouponList(size);
     }
