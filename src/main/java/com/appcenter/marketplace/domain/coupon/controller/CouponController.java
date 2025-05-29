@@ -51,7 +51,7 @@ public class CouponController {
     @GetMapping("/latest")
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getLatestCoupon(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Parameter(description = "위에 작성한 marketId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
+            @Parameter(description = "각 페이지의 마지막 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastCouponId") Long couponId,
