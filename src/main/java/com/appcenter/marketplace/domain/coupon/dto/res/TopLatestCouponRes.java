@@ -8,21 +8,22 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(force = true)
-public class ClosingCouponRes {
+public class TopLatestCouponRes {
     private final Long couponId;
     private final String couponName;
-    private final LocalDateTime deadline;
     private final Long marketId;
     private final String marketName;
     private final String thumbnail;
+    private final LocalDateTime couponCreatedAt;
 
+    // 최신 쿠폰 TOP 캐싱용 조회
     @QueryProjection
-    public ClosingCouponRes(Long couponId, String couponName, LocalDateTime deadline, Long marketId, String marketName, String thumbnail) {
+    public TopLatestCouponRes(Long couponId, String couponName, Long marketId, String marketName, String thumbnail, LocalDateTime couponCreatedAt) {
         this.couponId = couponId;
         this.couponName = couponName;
-        this.deadline = deadline;
         this.marketId = marketId;
         this.marketName = marketName;
         this.thumbnail = thumbnail;
+        this.couponCreatedAt = couponCreatedAt;
     }
 }
