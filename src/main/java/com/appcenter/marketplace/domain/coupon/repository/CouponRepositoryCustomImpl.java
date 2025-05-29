@@ -66,9 +66,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 최신 등록 쿠폰 페이징 조회
     @Override
-    public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
+    public List<CouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
         return jpaQueryFactory
-                .select(new QLatestCouponRes(
+                .select(new QCouponRes(
                         coupon.id,
                         coupon.name,
                         market.id,
@@ -96,10 +96,10 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 인기 쿠폰 페이징 조회
     @Override
-    public List<PopularCouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size) {
+    public List<CouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size) {
         QMemberCoupon issuedCoupon = new QMemberCoupon("issuedCoupon"); //해당 사용자의 각 쿠폰의 발급 여부 확인을 위한 별칭 생성
         return jpaQueryFactory
-                .select(new QPopularCouponRes(
+                .select(new QCouponRes(
                         coupon.id,
                         coupon.name,
                         market.id,
@@ -136,8 +136,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<ClosingCouponRes> findTopClosingCouponList(Integer size) {
-        return jpaQueryFactory.select(new QClosingCouponRes(
+    public List<TopClosingCouponRes> findTopClosingCouponList(Integer size) {
+        return jpaQueryFactory.select(new QTopClosingCouponRes(
                         coupon.id,
                         coupon.name,
                         coupon.deadLine,
@@ -157,9 +157,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
-    public List<LatestCouponRes> findTopLatestCouponList(Integer size) {
+    public List<TopLatestCouponRes> findTopLatestCouponList(Integer size) {
         return jpaQueryFactory
-                .select(new QLatestCouponRes(
+                .select(new QTopLatestCouponRes(
                         coupon.id,
                         coupon.name,
                         market.id,

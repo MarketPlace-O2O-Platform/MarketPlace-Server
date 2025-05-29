@@ -49,7 +49,7 @@ public class CouponController {
                     "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>"
     )
     @GetMapping("/latest")
-    public ResponseEntity<CommonResponse<CouponPageRes<LatestCouponRes>>> getLatestCoupon(
+    public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getLatestCoupon(
             @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "위에 작성한 marketId의 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
@@ -68,7 +68,7 @@ public class CouponController {
                     "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>"
     )
     @GetMapping("/popular")
-    public ResponseEntity<CommonResponse<CouponPageRes<PopularCouponRes>>> getPopularCoupon(
+    public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getPopularCoupon(
             @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "페이지의 마지막 issuedCount")
             @RequestParam(required = false, name = "lastIssuedCount") Long count,
@@ -85,7 +85,7 @@ public class CouponController {
             description = "메인 페이지에 들어갈 마감 임박이 다가온 쿠폰 TOP을 조회합니다. <br>" +
                     "만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.")
     @GetMapping("/top/closing")
-    public ResponseEntity<CommonResponse<List<ClosingCouponRes>>> getClosingCoupon(
+    public ResponseEntity<CommonResponse<List<TopClosingCouponRes>>> getClosingCoupon(
             @RequestParam(defaultValue = "10", name="pageSize") Integer size){
         return ResponseEntity.ok(CommonResponse.from(COUPON_FOUND.getMessage(),
                 couponService.getTopClosingCoupon(size)));
@@ -94,7 +94,7 @@ public class CouponController {
     @Operation(summary = "최신 등록 쿠폰 TOP 조회",
             description = "메인 페이지에 들어갈 최신 등록 쿠폰 TOP을 조회합니다. ")
     @GetMapping("/top/latest")
-    public ResponseEntity<CommonResponse<List<LatestCouponRes>>> getLatestCoupon(
+    public ResponseEntity<CommonResponse<List<TopLatestCouponRes>>> getLatestCoupon(
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),

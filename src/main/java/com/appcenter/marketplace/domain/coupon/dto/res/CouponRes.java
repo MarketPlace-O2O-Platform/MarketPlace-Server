@@ -13,12 +13,20 @@ import java.time.LocalDateTime;
 public class CouponRes {
     private final Long couponId;
     private final String couponName;
-    private final String couponDescription;
-    private final LocalDateTime deadLine;
+    private String couponDescription;
+    private LocalDateTime deadLine;
     private Integer stock;
     private Boolean isHidden;
     private Boolean isAvailable;
     private Boolean isMemberIssued;
+
+    // 최신,인기 쿠폰 조회 컬럼
+    private Long marketId;
+    private String marketName;
+    private String address;
+    private String thumbnail;
+    private LocalDateTime couponCreatedAt;
+    private Long issuedCount;
 
     // 사장님 매장 쿠폰 페이징 조회
     @QueryProjection
@@ -41,6 +49,34 @@ public class CouponRes {
         this.deadLine = deadLine;
         this.isAvailable= isAvailable;
         this.isMemberIssued= isMemberIssued;
+    }
+
+    // 최신 쿠폰 페이징 조회
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, LocalDateTime couponCreatedAt) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.marketId = marketId;
+        this.marketName = marketName;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        this.isAvailable = isAvailable;
+        this.isMemberIssued = isMemberIssued;
+        this.couponCreatedAt = couponCreatedAt;
+    }
+
+    // 인기 쿠폰 페이징 조회
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, Long issuedCount) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.marketId = marketId;
+        this.marketName = marketName;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        this.isAvailable = isAvailable;
+        this.isMemberIssued = isMemberIssued;
+        this.issuedCount = issuedCount;
     }
 
     public static CouponRes toDto(Coupon coupon){

@@ -33,30 +33,30 @@ public class CouponServiceImpl implements CouponService {
 
     // 최신 등록 쿠폰 더보기 조회
     @Override
-    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, Integer size) {
-        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
+    public CouponPageRes<CouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, Integer size) {
+        List<CouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
 
         return checkNextPageAndReturn(resDtoList, size);
     }
 
     // 인기 쿠폰 더보기 조회
     @Override
-    public CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
-        List<PopularCouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
+    public CouponPageRes<CouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
+        List<CouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
         return checkNextPageAndReturn(resDtoList, size);
     }
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
     @Cacheable(value = "CLOSINGCOUPONS", key = "#size", unless = "#result.isEmpty()")
-    public List<ClosingCouponRes> getTopClosingCoupon(Integer size) {
+    public List<TopClosingCouponRes> getTopClosingCoupon(Integer size) {
         return couponRepository.findTopClosingCouponList(size);
     }
 
     // 최신 등록 쿠폰 TOP 조회
     @Override
     @Cacheable(value = "LATESTCOUPONS", key = "#size", unless = "#result.isEmpty()")
-    public List<LatestCouponRes> getTopLatestCoupon(Integer size) {
+    public List<TopLatestCouponRes> getTopLatestCoupon(Integer size) {
         return couponRepository.findTopLatestCouponList(size);
 
     }
