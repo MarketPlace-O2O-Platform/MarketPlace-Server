@@ -17,5 +17,9 @@ public class QLatestCouponRes extends ConstructorExpression<LatestCouponRes> {
         super(LatestCouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, java.time.LocalDateTime.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, couponCreatedAt);
     }
 
+    public QLatestCouponRes(com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<java.time.LocalDateTime> couponCreatedAt) {
+        super(LatestCouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, java.time.LocalDateTime.class}, couponId, couponName, marketId, marketName, thumbnail, couponCreatedAt);
+    }
+
 }
 

@@ -13,5 +13,7 @@ public interface CouponService {
 
    CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size);
 
-   List<ClosingCouponRes> getClosingCouponPage(Integer size);
+   List<ClosingCouponRes> getTopClosingCoupon(Integer size);
+
+   List<LatestCouponRes> getTopLatestCoupon(Integer size);
 }

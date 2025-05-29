@@ -15,5 +15,7 @@ public interface CouponRepositoryCustom {
 
     List<PopularCouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size);
 
-    List<ClosingCouponRes> findClosingCouponList(Integer size);
+    List<ClosingCouponRes> findTopClosingCouponList(Integer size);
+
+    List<LatestCouponRes> findTopLatestCouponList(Integer size);
 }

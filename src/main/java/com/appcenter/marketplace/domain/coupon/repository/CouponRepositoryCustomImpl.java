@@ -64,7 +64,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     }
 
-    // 최신 등록 쿠폰의 매장 페이징 조회
+    // 최신 등록 쿠폰 페이징 조회
     @Override
     public List<LatestCouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
         return jpaQueryFactory
@@ -94,6 +94,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
+    // 인기 쿠폰 페이징 조회
     @Override
     public List<PopularCouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size) {
         QMemberCoupon issuedCoupon = new QMemberCoupon("issuedCoupon"); //해당 사용자의 각 쿠폰의 발급 여부 확인을 위한 별칭 생성
@@ -133,9 +134,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
-    // 마감 임박 쿠폰 조회
+    // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<ClosingCouponRes> findClosingCouponList(Integer size) {
+    public List<ClosingCouponRes> findTopClosingCouponList(Integer size) {
         return jpaQueryFactory.select(new QClosingCouponRes(
                         coupon.id,
                         coupon.name,
@@ -150,6 +151,28 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         .and(coupon.stock.gt(0))
                         .and(coupon.deadLine.after(LocalDateTime.now())))
                 .orderBy(coupon.deadLine.asc(), coupon.id.desc())
+                .limit(size)
+                .fetch();
+    }
+
+    // 최신 등록 쿠폰 TOP 조회
+    @Override
+    public List<LatestCouponRes> findTopLatestCouponList(Integer size) {
+        return jpaQueryFactory
+                .select(new QLatestCouponRes(
+                        coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        coupon.createdAt
+                ))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .where(coupon.isDeleted.eq(false)
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
+                .orderBy(coupon.createdAt.desc(), coupon.id.desc()) // 최신순 정렬
                 .limit(size)
                 .fetch();
     }
