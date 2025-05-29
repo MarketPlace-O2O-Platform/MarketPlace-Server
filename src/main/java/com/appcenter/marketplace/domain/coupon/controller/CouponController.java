@@ -100,5 +100,15 @@ public class CouponController {
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         couponService.getTopLatestCoupon(size)));
     }
+
+    @Operation(summary = "인기 쿠폰 TOP 조회",
+            description = "메인 페이지에 들어갈 인기 쿠폰 TOP을 조회합니다. ")
+    @GetMapping("/top/popular")
+    public ResponseEntity<CommonResponse<List<TopPopularCouponRes>>> getPopularCoupon(
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
+                        couponService.getTopPopularCoupon(size)));
+    }
   
 }

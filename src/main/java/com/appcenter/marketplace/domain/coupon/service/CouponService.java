@@ -16,4 +16,6 @@ public interface CouponService {
    List<TopClosingCouponRes> getTopClosingCoupon(Integer size);
 
    List<TopLatestCouponRes> getTopLatestCoupon(Integer size);
+
+   List<TopPopularCouponRes> getTopPopularCoupon(Integer size);
 }

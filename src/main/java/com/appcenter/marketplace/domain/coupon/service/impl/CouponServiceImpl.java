@@ -58,7 +58,13 @@ public class CouponServiceImpl implements CouponService {
     @Cacheable(value = "LATESTCOUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopLatestCouponRes> getTopLatestCoupon(Integer size) {
         return couponRepository.findTopLatestCouponList(size);
+    }
 
+    // 인기 쿠폰 TOP 조회
+    @Override
+    @Cacheable(value = "POPULARCOUPONS", key = "#size", unless = "#result.isEmpty()")
+    public List<TopPopularCouponRes> getTopPopularCoupon(Integer size) {
+        return couponRepository.findTopPopularCouponList(size);
     }
 
     private Market findMarketById(Long marketId) {

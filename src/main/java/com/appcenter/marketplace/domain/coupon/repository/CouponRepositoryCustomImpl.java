@@ -177,6 +177,33 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .fetch();
     }
 
+    // 인기 쿠폰 TOP 조회
+    @Override
+    public List<TopPopularCouponRes> findTopPopularCouponList(Integer size) {
+         return jpaQueryFactory
+                .select(new QTopPopularCouponRes(
+                        coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        memberCoupon.id.count()))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon))
+                .where(coupon.isDeleted.eq(false)
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.deadLine.after(LocalDateTime.now())))
+                .groupBy(coupon.id,
+                        coupon.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail)
+                .orderBy(memberCoupon.id.count().desc(), coupon.id.desc()) // 최신순 정렬
+                .limit(size)
+                .fetch();
+    }
+
     private BooleanBuilder ltCouponId(Long couponId) {
         BooleanBuilder builder = new BooleanBuilder();
         if( couponId !=  null){

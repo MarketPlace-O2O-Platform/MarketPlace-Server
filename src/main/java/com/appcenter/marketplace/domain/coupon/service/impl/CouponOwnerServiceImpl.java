@@ -33,7 +33,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS"}, allEntries = true)
+    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS", "POPULARCOUPONS"}, allEntries = true)
     public CouponRes createCoupon(CouponReq couponReq, Long marketId) {
         Market market = findMarketById(marketId);
         Coupon coupon = couponRepository.save(couponReq.ofCreate(market));
@@ -58,7 +58,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS"}, allEntries = true)
+    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS", "LATESTCOUPONS"}, allEntries = true)
     public CouponRes updateCoupon(CouponReq couponReq, Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.update(couponReq);
@@ -67,7 +67,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS"}, allEntries = true)
+    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS", "LATESTCOUPONS"}, allEntries = true)
     public void updateCouponHidden(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         coupon.updateHidden();
@@ -75,7 +75,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS"}, allEntries = true)
+    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS", "LATESTCOUPONS"}, allEntries = true)
     public void softDeleteCoupon(Long couponId) {
         Coupon coupon = findCouponById(couponId);
         // 소프트 딜리트 적용
@@ -84,7 +84,7 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS"}, allEntries = true)
+    @CacheEvict(cacheNames = {"CLOSINGCOUPONS", "LATESTCOUPONS", "LATESTCOUPONS"}, allEntries = true)
     public void hardDeleteCoupon(Long marketId) {
        couponRepository.deleteAllByMarketId(marketId);
     }
