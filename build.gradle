@@ -93,6 +93,7 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
 	// Sentry
 	implementation 'io.sentry:sentry-logback:8.3.0'
