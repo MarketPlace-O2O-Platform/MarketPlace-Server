@@ -4,10 +4,10 @@ import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
-import com.appcenter.marketplace.domain.coupon.dto.res.LatestCouponRes;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,24 +31,40 @@ public class CouponServiceImpl implements CouponService {
         return checkNextPageAndReturn(couponList, size);
     }
 
-    // 최신 등록 쿠폰의 매장 더보기 조회
+    // 최신 등록 쿠폰 더보기 조회
     @Override
-    public CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, Integer size) {
-        List<LatestCouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
+    public CouponPageRes<CouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, Integer size) {
+        List<CouponRes> resDtoList = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
 
         return checkNextPageAndReturn(resDtoList, size);
     }
 
+    // 인기 쿠폰 더보기 조회
     @Override
-    public CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
-        List<PopularCouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
+    public CouponPageRes<CouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size) {
+        List<CouponRes> resDtoList = couponRepository.findPopularCouponList(memberId, count, couponId, size);
         return checkNextPageAndReturn(resDtoList, size);
     }
 
     // 마감 임박 쿠폰 TOP 조회
     @Override
-    public List<ClosingCouponRes> getClosingCouponPage(Integer size) {
-        return couponRepository.findClosingCouponList(size);
+    @Cacheable(value = "CLOSING_COUPONS", key = "#size", unless = "#result.isEmpty()")
+    public List<TopClosingCouponRes> getTopClosingCoupon(Integer size) {
+        return couponRepository.findTopClosingCouponList(size);
+    }
+
+    // 최신 등록 쿠폰 TOP 조회
+    @Override
+    @Cacheable(value = "LATEST_COUPONS", key = "#size", unless = "#result.isEmpty()")
+    public List<TopLatestCouponRes> getTopLatestCoupon(Integer size) {
+        return couponRepository.findTopLatestCouponList(size);
+    }
+
+    // 인기 쿠폰 TOP 조회
+    @Override
+    @Cacheable(value = "POPULAR_COUPONS", key = "#size", unless = "#result.isEmpty()")
+    public List<TopPopularCouponRes> getTopPopularCoupon(Integer size) {
+        return couponRepository.findTopPopularCouponList(size);
     }
 
     private Market findMarketById(Long marketId) {

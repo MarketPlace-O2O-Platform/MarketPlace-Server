@@ -35,7 +35,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     @Transactional
     public void issuedCoupon(Long memberId, Long couponId) {
         Member member = findMemberById(memberId);
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithRock(couponId);
 
         // 쿠폰의 잔여 갯수가 0개일 경우
         if (coupon.getStock() == 0 ){
@@ -112,8 +112,8 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));
     }
 
-    private Coupon findCouponById(Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
+    private Coupon findCouponByIdWithRock(Long couponId) {
+        Coupon coupon = couponRepository.findCouponByIdWithLock(couponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
 
         if (!coupon.getIsDeleted())
             return coupon;

@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketRes;
 import com.appcenter.marketplace.domain.market.dto.res.QMarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.QMarketRes;
+import com.appcenter.marketplace.global.common.Major;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -111,7 +112,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
-                        .and(category.major.stringValue().eq(major)))
+                        .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -173,7 +174,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
-                        .and(category.major.stringValue().eq(major)))
+                        .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -193,21 +194,48 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         favorite.id.isNotNull(),
                         coupon.id.isNotNull(),
                         favorite.modifiedAt))
-                .from(market)
-                .innerJoin(favorite).on(market.eq(favorite.market)
-                        .and(favorite.isDeleted.eq(false)
-                        .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
+                .from(favorite)
+                .innerJoin(favorite.market, market)
+                .innerJoin(market.local, local)
+                .innerJoin(local.metro, metro)
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
-                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
-                .innerJoin(local).on(market.local.eq(local))
-                .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltFavoriteModifiedAt(lastModifiedAt) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
-                        .and(market.isDeleted.eq(false)))
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7))))
+                .where(
+                        favorite.isDeleted.eq(false)
+                                .and(favorite.member.id.eq(memberId))
+                                .and(ltFavoriteModifiedAt(lastModifiedAt))
+                                .and(market.isDeleted.eq(false))
+                )
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();
+//        return jpaQueryFactory
+//                .select(new QMarketRes(
+//                        market.id,
+//                        market.name,
+//                        market.description,
+//                        metro.name.concat(" ").concat(local.name),
+//                        market.thumbnail,
+//                        favorite.id.isNotNull(),
+//                        coupon.id.isNotNull(),
+//                        favorite.modifiedAt))
+//                .from(market)
+//                .innerJoin(favorite).on(market.eq(favorite.market)
+//                        .and(favorite.isDeleted.eq(false)
+//                        .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
+//                .leftJoin(coupon).on(coupon.market.eq(market)
+//                        .and(coupon.isDeleted.eq(false))
+//                        .and(coupon.isHidden.eq(false))
+//                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
+//                .innerJoin(local).on(market.local.eq(local))
+//                .innerJoin(metro).on(local.metro.eq(metro))
+//                .where(ltFavoriteModifiedAt(lastModifiedAt) // 회원 자신이 동시간대에 찜할 수 없으므로 lt이다.
+//                        .and(market.isDeleted.eq(false)))
+//                .orderBy(favorite.modifiedAt.desc())
+//                .limit(size + 1)
+//                .fetch();
     }
 
 //    // 찜 수가 가장 많은 매장 페이징 조회

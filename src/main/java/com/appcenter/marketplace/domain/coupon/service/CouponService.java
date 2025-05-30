@@ -9,9 +9,13 @@ public interface CouponService {
 
    CouponPageRes<CouponRes> getCouponList(Long memberId, Long marketId, Long couponId, Integer size);
 
-   CouponPageRes<LatestCouponRes> getLatestCouponPage(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
+   CouponPageRes<CouponRes> getLatestCouponPage(Long memberId, LocalDateTime createdAt, Long couponId, Integer size);
 
-   CouponPageRes<PopularCouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size);
+   CouponPageRes<CouponRes> getPopularCouponPage(Long memberId, Long count, Long couponId, Integer size);
 
-   List<ClosingCouponRes> getClosingCouponPage(Integer size);
+   List<TopClosingCouponRes> getTopClosingCoupon(Integer size);
+
+   List<TopLatestCouponRes> getTopLatestCoupon(Integer size);
+
+   List<TopPopularCouponRes> getTopPopularCoupon(Integer size);
 }
