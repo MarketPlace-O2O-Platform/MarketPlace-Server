@@ -22,6 +22,7 @@
 - Querydsl
 - Mysql
 - Oracle
+- Redis
 - Ngrinder
 - Prometheus
 - Grafana
