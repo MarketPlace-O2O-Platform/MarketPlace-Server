@@ -20,12 +20,18 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
-    @Column(name = "fcm_token",nullable = true)
-    private String fcmToken;
+    @Column(nullable = false)
+    private String account;
+
+    @Column(name = "account_number", nullable = false)
+    private String accountNumber;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "fcm_token",nullable = true)
+    private String fcmToken;
 
     @Builder
     public Member (Long id, Integer cheerTicket, Role role, String fcmToken) {
