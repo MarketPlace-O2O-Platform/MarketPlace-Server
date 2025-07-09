@@ -78,6 +78,7 @@ public class MemberController {
     }
 
     @Operation(summary = "관리자 권한 승급", description = "해당 회원을 관리자로 임명합니다.")
+//    @PreAuthorize("hasRole('ADMIN')") Admin 권한을 가진 사용자만 해당 API 이용가능
     @PatchMapping("/admin")
     public ResponseEntity<CommonResponse<Object>> upgradePermission(@AuthenticationPrincipal UserDetails userDetails) {
         Long memberId = Long.parseLong(userDetails.getUsername());
