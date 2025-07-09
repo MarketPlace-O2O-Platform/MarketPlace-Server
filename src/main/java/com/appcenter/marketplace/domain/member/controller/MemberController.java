@@ -76,4 +76,13 @@ public class MemberController {
         return ResponseEntity.status(MEMBER_FCM_DENY.getStatus())
                 .body(CommonResponse.from(MEMBER_FCM_DENY.getMessage()));
     }
+
+    @Operation(summary = "관리자 권한 승급", description = "해당 회원을 관리자로 임명합니다.")
+    @PatchMapping("/admin")
+    public ResponseEntity<CommonResponse<Object>> upgradePermission(@AuthenticationPrincipal UserDetails userDetails) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        memberService.upgradePermission(memberId);
+        return ResponseEntity.status(MEMBER_UPGRADE_PERMISSION.getStatus())
+                .body(CommonResponse.from(MEMBER_UPGRADE_PERMISSION.getMessage()));
+    }
 }

@@ -62,5 +62,7 @@ public class Member extends BaseEntity {
     public void permitFcmToken(String fcmToken){
         this.fcmToken=fcmToken;
     }
+
+    public void upgradePermission(){ this.role=Role.ROLE_ADMIN;}
 }
 

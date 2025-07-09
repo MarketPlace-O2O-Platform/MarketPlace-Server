@@ -14,4 +14,6 @@ public interface MemberService {
 
     void permitFcm(Long memberId, String fcmToken);
     void denyFcm(Long memberId);
+
+    void upgradePermission(Long memberId);
 }

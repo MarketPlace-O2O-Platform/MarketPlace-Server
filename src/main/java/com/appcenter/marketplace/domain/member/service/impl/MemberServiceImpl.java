@@ -96,6 +96,13 @@ public class MemberServiceImpl implements MemberService {
         member.denyFcmToken();
     }
 
+    @Override
+    @Transactional
+    public void upgradePermission(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.upgradePermission();
+    }
+
     // 학번 로그인 검증 및 형변환
     private Long validateAndParseStudentId(MemberLoginReq memberLoginReq) {
         // 로그인 검증

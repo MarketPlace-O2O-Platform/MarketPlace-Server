@@ -40,6 +40,7 @@ public enum StatusCode {
     MEMBER_FCM_DENY(OK,"회원 FCM 알림 거부"),
     MEMBER_ACCOUNT_PERMIT(OK,"회원 주거래은행/계좌번호 저장"),
     MEMBER_ACCOUNT_DENY(OK,"회원 주거래은행/계좌번호 저장 거부"),
+    MEMBER_UPGRADE_PERMISSION(OK,"회원 권한 관리자 승급 완료"),
 
     // FCM
     FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
