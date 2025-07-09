@@ -1,9 +1,10 @@
 package com.appcenter.marketplace.domain.member.controller;
 
 
+import com.appcenter.marketplace.domain.member.dto.req.MemberAccountReq;
 import com.appcenter.marketplace.domain.member.dto.req.MemberFcmReq;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
-import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberRes;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,17 +33,35 @@ public class MemberController {
                 .body(CommonResponse.from(MEMBER_LOGIN_SUCCESS.getMessage(),memberService.login(memberLoginReq)));
     }
 
-    @Operation(summary = "학생 학번 조회", description = "마이페이지에 로그인한 회원의 학번을 조회하기 위해 사용됩니다." )
+    @Operation(summary = "학생 조회", description = "마이페이지에 로그인한 회원의 정보를 조회하기 위해 사용됩니다." )
     @GetMapping
-    public ResponseEntity<CommonResponse<MemberLoginRes>> getMember(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<CommonResponse<MemberRes>> getMember(@AuthenticationPrincipal UserDetails userDetails){
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(MEMBER_FOUND.getStatus())
                 .body(CommonResponse.from(MEMBER_FOUND.getMessage(),memberService.getMember(memberId)));
     }
 
+    @Operation(summary = "주거래은행, 계좌번호 저장 API", description = "환급 쿠폰을 사용하기 위한 정보를 저장합니다.")
+    @PatchMapping("/account/permit")
+    public ResponseEntity<CommonResponse<Object>> permitAccount(@AuthenticationPrincipal UserDetails userDetails, @RequestBody MemberAccountReq memberAccountReq) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        memberService.permitAccount(memberId, memberAccountReq.getAccount(),memberAccountReq.getAccountNumber());
+        return ResponseEntity.status(MEMBER_ACCOUNT_PERMIT.getStatus())
+                .body(CommonResponse.from(MEMBER_ACCOUNT_PERMIT.getMessage()));
+    }
+
+    @Operation(summary = "주거래은행, 계좌번호 삭제 API", description = "환급 쿠폰을 사용하기 위한 정보를 삭제합니다.")
+    @PatchMapping("/account/deny")
+    public ResponseEntity<CommonResponse<Object>> denyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        memberService.denyAccount(memberId);
+        return ResponseEntity.status(MEMBER_ACCOUNT_DENY.getStatus())
+                .body(CommonResponse.from(MEMBER_ACCOUNT_DENY.getMessage()));
+    }
+
     @Operation(summary = "FCM 토큰 저장 API", description = "FCM 토큰을 저장합니다.")
     @PatchMapping("/notification/permit")
-    public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails,@RequestBody MemberFcmReq memberFcmReq) {
+    public ResponseEntity<CommonResponse<Object>> permitFcmToken(@AuthenticationPrincipal UserDetails userDetails,@RequestBody MemberFcmReq memberFcmReq) {
         Long memberId = Long.parseLong(userDetails.getUsername());
         memberService.permitFcm(memberId, memberFcmReq.getFcmToken());
         return ResponseEntity.status(MEMBER_FCM_PERMIT.getStatus())
@@ -51,7 +70,7 @@ public class MemberController {
 
     @Operation(summary = "FCM 토큰 삭제 API", description = "FCM 토큰을 삭제합니다.")
     @PatchMapping("/notification/deny")
-    public ResponseEntity<CommonResponse<Object>> loginMember(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<CommonResponse<Object>> denyFcmToken(@AuthenticationPrincipal UserDetails userDetails) {
         Long memberId = Long.parseLong(userDetails.getUsername());
         memberService.denyFcm(memberId);
         return ResponseEntity.status(MEMBER_FCM_DENY.getStatus())

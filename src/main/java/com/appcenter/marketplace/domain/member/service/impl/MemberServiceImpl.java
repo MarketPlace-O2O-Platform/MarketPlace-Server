@@ -6,7 +6,7 @@ import com.appcenter.marketplace.domain.beta.repository.BetaCouponRepository;
 import com.appcenter.marketplace.domain.beta.repository.BetaMarketRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
-import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberRes;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -56,9 +56,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberLoginRes getMember(Long studentId) {
+    public MemberRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
-        return MemberLoginRes.toDto(member);
+        return MemberRes.toDto(member);
     }
 
     @Override
@@ -66,6 +66,21 @@ public class MemberServiceImpl implements MemberService {
     public long resetCheerTickets() {
             return memberRepository.resetCheerTickets();
     }
+
+    @Override
+    @Transactional
+    public void permitAccount(Long memberId, String account, String accountNumber) {
+        Member member = findMemberByMemberId(memberId);
+        member.saveAccount(account,accountNumber);
+    }
+
+    @Override
+    @Transactional
+    public void denyAccount(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.deleteAccount();
+    }
+
 
     @Override
     @Transactional

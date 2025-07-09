@@ -20,10 +20,10 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String account;
 
-    @Column(name = "account_number", nullable = false)
+    @Column(name = "account_number", nullable = true)
     private String accountNumber;
 
     @Column(nullable = false)
@@ -34,15 +34,27 @@ public class Member extends BaseEntity {
     private String fcmToken;
 
     @Builder
-    public Member (Long id, Integer cheerTicket, Role role, String fcmToken) {
+    public Member (Long id, Integer cheerTicket, String account, String accountNumber, Role role, String fcmToken) {
         this.id = id;
         this.cheerTicket = cheerTicket;
+        this.account=account;
+        this.accountNumber=accountNumber;
         this.role = role;
         this.fcmToken=fcmToken;
     }
 
     public void reduceTicket() {
         this.cheerTicket--;
+    }
+
+    public void saveAccount(String account, String accountNumber){
+        this.account=account;
+        this.accountNumber=accountNumber;
+    }
+
+    public void deleteAccount(){
+        this.account=null;
+        this.accountNumber=null;
     }
 
     public void denyFcmToken() { this.fcmToken=null; }

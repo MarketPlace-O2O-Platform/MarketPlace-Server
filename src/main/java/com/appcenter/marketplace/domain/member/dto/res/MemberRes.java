@@ -6,20 +6,26 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberLoginRes {
+public class MemberRes {
     private final Long studentId;
     private final Integer cheerTicket;
+    private final String account;
+    private final String accountNumber;
 
     @Builder
-    public MemberLoginRes(Long studentId, Integer cheerTicket) {
+    public MemberRes(Long studentId, Integer cheerTicket, String account, String accountNumber) {
         this.studentId = studentId;
         this.cheerTicket = cheerTicket;
+        this.account = account;
+        this.accountNumber = accountNumber;
     }
 
-    public static MemberLoginRes toDto(Member member) {
-        return MemberLoginRes.builder()
+    public static MemberRes toDto(Member member) {
+        return MemberRes.builder()
                 .studentId(member.getId())
                 .cheerTicket(member.getCheerTicket())
+                .account(member.getAccount())
+                .accountNumber(member.getAccountNumber())
                 .build();
     }
 }
