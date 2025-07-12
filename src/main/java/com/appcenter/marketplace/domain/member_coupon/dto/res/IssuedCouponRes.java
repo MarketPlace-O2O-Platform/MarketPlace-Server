@@ -16,10 +16,11 @@ public class IssuedCouponRes {
     private final String description;
     private final LocalDateTime deadLine;
     private final Boolean used;
+    private final Boolean expired;
 
     @QueryProjection
     @Builder
-    public IssuedCouponRes(Long memberCouponId, Long couponId,String thumbnail, String couponName, String description, LocalDateTime deadLine, Boolean used) {
+    public IssuedCouponRes(Long memberCouponId, Long couponId,String thumbnail, String couponName, String description, LocalDateTime deadLine, Boolean used, Boolean expired) {
         this.memberCouponId = memberCouponId;
         this.couponId = couponId;
         this.thumbnail = thumbnail;
@@ -27,6 +28,7 @@ public class IssuedCouponRes {
         this.description = description;
         this.deadLine = deadLine;
         this.used = used;
+        this.expired = expired;
     }
 
     public static IssuedCouponRes toDto(MemberCoupon memberCoupon){
@@ -38,6 +40,7 @@ public class IssuedCouponRes {
                 .description(memberCoupon.getCoupon().getDescription())
                 .deadLine(memberCoupon.getCoupon().getDeadLine())
                 .used(memberCoupon.getIsUsed())
+                .expired(memberCoupon.getIsExpired())
                 .build();
     }
 }

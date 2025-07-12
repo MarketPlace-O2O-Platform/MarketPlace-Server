@@ -13,8 +13,8 @@ public class QIssuedCouponRes extends ConstructorExpression<IssuedCouponRes> {
 
     private static final long serialVersionUID = 422510221L;
 
-    public QIssuedCouponRes(com.querydsl.core.types.Expression<Long> memberCouponId, com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<java.time.LocalDateTime> deadLine, com.querydsl.core.types.Expression<Boolean> used) {
-        super(IssuedCouponRes.class, new Class<?>[]{long.class, long.class, String.class, String.class, String.class, java.time.LocalDateTime.class, boolean.class}, memberCouponId, couponId, thumbnail, couponName, description, deadLine, used);
+    public QIssuedCouponRes(com.querydsl.core.types.Expression<Long> memberCouponId, com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<java.time.LocalDateTime> deadLine, com.querydsl.core.types.Expression<Boolean> used, com.querydsl.core.types.Expression<Boolean> expired) {
+        super(IssuedCouponRes.class, new Class<?>[]{long.class, long.class, String.class, String.class, String.class, java.time.LocalDateTime.class, boolean.class, boolean.class}, memberCouponId, couponId, thumbnail, couponName, description, deadLine, used, expired);
     }
 
 }

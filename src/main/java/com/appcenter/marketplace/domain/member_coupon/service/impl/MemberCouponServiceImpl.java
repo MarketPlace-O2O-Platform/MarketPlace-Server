@@ -62,13 +62,11 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     public CouponPageRes<IssuedCouponRes> getMemberCouponList(Long memberId, MemberCouponType type, Long memberCouponId, Integer size) {
         List<IssuedCouponRes> couponList;
 
-        switch (type) {
-            case EXPIRED ->
-                    couponList = memberCouponRepository.findExpiredCouponResDtoByMemberId(memberId, memberCouponId, size);
-            case USED ->
-                    couponList = memberCouponRepository.findUsedMemberCouponResDtoByMemberId(memberId, memberCouponId, size);
-            default ->
-                    couponList = memberCouponRepository.findIssuedCouponResDtoByMemberId(memberId, memberCouponId, size);
+        // ISSUED, ENDED로 조회
+        if (type == MemberCouponType.ENDED) {
+            couponList = memberCouponRepository.findEndedCouponResDtoByMemberId(memberId, memberCouponId, size);
+        } else {
+            couponList = memberCouponRepository.findIssuedCouponResDtoByMemberId(memberId, memberCouponId, size);
         };
 
         return checkNextPageAndReturn(couponList, size);

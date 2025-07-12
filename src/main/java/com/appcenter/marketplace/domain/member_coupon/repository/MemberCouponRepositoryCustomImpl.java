@@ -37,7 +37,8 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
-                        memberCoupon.isUsed))
+                        memberCoupon.isUsed,
+                        memberCoupon.isExpired))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))
@@ -53,49 +54,72 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     @Override
-    public List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
-        // 발급 받은 쿠폰 중,
-        // 기간 만료 + 3일이 지난 쿠폰 을 조회합니다.
+    public List<IssuedCouponRes> findEndedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
-                        coupon.id,
-                        coupon.market.thumbnail,
-                        coupon.name,
-                        coupon.description,
-                        coupon.deadLine,
-                        memberCoupon.isUsed))
+                    coupon.id,
+                    coupon.market.thumbnail,
+                    coupon.name,
+                    coupon.description,
+                    coupon.deadLine,
+                    memberCoupon.isUsed,
+                    memberCoupon.isExpired))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))
                 .where(ltMemberCouponId(memberCouponId)
                         .and(memberCoupon.member.id.eq(memberId))
-                        .and(memberCoupon.isUsed.eq(false))
-                        .and(memberCoupon.isExpired.eq(true)))
+                        .and(memberCoupon.isUsed.eq(true) // 사용완료 or 사용만료
+                                .or(memberCoupon.isExpired.eq(true))))
                 .orderBy(memberCoupon.id.desc())
                 .limit(size+1)
                 .fetch();
 
     }
+
+//    @Override
+//    public List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
+//        // 발급 받은 쿠폰 중,
+//        // 기간 만료 + 3일이 지난 쿠폰 을 조회합니다.
+//        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
+//                        coupon.id,
+//                        coupon.market.thumbnail,
+//                        coupon.name,
+//                        coupon.description,
+//                        coupon.deadLine,
+//                        memberCoupon.isUsed))
+//                .from(coupon)
+//                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+//                .join(market).on(market.id.eq(coupon.market.id))
+//                .where(ltMemberCouponId(memberCouponId)
+//                        .and(memberCoupon.member.id.eq(memberId))
+//                        .and(memberCoupon.isUsed.eq(false))
+//                        .and(memberCoupon.isExpired.eq(true)))
+//                .orderBy(memberCoupon.id.desc())
+//                .limit(size+1)
+//                .fetch();
+//
+//    }
 
     // 사용완료된 쿠폰 조회
-    @Override
-    public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size ) {
-        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
-                        coupon.id,
-                        coupon.market.thumbnail,
-                        coupon.name,
-                        coupon.description,
-                        coupon.deadLine,
-                        memberCoupon.isUsed))
-                .from(coupon)
-                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
-                .join(market).on(market.id.eq(coupon.market.id))
-                .where(ltMemberCouponId(memberCouponId)
-                        .and(memberCoupon.member.id.eq(memberId))
-                        .and(memberCoupon.isUsed.eq(true)))
-                .orderBy(memberCoupon.id.desc())
-                .limit(size+1)
-                .fetch();
-    }
+//    @Override
+//    public List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size ) {
+//        return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
+//                        coupon.id,
+//                        coupon.market.thumbnail,
+//                        coupon.name,
+//                        coupon.description,
+//                        coupon.deadLine,
+//                        memberCoupon.isUsed))
+//                .from(coupon)
+//                .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
+//                .join(market).on(market.id.eq(coupon.market.id))
+//                .where(ltMemberCouponId(memberCouponId)
+//                        .and(memberCoupon.member.id.eq(memberId))
+//                        .and(memberCoupon.isUsed.eq(true)))
+//                .orderBy(memberCoupon.id.desc())
+//                .limit(size+1)
+//                .fetch();
+//    }
 
     // 3일 후 유효한지 체크
     @Override
@@ -127,4 +151,3 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
         return builder;
     }
 }
-

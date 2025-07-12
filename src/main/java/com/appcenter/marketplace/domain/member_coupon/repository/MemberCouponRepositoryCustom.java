@@ -8,8 +8,7 @@ public interface MemberCouponRepositoryCustom {
     boolean existCouponByMemberId(Long memberId, Long couponId);
 
     List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
-    List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
-    List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
+    List<IssuedCouponRes> findEndedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
     void check3DaysCoupons();
     void checkExpiredCoupons();
 }
