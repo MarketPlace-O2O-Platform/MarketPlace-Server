@@ -20,4 +20,7 @@ public interface PaybackService {
     // 환급 쿠폰 전체 확인 메서드 (관리자용)
     CouponPageRes<PaybackRes> getCouponListForAdmin(Long marketId, Long couponId, Integer size);
 
+    // 환급 쿠폰 전체 확인 메서드 (유저용 - isHidden False)
+    CouponPageRes<PaybackRes> getCouponListForMembers(Long marketId, Long couponId, Integer size);
+
 }

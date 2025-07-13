@@ -34,4 +34,31 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<PaybackRes> findCouponsForMembersByMarketId(Long marketId, Long couponId, Integer size) {
+        return queryFactory.select(new QPaybackRes(
+                        payback.id,
+                        payback.name,
+                        payback.description,
+                        payback.isHidden))
+                .from(payback)
+                .join(market).on(payback.market.id.eq(market.id))
+                .where(ltCouponId(couponId)
+                        .and(payback.market.id.eq(marketId))
+                        .and(payback.isHidden.eq(false))
+                        .and(payback.isDeleted.eq(false)))
+                .orderBy(payback.id.desc())
+                .limit(size+1)
+                .fetch();
+    }
+
+    private BooleanBuilder ltCouponId(Long couponId){
+        BooleanBuilder builder = new BooleanBuilder();
+        if( couponId !=  null){
+            builder.and(payback.id.lt(couponId));
+        }
+        return builder;
+    }
+
+
 }
