@@ -52,3 +52,12 @@ public class PaybackAdminController {
         paybackAdminService.updateCouponHidden(couponId);
         return ResponseEntity.status(COUPON_HIDDEN.getStatus()).body(CommonResponse.from(COUPON_HIDDEN.getMessage()));
     }
+
+    @Operation(summary = "관리자(혹은 사장님) 쿠폰 삭제", description = "관리자(혹은 사장님)은 쿠폰을 삭제할 수 있습니다. " +
+            "<br> 삭제는 소프트 딜리트로 구현됩니다.")
+    @DeleteMapping("/payback-coupons/{couponId}")
+    public ResponseEntity<CommonResponse<Object>> deleteCoupon(@PathVariable Long couponId) {
+        paybackAdminService.softDeleteCoupon(couponId);
+        return ResponseEntity.status(COUPON_DELETE.getStatus()).body(CommonResponse.from(COUPON_DELETE.getMessage()));
+    }
+}

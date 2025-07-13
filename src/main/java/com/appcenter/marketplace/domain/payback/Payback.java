@@ -51,4 +51,9 @@ public class Payback extends BaseEntity {
     public void updateHidden() {
         this.isHidden = !this.isHidden;
     }
+
+    public void softDeleteCoupon(){
+        this.isDeleted = true;
+        this.isHidden = true;
+    }
 }

@@ -65,6 +65,14 @@ public class PaybackServiceImpl implements PaybackService {
         List<PaybackRes> paybackResList = paybackRepository.findCouponsForMembersByMarketId(market.getId(), couponId, size);
         return checkNextPageAndReturn(paybackResList, size);
     }
+
+    @Override
+    @Transactional
+    public void softDeleteCoupon(Long couponId) {
+        Payback payback = findPaybackById(couponId);
+        payback.softDeleteCoupon();
+    }
+
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
     }

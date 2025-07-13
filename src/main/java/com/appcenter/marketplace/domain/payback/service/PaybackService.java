@@ -23,4 +23,7 @@ public interface PaybackService {
     // 환급 쿠폰 전체 확인 메서드 (유저용 - isHidden False)
     CouponPageRes<PaybackRes> getCouponListForMembers(Long marketId, Long couponId, Integer size);
 
+    // 환급 쿠폰 삭제 메서드
+    void softDeleteCoupon(Long couponId);
+
 }
