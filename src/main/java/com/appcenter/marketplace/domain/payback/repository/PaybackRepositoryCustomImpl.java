@@ -1,8 +1,10 @@
 package com.appcenter.marketplace.domain.payback.repository;
 
+import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.payback.dto.res.PaybackRes;
 import com.appcenter.marketplace.domain.payback.dto.res.QPaybackRes;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +22,11 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
     public List<PaybackRes> findCouponsForAdminByMarketId(Long marketId, Long couponId, Integer size) {
 
         return queryFactory.select(new QPaybackRes(
-                    payback.id,
-                    payback.name,
-                    payback.description,
-                    payback.isHidden))
+                        payback.id,
+                        payback.name,
+                        payback.description,
+                        payback.isHidden,
+                        Expressions.constant(CouponType.PAYBACK)))
                 .from(payback)
                 .join(market).on(payback.market.id.eq(market.id))
                 .where(ltCouponId(couponId)
@@ -40,7 +43,8 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         payback.id,
                         payback.name,
                         payback.description,
-                        payback.isHidden))
+                        payback.isHidden,
+                        Expressions.constant(CouponType.PAYBACK)))
                 .from(payback)
                 .join(market).on(payback.market.id.eq(market.id))
                 .where(ltCouponId(couponId)
