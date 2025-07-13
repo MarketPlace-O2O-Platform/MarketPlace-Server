@@ -34,3 +34,10 @@ public class PaybackAdminController {
                                                                   @PathVariable Long couponId ){
         return ResponseEntity.status(COUPON_UPDATE.getStatus()).body(CommonResponse.from(COUPON_UPDATE.getMessage(),paybackAdminService.updateCoupon(req, couponId)));
     }
+
+    @Operation(summary = "숨김/공개 처리 기능", description = "생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.")
+    @PutMapping("/payback-coupons/hidden/{couponId}")
+    public ResponseEntity<CommonResponse<Object>> hiddenCoupon(@PathVariable Long couponId) {
+        paybackAdminService.updateCouponHidden(couponId);
+        return ResponseEntity.status(COUPON_HIDDEN.getStatus()).body(CommonResponse.from(COUPON_HIDDEN.getMessage()));
+    }

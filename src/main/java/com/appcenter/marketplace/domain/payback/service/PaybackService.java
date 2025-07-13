@@ -13,4 +13,8 @@ public interface PaybackService {
 
     // 환급 쿠폰 수정 메서드
     PaybackRes updateCoupon(PaybackReq req, Long couponId);
+
+    // 환급 쿠폰 숨김 처리 메서드
+    void updateCouponHidden(Long couponId);
+
 }

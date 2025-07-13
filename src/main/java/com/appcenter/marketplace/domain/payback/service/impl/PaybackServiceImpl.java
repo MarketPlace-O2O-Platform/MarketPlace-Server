@@ -43,3 +43,23 @@ public class PaybackServiceImpl implements PaybackService {
         payback.update(couponReq);
         return PaybackRes.toDto(payback);
     }
+
+    @Override
+    @Transactional
+    public void updateCouponHidden(Long couponId) {
+        Payback payback = findPaybackById(couponId);
+        payback.updateHidden();
+    }
+
+    private Market findMarketById(Long marketId) {
+        return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
+    }
+
+    private Payback findPaybackById(Long couponId) {
+        Payback payback = paybackRepository.findById(couponId).orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
+
+        if (!payback.getIsDeleted()){
+            return payback;
+        }
+        else throw new CustomException(COUPON_IS_DELETED);
+    }
