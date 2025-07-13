@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.payback;
 
 import com.appcenter.marketplace.domain.market.Market;
+import com.appcenter.marketplace.domain.payback.dto.req.PaybackReq;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

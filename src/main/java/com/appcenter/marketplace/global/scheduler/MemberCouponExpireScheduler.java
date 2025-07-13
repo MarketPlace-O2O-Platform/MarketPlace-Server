@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.global.scheduler;
 
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
+import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,12 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MemberCouponExpireScheduler {
     private final MemberCouponService memberCouponService;
+    private final MemberPaybackService memberPaybackService;
 
     // 받은 쿠폰이 3일뒤 사용 안했다면 만료
     @Scheduled(cron = "${schedule.cron.run-daily}", zone="Asia/Seoul")
     public void check3DaysCoupons() {
         try{
             memberCouponService.check3DaysCoupons();
+            memberPaybackService.check3DaysCoupons();
         }catch(Exception e){
             log.error("MemberCouponExpireScheduler: {} 에러 발생", e.getMessage());
         }

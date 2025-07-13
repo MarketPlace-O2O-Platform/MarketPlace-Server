@@ -1,8 +1,10 @@
 package com.appcenter.marketplace.domain.member_coupon.repository;
 
+import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -29,16 +31,18 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     @Override
-    public List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
+    public List<IssuedCouponRes> findIssuedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size) {
         // 만료되기 전의 쿠폰만 조회가 가능합니다.
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                         coupon.id,
+                        coupon.market.name,
                         coupon.market.thumbnail,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
                         memberCoupon.isUsed,
-                        memberCoupon.isExpired))
+                        memberCoupon.isExpired,
+                        Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))
@@ -54,15 +58,17 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
     }
 
     @Override
-    public List<IssuedCouponRes> findEndedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size) {
+    public List<IssuedCouponRes> findEndedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberCoupon.id,
                     coupon.id,
+                    coupon.market.name,
                     coupon.market.thumbnail,
                     coupon.name,
                     coupon.description,
                     coupon.deadLine,
                     memberCoupon.isUsed,
-                    memberCoupon.isExpired))
+                    memberCoupon.isExpired,
+                    Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))

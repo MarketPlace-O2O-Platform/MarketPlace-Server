@@ -1,6 +1,8 @@
 package com.appcenter.marketplace.domain.member_coupon.dto.res;
 
+import com.appcenter.marketplace.domain.coupon.Coupon;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
+import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,6 +21,13 @@ public class CouponHandleRes {
         return CouponHandleRes.builder()
                 .couponId(memberCoupon.getId())
                 .isUsed(memberCoupon.getIsUsed())
+                .build();
+    }
+
+    public static CouponHandleRes toDto(MemberPayback memberPayback) {
+        return CouponHandleRes.builder()
+                .couponId(memberPayback.getId())
+                .isUsed(memberPayback.getIsPayback())
                 .build();
     }
 }

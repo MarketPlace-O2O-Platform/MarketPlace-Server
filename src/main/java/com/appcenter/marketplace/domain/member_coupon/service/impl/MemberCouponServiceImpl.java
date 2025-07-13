@@ -64,10 +64,10 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 
         // ISSUED, ENDED로 조회
         if (type == MemberCouponType.ENDED) {
-            couponList = memberCouponRepository.findEndedCouponResDtoByMemberId(memberId, memberCouponId, size);
+            couponList = memberCouponRepository.findEndedCouponResByMemberId(memberId, memberCouponId, size);
         } else {
-            couponList = memberCouponRepository.findIssuedCouponResDtoByMemberId(memberId, memberCouponId, size);
-        };
+            couponList = memberCouponRepository.findIssuedCouponResByMemberId(memberId, memberCouponId, size);
+        }
 
         return checkNextPageAndReturn(couponList, size);
     }
@@ -84,7 +84,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     @Override
     public IssuedCouponRes getMemberCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
-        return IssuedCouponRes.toDto(memberCoupon);
+        return IssuedCouponRes.fromCoupon(memberCoupon);
     }
 
     @Override
