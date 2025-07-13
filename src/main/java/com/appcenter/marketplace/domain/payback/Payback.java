@@ -43,6 +43,11 @@ public class Payback extends BaseEntity {
         this.market = market;
     }
 
+    public void update(PaybackReq req){
+        this.name = req.getCouponName();
+        this.description = req.getDescription();
+    }
+
     public void updateHidden() {
         this.isHidden = !this.isHidden;
     }
