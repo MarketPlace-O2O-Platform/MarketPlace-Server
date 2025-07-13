@@ -48,7 +48,6 @@ public class MemberCouponController {
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCouponList(memberId, memberCouponType, memberCouponId, size)));
     }
 
-
     @Operation(summary = "회원 쿠폰 사용처리", description = "회원은 발급받은 memberCouponId로 사용처리를 할 수 있습니다." )
     @PutMapping
     public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@RequestParam(name="memberCouponId") Long couponId){
@@ -56,10 +55,4 @@ public class MemberCouponController {
                 .body(CommonResponse.from(COUPON_USED.getMessage(),memberCouponService.updateCoupon(couponId)));
     }
 
-    @Operation(summary = "회원의 발급 쿠폰 단일 조회", description = "회원은 발급받은 memberCouponId로 1개의 쿠폰 정보를 확인할 수 있습니다." )
-    @GetMapping("/{memberCouponId}")
-    public ResponseEntity<CommonResponse<IssuedCouponRes>> getMemberCoupon(@RequestParam(name="memberCouponId")Long couponId){
-        return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberCouponService.getMemberCoupon(couponId)));
-    }
 }

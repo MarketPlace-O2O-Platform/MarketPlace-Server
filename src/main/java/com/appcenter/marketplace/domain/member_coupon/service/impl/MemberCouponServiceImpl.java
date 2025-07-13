@@ -81,11 +81,6 @@ public class MemberCouponServiceImpl implements MemberCouponService {
         return CouponHandleRes.toDto(memberCoupon);
     }
 
-    @Override
-    public IssuedCouponRes getMemberCoupon(Long memberCouponId) {
-        MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
-        return IssuedCouponRes.fromCoupon(memberCoupon);
-    }
 
     @Override
     @Transactional

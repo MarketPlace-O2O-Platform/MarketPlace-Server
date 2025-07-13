@@ -52,7 +52,7 @@ public class IssuedCouponRes {
         this.couponType = couponType;
     }
 
-    public static IssuedCouponRes fromCoupon(MemberCoupon memberCoupon){
+    public static IssuedCouponRes toDto(MemberCoupon memberCoupon){
         return IssuedCouponRes.builder()
                 .memberCouponId(memberCoupon.getId())
                 .couponId(memberCoupon.getCoupon().getId())
@@ -63,19 +63,6 @@ public class IssuedCouponRes {
                 .deadLine(memberCoupon.getCoupon().getDeadLine())
                 .used(memberCoupon.getIsUsed())
                 .expired(memberCoupon.getIsExpired())
-                .couponType(CouponType.GIFT)
-                .build();
-    }
-
-
-    public static IssuedCouponRes fromPayback(MemberPayback memberPayback){
-        return IssuedCouponRes.builder()
-                .memberCouponId(memberPayback.getId())
-                .couponId(memberPayback.getPayback().getId())
-                .marketName(memberPayback.getPayback().getMarket().getName())
-                .thumbnail(memberPayback.getPayback().getMarket().getThumbnail())
-                .couponName(memberPayback.getPayback().getName())
-                .description(memberPayback.getPayback().getDescription())
                 .build();
     }
 }
