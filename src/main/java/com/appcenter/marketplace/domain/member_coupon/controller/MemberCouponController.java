@@ -14,10 +14,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.domain.member_coupon.MemberCouponType.*;
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
-@Tag(name = "[회원 쿠폰]", description = "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인")
+@Tag(name = "[회원 증정 쿠폰(발급)]", description = "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인")
 @RestController
 @RequestMapping("/api/members/coupons")
 @RequiredArgsConstructor
@@ -25,8 +24,8 @@ public class MemberCouponController {
 
     private final MemberCouponService memberCouponService;
 
-    @Operation(summary = "회원 쿠폰 발급", description = "회원은 해당 marketId로 유효한 쿠폰을 발급받을 수 있습니다. " +
-                                             "<br> '유효한 쿠폰'은 공개처리가 된 쿠폰, 만료되지 않은 쿠폰을 뜻합니다." )
+    @Operation(summary = "회원 증정 쿠폰 발급", description = "회원은 해당 couponId로 유효한 쿠폰을 발급받을 수 있습니다. " +
+                                             "<br> '유효한 쿠폰'은 공개처리가 된 쿠폰 및 만료되지 않은 쿠폰을 뜻합니다." )
     @PostMapping("/{couponId}")
     public ResponseEntity<CommonResponse<Object>> issuedCoupon(@AuthenticationPrincipal UserDetails userDetails,
                                                @PathVariable(name="couponId") Long couponId) {
