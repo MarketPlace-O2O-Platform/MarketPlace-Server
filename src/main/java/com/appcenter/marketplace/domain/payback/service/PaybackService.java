@@ -17,4 +17,7 @@ public interface PaybackService {
     // 환급 쿠폰 숨김 처리 메서드
     void updateCouponHidden(Long couponId);
 
+    // 환급 쿠폰 전체 확인 메서드 (관리자용)
+    CouponPageRes<PaybackRes> getCouponListForAdmin(Long marketId, Long couponId, Integer size);
+
 }

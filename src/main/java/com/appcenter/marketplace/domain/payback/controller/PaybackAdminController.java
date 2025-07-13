@@ -27,6 +27,17 @@ public class PaybackAdminController {
                                                                    @RequestBody @Valid PaybackReq req) {
         return ResponseEntity.status(COUPON_CREATE.getStatus()).body(CommonResponse.from(COUPON_CREATE.getMessage(), paybackAdminService.createCoupon(req, marketId)));
     }
+
+    @Operation(summary = "매장별 전체 생성된 환급 쿠폰 조회", description = "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
+    @GetMapping("/payback-coupons")
+    public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getCouponList(@RequestParam(name = "marketId")Long marketId,
+                                                                                  @RequestParam(name = "couponId", required = false) Long couponId,
+                                                                                  @RequestParam(name = "size", defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),paybackAdminService.getCouponListForAdmin(marketId, couponId, size)));
+    }
+
+
     @Operation(summary = "쿠폰 내용 수정", description = "관리자(혹은 사장님)이 생성한 쿠폰의 내용을 수정합니다. " +
             "<br> '숨김처리'를 제외한 쿠폰 제목/내용을 수정할 수 있습니다. ")
     @PutMapping("/payback-coupons/{couponId}")

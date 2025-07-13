@@ -51,6 +51,14 @@ public class PaybackServiceImpl implements PaybackService {
         payback.updateHidden();
     }
 
+    // [관리자용] 전체 쿠폰 리스트 조회
+    @Override
+    public CouponPageRes<PaybackRes> getCouponListForAdmin(Long marketId, Long couponId, Integer size) {
+        Market market = findMarketById(marketId);
+        List<PaybackRes> paybackResList = paybackRepository.findCouponsForAdminByMarketId(market.getId(), couponId, size);
+        return checkNextPageAndReturn(paybackResList, size);
+    }
+
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
     }
@@ -63,3 +71,15 @@ public class PaybackServiceImpl implements PaybackService {
         }
         else throw new CustomException(COUPON_IS_DELETED);
     }
+
+    private <T> CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
+        boolean hasNext = false;
+
+        if(couponList.size() > size){
+            hasNext = true;
+            couponList.remove(size.intValue());
+        }
+
+        return new CouponPageRes<>(couponList, hasNext);
+    }
+}
