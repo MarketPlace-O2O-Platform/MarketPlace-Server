@@ -98,7 +98,6 @@ public class CouponOwnerServiceImpl implements CouponOwnerService {
 
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
-
     }
 
     private Coupon findCouponById(Long couponId) {

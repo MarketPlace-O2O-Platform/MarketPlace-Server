@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.beta;
 
 
+import com.appcenter.marketplace.domain.beta.dto.req.BetaMarketReq;
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -37,13 +38,26 @@ public class BetaMarket extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column(name="is_promise", nullable = false)
+    private Boolean isPromise;
+
     @Builder
-    public BetaMarket(String marketName, String couponName, String couponDetail, LocalDateTime deadLine, Integer stock, Category category) {
+    public BetaMarket(String marketName, String couponName, String couponDetail, LocalDateTime deadLine, Integer stock, Category category, Boolean isPromise) {
         this.marketName = marketName;
         this.couponName = couponName;
         this.couponDetail = couponDetail;
         this.category = category;
+        this.isPromise = isPromise;
     }
+
+    public void update(BetaMarketReq betaMarketReq, Category category) {
+        this.marketName = betaMarketReq.getMarketName();
+        this.couponName = betaMarketReq.getCouponName();
+        this.couponDetail = betaMarketReq.getCouponDetail();
+        this.category = category;
+        this.isPromise = betaMarketReq.getIsPromise();
+    }
+
 
     public void updateImage(String image){
         this.image= image;

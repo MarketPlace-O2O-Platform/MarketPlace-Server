@@ -11,14 +11,16 @@ public class BetaMarketRes {
     private final String couponName;
     private final String couponDetail;
     private final String image;
+    private final Boolean isPromise;
 
     @Builder
-    public BetaMarketRes(Long betaMarketId, String marketName, String couponName, String couponDetail, String image) {
+    public BetaMarketRes(Long betaMarketId, String marketName, String couponName, String couponDetail, String image, Boolean isPromise) {
         this.betaMarketId = betaMarketId;
         this.marketName = marketName;
         this.couponName = couponName;
         this.couponDetail = couponDetail;
         this.image = image;
+        this.isPromise = isPromise;
     }
 
     public static BetaMarketRes of(BetaMarket betaMarket){
@@ -28,6 +30,7 @@ public class BetaMarketRes {
                 .couponName(betaMarket.getCouponName())
                 .couponDetail(betaMarket.getCouponDetail())
                 .image(betaMarket.getImage())
+                .isPromise(betaMarket.getIsPromise())
                 .build();
     }
 }

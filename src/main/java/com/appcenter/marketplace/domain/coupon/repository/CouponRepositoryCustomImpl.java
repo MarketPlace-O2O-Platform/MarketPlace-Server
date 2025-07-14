@@ -1,8 +1,10 @@
 package com.appcenter.marketplace.domain.coupon.repository;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
+import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_coupon.QMemberCoupon;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +52,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.description,
                         coupon.deadLine,
                         coupon.stock.gt(0),
-                        memberCoupon.id.isNotNull()))
+                        memberCoupon.id.isNotNull(),
+                        Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon)
                         .and(memberCoupon.member.id.eq(memberId)))

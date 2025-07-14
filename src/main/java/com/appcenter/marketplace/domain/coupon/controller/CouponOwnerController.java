@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
-@Tag(name = "[사장님 쿠폰]", description = "[사장님] 사장님 쿠폰 관리")
+@Tag(name = "[사장님 쿠폰]", description = "[사장님] 사장님 발급 쿠폰 관리")
 @RestController
 @RequestMapping("/api/owners")
 @RequiredArgsConstructor

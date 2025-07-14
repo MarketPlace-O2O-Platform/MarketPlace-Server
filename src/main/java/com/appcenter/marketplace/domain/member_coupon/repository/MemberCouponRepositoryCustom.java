@@ -7,9 +7,8 @@ import java.util.List;
 public interface MemberCouponRepositoryCustom {
     boolean existCouponByMemberId(Long memberId, Long couponId);
 
-    List<IssuedCouponRes> findIssuedCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
-    List<IssuedCouponRes> findExpiredCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
-    List<IssuedCouponRes> findUsedMemberCouponResDtoByMemberId(Long memberId, Long memberCouponId, Integer size);
+    List<IssuedCouponRes> findIssuedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size);
+    List<IssuedCouponRes> findEndedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size);
     void check3DaysCoupons();
     void checkExpiredCoupons();
 }

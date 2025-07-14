@@ -111,8 +111,6 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
         tempMarketRepository.deleteById(tempMarket.getId());
     }
 
-
-
     private Category findCategory(String category) {
         if (Major.exists(category)) {
             return categoryRepository.findByMajor(Major.valueOf(category))

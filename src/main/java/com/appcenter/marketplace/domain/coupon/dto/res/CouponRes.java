@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.coupon.dto.res;
 
 import com.appcenter.marketplace.domain.coupon.Coupon;
+import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
@@ -19,6 +20,9 @@ public class CouponRes {
     private Boolean isHidden;
     private Boolean isAvailable;
     private Boolean isMemberIssued;
+
+    // 환급 / 증정 Flag
+    private CouponType couponType;
 
     // 최신,인기 쿠폰 조회 컬럼
     private Long marketId;
@@ -42,13 +46,14 @@ public class CouponRes {
 
     // 매장 별 쿠폰 페이징 조회
     @QueryProjection
-    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Boolean isAvailable, Boolean isMemberIssued) {
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Boolean isAvailable, Boolean isMemberIssued, CouponType couponType) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.couponDescription = couponDescription;
         this.deadLine = deadLine;
         this.isAvailable= isAvailable;
         this.isMemberIssued= isMemberIssued;
+        this.couponType = couponType;
     }
 
     // 최신 쿠폰 페이징 조회
