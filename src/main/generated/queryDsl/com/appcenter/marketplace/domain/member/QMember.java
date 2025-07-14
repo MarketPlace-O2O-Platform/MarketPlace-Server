@@ -21,6 +21,10 @@ public class QMember extends EntityPathBase<Member> {
 
     public final com.appcenter.marketplace.global.common.QBaseEntity _super = new com.appcenter.marketplace.global.common.QBaseEntity(this);
 
+    public final StringPath account = createString("account");
+
+    public final StringPath accountNumber = createString("accountNumber");
+
     public final NumberPath<Integer> cheerTicket = createNumber("cheerTicket", Integer.class);
 
     //inherited

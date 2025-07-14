@@ -6,7 +6,7 @@ import com.appcenter.marketplace.domain.beta.repository.BetaCouponRepository;
 import com.appcenter.marketplace.domain.beta.repository.BetaMarketRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
-import com.appcenter.marketplace.domain.member.dto.res.MemberLoginRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberRes;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.service.MemberService;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -14,6 +14,7 @@ import com.appcenter.marketplace.global.jwt.JwtTokenProvider;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,9 +57,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberLoginRes getMember(Long studentId) {
+    public MemberRes getMember(Long studentId) {
         Member member = findMemberByMemberId(studentId);
-        return MemberLoginRes.toDto(member);
+        return MemberRes.toDto(member);
     }
 
     @Override
@@ -68,6 +69,24 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {"USER"}, key = "#memberId")
+    @Transactional
+    public void permitAccount(Long memberId, String account, String accountNumber) {
+        Member member = findMemberByMemberId(memberId);
+        member.saveAccount(account,accountNumber);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "USER", key = "#memberId")
+    @Transactional
+    public void denyAccount(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.deleteAccount();
+    }
+
+
+    @Override
+    @CacheEvict(cacheNames = "USER", key = "#memberId")
     @Transactional
     public void permitFcm(Long memberId, String fcmToken) {
         Member member = findMemberByMemberId(memberId);
@@ -75,10 +94,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "USER", key = "#memberId")
     @Transactional
     public void denyFcm(Long memberId) {
         Member member = findMemberByMemberId(memberId);
         member.denyFcmToken();
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "USER", key = "#memberId")
+    @Transactional
+    public void upgradePermission(Long memberId) {
+        Member member = findMemberByMemberId(memberId);
+        member.upgradePermission();
     }
 
     // 학번 로그인 검증 및 형변환

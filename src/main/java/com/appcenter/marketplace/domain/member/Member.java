@@ -20,17 +20,25 @@ public class Member extends BaseEntity {
     @Column(name = "cheer_ticket", nullable = false)
     private Integer cheerTicket;
 
-    @Column(name = "fcm_token",nullable = true)
-    private String fcmToken;
+    @Column(nullable = true)
+    private String account;
+
+    @Column(name = "account_number", nullable = true)
+    private String accountNumber;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "fcm_token",nullable = true)
+    private String fcmToken;
+
     @Builder
-    public Member (Long id, Integer cheerTicket, Role role, String fcmToken) {
+    public Member (Long id, Integer cheerTicket, String account, String accountNumber, Role role, String fcmToken) {
         this.id = id;
         this.cheerTicket = cheerTicket;
+        this.account=account;
+        this.accountNumber=accountNumber;
         this.role = role;
         this.fcmToken=fcmToken;
     }
@@ -39,10 +47,22 @@ public class Member extends BaseEntity {
         this.cheerTicket--;
     }
 
+    public void saveAccount(String account, String accountNumber){
+        this.account=account;
+        this.accountNumber=accountNumber;
+    }
+
+    public void deleteAccount(){
+        this.account=null;
+        this.accountNumber=null;
+    }
+
     public void denyFcmToken() { this.fcmToken=null; }
 
     public void permitFcmToken(String fcmToken){
         this.fcmToken=fcmToken;
     }
+
+    public void upgradePermission(){ this.role=Role.ROLE_ADMIN;}
 }
 
