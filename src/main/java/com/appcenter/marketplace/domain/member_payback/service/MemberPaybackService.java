@@ -18,6 +18,8 @@ public interface MemberPaybackService {
     // 쿠폰 영수증 제출 ( 쿠폰 사용 ) (병합 후 진행)
     CouponHandleRes updateCoupon(Long memberId, Long memberPaybackId, MultipartFile receiptImages);
 
+    // 쿠폰 영수증 조회
+    ReceiptRes getReceipt(Long memberId, Long couponId);
 
     // 3일뒤 만료 처리
     void check3DaysCoupons();
