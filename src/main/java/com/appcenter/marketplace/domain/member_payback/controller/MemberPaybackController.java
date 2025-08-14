@@ -4,18 +4,20 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.MemberCouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
-import static com.appcenter.marketplace.global.common.StatusCode.COUPON_USED;
 
 @Tag(name = "[회원 환급 쿠폰(발급)]", description = "[회원] 회원의 환급 쿠폰의 발급 처리 및 리스트 조회")
 @RestController
@@ -50,10 +52,6 @@ public class MemberPaybackController {
     }
 
     @Operation(summary = "회원 쿠폰 영수증 제출", description = "회원은 발급받은 memberCouponId로 영수증을 제출합니다." )
-    @PutMapping
-    public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@RequestParam(name="memberCouponId") Long couponId){
-        return ResponseEntity.status(COUPON_USED.getStatus())
-                .body(CommonResponse.from(COUPON_USED.getMessage(),memberPaybackService.updateCoupon(couponId)));
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@AuthenticationPrincipal UserDetails userDetails,
                                                                         @RequestParam(name="memberCouponId") Long couponId,
@@ -62,5 +60,16 @@ public class MemberPaybackController {
         return ResponseEntity.status(RECEIPT_SUBMIT.getStatus())
                 .body(CommonResponse.from(RECEIPT_SUBMIT.getMessage(), memberPaybackService.updateCoupon(memberId, couponId, image)));
     }
+
+    @Operation(summary = "회원 쿠폰 영수증 조회", description = "회원은 제출한 영수증을 조회할 수 있습니다. \n" +
+            "이미지를 조회할 땐, \"/image/receipt/\" prefix를 꼭 붙여야 합니다. ")
+
+    @GetMapping("/receipt/{couponId}")
+    public ResponseEntity<CommonResponse<ReceiptRes>> getReceipt(@AuthenticationPrincipal UserDetails userDetails,
+                                                                 @PathVariable(name = "couponId") Long couponId) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        return ResponseEntity.status(COUPON_FOUND.getStatus()).body(
+                CommonResponse.from(COUPON_FOUND.getMessage(), memberPaybackService.getReceipt(memberId, couponId))
+        );
     }
 }

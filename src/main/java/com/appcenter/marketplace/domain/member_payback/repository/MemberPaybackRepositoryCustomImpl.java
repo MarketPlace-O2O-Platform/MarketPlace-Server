@@ -3,6 +3,10 @@ package com.appcenter.marketplace.domain.member_payback.repository;
 import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
+import com.appcenter.marketplace.domain.member_payback.MemberPayback;
+import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -10,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.appcenter.marketplace.domain.market.QMarket.market;
+import static com.appcenter.marketplace.domain.member.QMember.member;
 import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 import static com.appcenter.marketplace.domain.member_payback.QMemberPayback.memberPayback;
 import static com.appcenter.marketplace.domain.payback.QPayback.payback;
@@ -28,6 +34,15 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .where(memberPayback.member.id.eq(memberId)
                         .and(memberPayback.payback.id.eq(paybackId)))
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public Optional<MemberPayback> findByCouponIdAndMemberId(Long memberId, Long paybackId) {
+        MemberPayback found = jpaQueryFactory.selectFrom(memberPayback)
+                .where(memberPayback.id.eq(paybackId)
+                        .and(memberPayback.member.id.eq(memberId)))
+                .fetchOne();
+        return Optional.ofNullable(found);
     }
 
     @Override
@@ -69,11 +84,27 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .join(market).on(market.id.eq(payback.market.id))
                 .where(ltMemberCouponId(memberCouponId)
                         .and(memberPayback.member.id.eq(memberId))
-                        .and(memberPayback.isPayback.eq(true))
-                        .and(memberPayback.isExpired.eq(true)))
+                        .and(memberPayback.isPayback.eq(true)
+                        .or(memberPayback.isExpired.eq(true))))
                 .orderBy(memberPayback.id.desc())
                 .limit(size+1)
                 .fetch();
+    }
+
+    @Override
+    public ReceiptRes findReceiptWithMemberInfo(Long memberId, Long memberPaybackId) {
+        return jpaQueryFactory
+                .select(new QReceiptRes(
+                        memberPayback.id,
+                        memberPayback.receipt,
+                        member.account,
+                        member.accountNumber,
+                        memberPayback.isPayback))
+                .from(memberPayback)
+                .join(member).on(memberPayback.member.id.eq(member.id))
+                .where(memberPayback.member.id.eq(memberId)
+                        .and(memberPayback.id.eq(memberPaybackId)))
+                .fetchOne();
     }
 
     // 3일 후 유효한지 체크
@@ -86,6 +117,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                         .and(memberPayback.isPayback.eq(false)))
                 .execute();
     }
+
 
     private BooleanBuilder ltMemberCouponId(Long memberCouponId){
         BooleanBuilder builder = new BooleanBuilder();
