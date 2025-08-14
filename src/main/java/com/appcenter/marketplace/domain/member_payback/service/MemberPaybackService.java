@@ -4,6 +4,8 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.MemberCouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberPaybackService {
 
@@ -14,7 +16,8 @@ public interface MemberPaybackService {
     CouponPageRes<IssuedCouponRes> getPaybackCouponList(Long memberId, MemberCouponType type, Long couponId, Integer size);
 
     // 쿠폰 영수증 제출 ( 쿠폰 사용 ) (병합 후 진행)
-    CouponHandleRes updateCoupon(Long memberPaybackId);
+    CouponHandleRes updateCoupon(Long memberId, Long memberPaybackId, MultipartFile receiptImages);
+
 
     // 3일뒤 만료 처리
     void check3DaysCoupons();

@@ -26,6 +26,7 @@ public enum StatusCode {
     COUPON_HIDDEN(OK,"쿠폰 숨김(공개)처리 완료"),
     COUPON_USED(OK,"쿠폰 사용처리 완료"),
     COUPON_DELETE(OK,"쿠폰 삭제 완료"),
+    RECEIPT_SUBMIT(OK, "영수증 제출 완료"),
 
     // Favorite
     FAVORITE_CREATE(CREATED,"찜 생성(취소) 완료"),

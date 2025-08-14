@@ -54,5 +54,13 @@ public class MemberPaybackController {
     public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@RequestParam(name="memberCouponId") Long couponId){
         return ResponseEntity.status(COUPON_USED.getStatus())
                 .body(CommonResponse.from(COUPON_USED.getMessage(),memberPaybackService.updateCoupon(couponId)));
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@AuthenticationPrincipal UserDetails userDetails,
+                                                                        @RequestParam(name="memberCouponId") Long couponId,
+                                                                        @RequestPart(value = "image") MultipartFile image) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        return ResponseEntity.status(RECEIPT_SUBMIT.getStatus())
+                .body(CommonResponse.from(RECEIPT_SUBMIT.getMessage(), memberPaybackService.updateCoupon(memberId, couponId, image)));
+    }
     }
 }
