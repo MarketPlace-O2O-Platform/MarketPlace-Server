@@ -66,6 +66,7 @@ public enum StatusCode {
     INVALID_ACCESS_TOKEN(UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 
     /* 403 FORBIDDEN : 권한 없음 */
+    FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
     /* 404 NOT_FOUND : 존재하지 않는 리소스 */
     MEMBER_NOT_EXIST(NOT_FOUND, "존재하지 않는 회원입니다."),
@@ -78,9 +79,10 @@ public enum StatusCode {
 
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
+    COUPON_IS_EXPIRED(CONFLICT, "쿠폰이 만료되었습니다."),
+    COUPON_ALREADY_USED(CONFLICT, "쿠폰이 이미 사용되었습니댜."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
     TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다."),
-
     /* 503 UNAVAILABLE : 서비스 이용 불가  */
     FCM_UNAVAILABLE(SERVICE_UNAVAILABLE, "알림 기능을 이용할 수 없습니다.");
 
