@@ -31,9 +31,9 @@ public class MemberPaybackController {
             "<br> '유효한 쿠폰'은 공개처리가 된 쿠폰 및 만료되지 않은 쿠폰을 뜻합니다." )
     @PostMapping("/{couponId}")
     public ResponseEntity<CommonResponse<Object>> issuedCoupon(@AuthenticationPrincipal UserDetails userDetails,
-                                                               @PathVariable(name="couponId") Long couponId) {
+                                                               @PathVariable(name="couponId") Long paybackId) {
         Long memberId = Long.parseLong(userDetails.getUsername());
-        memberPaybackService.issuedCoupon(memberId, couponId);
+        memberPaybackService.issuedCoupon(memberId, paybackId);
         return ResponseEntity.status(COUPON_ISSUED.getStatus()).body(CommonResponse.from(COUPON_ISSUED.getMessage()));
     }
 
@@ -44,32 +44,32 @@ public class MemberPaybackController {
     public ResponseEntity<CommonResponse<CouponPageRes<IssuedCouponRes>>> getCouponList(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(name="type", defaultValue = "ISSUED") MemberCouponType memberCouponType,
-            @RequestParam(name="memberCouponId", required = false) Long memberCouponId,
+            @RequestParam(name= "memberCouponId", required = false) Long memberPaybackId,
             @RequestParam(name="size", defaultValue = "10")Integer size) {
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(COUPON_FOUND.getStatus())
-                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberPaybackService.getPaybackCouponList(memberId, memberCouponType, memberCouponId, size)));
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(), memberPaybackService.getPaybackCouponList(memberId, memberCouponType, memberPaybackId, size)));
     }
 
     @Operation(summary = "회원 쿠폰 영수증 제출", description = "회원은 발급받은 memberCouponId로 영수증을 제출합니다." )
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<CouponHandleRes>> updateCoupon(@AuthenticationPrincipal UserDetails userDetails,
-                                                                        @RequestParam(name="memberCouponId") Long couponId,
+                                                                        @RequestParam(name= "memberCouponId") Long memberPaybackId,
                                                                         @RequestPart(value = "image") MultipartFile image) {
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(RECEIPT_SUBMIT.getStatus())
-                .body(CommonResponse.from(RECEIPT_SUBMIT.getMessage(), memberPaybackService.updateCoupon(memberId, couponId, image)));
+                .body(CommonResponse.from(RECEIPT_SUBMIT.getMessage(), memberPaybackService.updateCoupon(memberId, memberPaybackId, image)));
     }
 
     @Operation(summary = "회원 쿠폰 영수증 조회", description = "회원은 제출한 영수증을 조회할 수 있습니다. \n" +
             "이미지를 조회할 땐, \"/image/receipt/\" prefix를 꼭 붙여야 합니다. ")
 
-    @GetMapping("/receipt/{couponId}")
+    @GetMapping("/receipt/{memberCouponId}")
     public ResponseEntity<CommonResponse<ReceiptRes>> getReceipt(@AuthenticationPrincipal UserDetails userDetails,
-                                                                 @PathVariable(name = "couponId") Long couponId) {
+                                                                 @PathVariable(name = "memberCouponId") Long memberPaybackId) {
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(COUPON_FOUND.getStatus()).body(
-                CommonResponse.from(COUPON_FOUND.getMessage(), memberPaybackService.getReceipt(memberId, couponId))
+                CommonResponse.from(COUPON_FOUND.getMessage(), memberPaybackService.getReceipt(memberId, memberPaybackId))
         );
     }
 }

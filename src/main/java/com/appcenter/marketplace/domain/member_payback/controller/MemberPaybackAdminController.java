@@ -24,9 +24,9 @@ public class MemberPaybackAdminController {
 
     @Operation(summary = "환급 쿠폰 사용 처리", description = "관리자는 영수증을 토대로, 환급을 진행한 후 사용처리를 완료합니다." )
     @PutMapping("/complete/{couponId}")
-    public ResponseEntity<CommonResponse<CouponHandleRes>> manageCoupon(@PathVariable(name = "couponId") Long couponId) {
+    public ResponseEntity<CommonResponse<CouponHandleRes>> manageCoupon(@PathVariable(name = "couponId") Long memberPaybackId) {
 
         return ResponseEntity.status(COUPON_USED.getStatus())
-                .body(CommonResponse.from(COUPON_USED.getMessage(),  memberPaybackAdminService.manageCoupon(couponId)));
+                .body(CommonResponse.from(COUPON_USED.getMessage(),  memberPaybackAdminService.manageCoupon(memberPaybackId)));
     }
 }

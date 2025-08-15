@@ -4,5 +4,5 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 
 public interface MemberPaybackAdminService {
     
-    CouponHandleRes manageCoupon(Long paybackId);
+    CouponHandleRes manageCoupon(Long memberPaybackId);
 }

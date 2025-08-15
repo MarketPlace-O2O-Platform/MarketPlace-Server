@@ -40,9 +40,9 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
 
     @Override
     @Transactional
-    public void issuedCoupon(Long memberId, Long couponId) {
+    public void issuedCoupon(Long memberId, Long paybackId) {
         Member member = findMemberById(memberId);
-        Payback payback = findPaybackById(couponId);
+        Payback payback = findPaybackById(paybackId);
 
         if(!memberPaybackRepository.existCouponByMemberId(member.getId(), payback.getId())){
             memberPaybackRepository.save(
@@ -59,13 +59,13 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
     }
 
     @Override
-    public CouponPageRes<IssuedCouponRes> getPaybackCouponList(Long memberId, MemberCouponType type, Long couponId, Integer size) {
+    public CouponPageRes<IssuedCouponRes> getPaybackCouponList(Long memberId, MemberCouponType type, Long memberPaybackId, Integer size) {
         List<IssuedCouponRes> couponList;
 
         if (type == MemberCouponType.ISSUED){
-             couponList = memberPaybackRepository.findIssuedCouponResByMemberId(memberId, couponId, size);
+             couponList = memberPaybackRepository.findIssuedCouponResByMemberId(memberId, memberPaybackId, size);
         }else{
-            couponList = memberPaybackRepository.findEndedCouponResByMemberId(memberId, couponId, size);
+            couponList = memberPaybackRepository.findEndedCouponResByMemberId(memberId, memberPaybackId, size);
         }
 
         return checkNextPageAndReturn(couponList, size);
@@ -92,8 +92,8 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
     }
 
     @Override
-    public ReceiptRes getReceipt(Long memberId, Long couponId) {
-        return memberPaybackRepository.findReceiptWithMemberInfo(memberId, couponId);
+    public ReceiptRes getReceipt(Long memberId, Long memberPaybackId) {
+        return memberPaybackRepository.findReceiptByMemberId(memberId, memberPaybackId);
     }
 
     @Override

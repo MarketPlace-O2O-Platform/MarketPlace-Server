@@ -6,7 +6,6 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.appcenter.marketplace.domain.member.QMember.member;
-import static com.appcenter.marketplace.domain.member_coupon.QMemberCoupon.memberCoupon;
 import static com.appcenter.marketplace.domain.member_payback.QMemberPayback.memberPayback;
 import static com.appcenter.marketplace.domain.payback.QPayback.payback;
 
@@ -46,7 +44,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
     }
 
     @Override
-    public List<IssuedCouponRes> findIssuedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size) {
+    public List<IssuedCouponRes> findIssuedCouponResByMemberId(Long memberId, Long memberPaybackId, Integer size) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberPayback.id,
                     payback.id,
                     payback.market.name,
@@ -59,7 +57,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .from(payback)
                 .join(memberPayback).on(memberPayback.payback.id.eq(payback.id))
                 .join(market).on(market.id.eq(payback.market.id))
-                .where(ltMemberCouponId(memberCouponId)
+                .where(ltMemberPaybackId(memberPaybackId)
                         .and(memberPayback.member.id.eq(memberId))
                         .and(memberPayback.isPayback.eq(false))
                                 .and(memberPayback.isExpired.eq(false)))
@@ -69,7 +67,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
     }
 
     @Override
-    public List<IssuedCouponRes> findEndedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size) {
+    public List<IssuedCouponRes> findEndedCouponResByMemberId(Long memberId, Long memberPaybackId, Integer size) {
         return jpaQueryFactory.select(new QIssuedCouponRes(memberPayback.id,
                         payback.id,
                         payback.market.name,
@@ -82,7 +80,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .from(payback)
                 .join(memberPayback).on(memberPayback.payback.id.eq(payback.id))
                 .join(market).on(market.id.eq(payback.market.id))
-                .where(ltMemberCouponId(memberCouponId)
+                .where(ltMemberPaybackId(memberPaybackId)
                         .and(memberPayback.member.id.eq(memberId))
                         .and(memberPayback.isPayback.eq(true)
                         .or(memberPayback.isExpired.eq(true))))
@@ -92,7 +90,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
     }
 
     @Override
-    public ReceiptRes findReceiptWithMemberInfo(Long memberId, Long memberPaybackId) {
+    public ReceiptRes findReceiptByMemberId(Long memberId, Long memberPaybackId) {
         return jpaQueryFactory
                 .select(new QReceiptRes(
                         memberPayback.id,
@@ -119,10 +117,10 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
     }
 
 
-    private BooleanBuilder ltMemberCouponId(Long memberCouponId){
+    private BooleanBuilder ltMemberPaybackId(Long memberPaybackId){
         BooleanBuilder builder = new BooleanBuilder();
-        if( memberCouponId != null){
-            builder.and(memberPayback.id.lt(memberCouponId));
+        if( memberPaybackId != null){
+            builder.and(memberPayback.id.lt(memberPaybackId));
         }
         return builder;
     }

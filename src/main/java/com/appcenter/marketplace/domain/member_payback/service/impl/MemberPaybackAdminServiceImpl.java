@@ -20,9 +20,9 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
 
     @Override
     @Transactional
-    public CouponHandleRes manageCoupon(Long couponId) {
+    public CouponHandleRes manageCoupon(Long memberPaybackId) {
 
-        MemberPayback memberPayback = findMemberPaybackById(couponId);
+        MemberPayback memberPayback = findMemberPaybackById(memberPaybackId);
         memberPayback.completePayback();
 
         // TODO 추후, 사용완료 처리 후 알림 발송 추가해보기

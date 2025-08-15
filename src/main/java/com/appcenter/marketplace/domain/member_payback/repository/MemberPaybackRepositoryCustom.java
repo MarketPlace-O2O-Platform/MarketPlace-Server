@@ -13,5 +13,5 @@ public interface MemberPaybackRepositoryCustom {
     List<IssuedCouponRes> findIssuedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size);
     List<IssuedCouponRes> findEndedCouponResByMemberId(Long memberId, Long memberCouponId, Integer size);
     void check3DaysCoupons();
-    ReceiptRes findReceiptWithMemberInfo(Long memberPaybackId, Long couponId);
+    ReceiptRes findReceiptByMemberId(Long memberPaybackId, Long couponId);
 }
