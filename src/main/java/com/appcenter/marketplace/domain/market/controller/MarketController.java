@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +41,13 @@ public class MarketController {
                     "최신순으로 보여줍니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(required = false, name = "category") String major,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size)
     {
-        Long memberId = Long.parseLong(userDetails.getUsername());
+        Long memberId = extractMemberId(authentication);
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMarketPage(memberId, marketId,size,major)));
@@ -58,14 +59,14 @@ public class MarketController {
                     "최신순으로 보여줍니다.")
     @GetMapping("/map")
     public ResponseEntity<CommonResponse<MarketPageRes<MarketRes>>> getMarket(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(required = false, name = "category") String major,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
             @RequestParam String address)
     {
-        Long memberId = Long.parseLong(userDetails.getUsername());
+        Long memberId = extractMemberId(authentication);
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMarketPageByAddress(memberId, marketId, size, major, address)));
@@ -102,6 +103,15 @@ public class MarketController {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,marketService.getMyFavoriteMarketPage(memberId,lastModifiedAt,size)));
+    }
+
+    private Long extractMemberId(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getPrincipal())) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return Long.parseLong(userDetails.getUsername());
+        }
+        return null;
     }
 
 //    @Operation(summary = "찜 수가 가장 많은 매장 더보기 조회",
