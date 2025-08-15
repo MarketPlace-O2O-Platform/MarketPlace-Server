@@ -60,9 +60,9 @@ public class PaybackServiceImpl implements PaybackService {
     }
 
     @Override
-    public CouponPageRes<PaybackRes> getCouponListForMembers(Long marketId, Long couponId, Integer size) {
+    public CouponPageRes<PaybackRes> getCouponListForMembers(Long marketId, Long memberId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
-        List<PaybackRes> paybackResList = paybackRepository.findCouponsForMembersByMarketId(market.getId(), couponId, size);
+        List<PaybackRes> paybackResList = paybackRepository.findCouponsForMembersByMarketId(market.getId(), memberId, couponId, size);
         return checkNextPageAndReturn(paybackResList, size);
     }
 

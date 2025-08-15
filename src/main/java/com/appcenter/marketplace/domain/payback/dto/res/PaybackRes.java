@@ -11,9 +11,10 @@ public class PaybackRes {
     private final Long couponId;
     private final String couponName;
     private final String couponDescription;
-    private final Boolean isHidden;
-
+    private Boolean isHidden;
+    private Boolean isMemberIssued;
     private CouponType couponType;
+
 
     @Builder
     @QueryProjection
@@ -23,6 +24,16 @@ public class PaybackRes {
         this.couponDescription = couponDescription;
         this.isHidden = isHidden;
         this.couponType = couponType;
+    }
+
+    // 유저용 ) 매장별 환급 쿠폰 조회
+    @QueryProjection
+    public PaybackRes(Long couponId, String couponName, String couponDescription, CouponType couponType, Boolean isMemberIssued) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.couponDescription = couponDescription;
+        this.couponType = couponType;
+        this.isMemberIssued = isMemberIssued;
     }
 
     public static PaybackRes toDto(Payback payback) {
