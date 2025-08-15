@@ -67,7 +67,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void UpdateImage(Market market, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multipartFileList){
+    public void updateImage(Market market, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multipartFileList){
 
         // 삭제할 이미지 id 리스트를 순회하며 파일을 삭제하고 이미지 엔티티를 삭제한다.
         for (Long id : marketImageUpdateReq.getDeletedImageIds()) {

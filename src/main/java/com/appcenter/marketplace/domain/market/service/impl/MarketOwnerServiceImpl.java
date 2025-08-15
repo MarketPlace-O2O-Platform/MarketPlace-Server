@@ -73,7 +73,7 @@ public class MarketOwnerServiceImpl implements MarketOwnerService {
     @Transactional
     public MarketDetailsRes updateMarketImage(Long marketId, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multiPartFileList) {
         Market market=findMarketByMarketId(marketId);
-        imageService.UpdateImage(market, marketImageUpdateReq,multiPartFileList);
+        imageService.updateImage(market, marketImageUpdateReq,multiPartFileList);
         return marketService.getMarketDetails(market.getId());
     }
 

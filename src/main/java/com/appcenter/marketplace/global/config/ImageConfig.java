@@ -20,6 +20,9 @@ public class ImageConfig implements WebMvcConfigurer{
     private String imageUploadFolder;
     @Value("${tempImage.upload.path}")
     private String tempImageUploadFolder;
+    @Value("${receipt.upload.path}")
+    private String receiptUploadFolder;
+
     private final OctetStreamReadMsgConverter octetStreamReadMsgConverter;
 
 
@@ -34,6 +37,9 @@ public class ImageConfig implements WebMvcConfigurer{
 
         registry.addResourceHandler("/image/tempMarket/**")
                 .addResourceLocations("file:"+ tempImageUploadFolder);
+
+        registry.addResourceHandler("/image/receipt/**")
+                .addResourceLocations("file:"+ receiptUploadFolder);
 
     }
 

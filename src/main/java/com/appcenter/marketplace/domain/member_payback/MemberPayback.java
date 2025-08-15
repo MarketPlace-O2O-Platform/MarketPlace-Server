@@ -26,7 +26,7 @@ public class MemberPayback extends BaseEntity {
     @Column(name = "is_expired", nullable = false)
     private Boolean isExpired;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String receipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,5 +44,13 @@ public class MemberPayback extends BaseEntity {
         this.receipt = receipt;
         this.payback = payback;
         this.member = member;
+    }
+
+    public void updateReceipt(String receipt) {
+        this.receipt = receipt;
+    }
+
+    public void completePayback() {
+        this.isPayback = true;
     }
 }

@@ -10,7 +10,7 @@ public interface ImageService {
 
     void createImage(Market market, List<MultipartFile> multipartFileList);
 
-    void UpdateImage(Market market, MarketImageUpdateReq marketImageUpdateReq,
+    void updateImage(Market market, MarketImageUpdateReq marketImageUpdateReq,
                      List<MultipartFile> multipartFileList);
 
     void hardDeleteAllImages(Long marketId);
