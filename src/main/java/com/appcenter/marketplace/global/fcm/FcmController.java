@@ -21,7 +21,7 @@ public class FcmController {
     private final FcmService fcmService;
 
     @Operation(summary = "[TEST] 개인 알림 전송", description = "개인 회원에게 알림 메시지 전송")
-    @PostMapping
+    @PostMapping("/test")
     public ResponseEntity<CommonResponse<Object>> sendFcmMessage(@RequestBody FcmRequest fcmRequest) throws FirebaseMessagingException{
         fcmService.sendFcmMessage(fcmRequest);
         return ResponseEntity
