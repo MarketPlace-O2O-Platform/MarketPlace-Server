@@ -46,17 +46,19 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     @Override
     public List<CouponRes> findCouponsForMemberByMarketId(Long memberId, Long marketId, Long couponId, Integer size) {
 
-        return jpaQueryFactory.select(new QCouponRes(
+        return jpaQueryFactory.selectDistinct(new QCouponRes(
                         coupon.id,
                         coupon.name,
                         coupon.description,
                         coupon.deadLine,
                         coupon.stock.gt(0),
-                        memberCoupon.id.isNotNull(),
+                        memberId != null ?
+                                memberCoupon.id.isNotNull() :
+                                Expressions.FALSE,
                         Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon)
-                        .and(memberCoupon.member.id.eq(memberId)))
+                        .and(memberId != null ? memberCoupon.member.id.eq(memberId) : null))
                 .where(coupon.market.id.eq(marketId)
                         .and(ltCouponId(couponId))
                         .and(coupon.isDeleted.eq(false))
@@ -71,7 +73,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     @Override
     public List<CouponRes> findLatestCouponList(Long memberId, LocalDateTime lastCreatedAt, Long lastCouponId, Integer size) {
         return jpaQueryFactory
-                .select(new QCouponRes(
+                .selectDistinct(new QCouponRes(
                         coupon.id,
                         coupon.name,
                         market.id,
@@ -79,7 +81,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         coupon.stock.gt(0),
-                        memberCoupon.id.isNotNull(),
+                        memberId != null ?
+                                memberCoupon.id.isNotNull() :
+                                Expressions.FALSE,
                         coupon.createdAt
                 ))
                 .from(coupon)
@@ -87,7 +91,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon)
-                        .and(memberCoupon.member.id.eq(memberId)))
+                        .and(memberId != null ? memberCoupon.member.id.eq(memberId) : null))
+                    //    .and(memberCoupon.member.id.eq(memberId)))
                 .where(loeCreateAtAndLtCouponId(lastCreatedAt,lastCouponId)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -102,7 +107,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
     public List<CouponRes> findPopularCouponList(Long memberId, Long count, Long couponId, Integer size) {
         QMemberCoupon issuedCoupon = new QMemberCoupon("issuedCoupon"); //해당 사용자의 각 쿠폰의 발급 여부 확인을 위한 별칭 생성
         return jpaQueryFactory
-                .select(new QCouponRes(
+                .selectDistinct(new QCouponRes(
                         coupon.id,
                         coupon.name,
                         market.id,
@@ -110,7 +115,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         coupon.stock.gt(0),
-                        issuedCoupon.id.isNotNull(),
+                        memberId != null ?
+                                issuedCoupon.id.isNotNull() :
+                                Expressions.FALSE,
                         memberCoupon.id.count()))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
@@ -118,7 +125,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon))
                 .leftJoin(issuedCoupon).on(coupon.eq(issuedCoupon.coupon)
-                        .and(issuedCoupon.member.id.eq(memberId)))
+                        .and(memberId != null ? issuedCoupon.member.id.eq(memberId) : null))
+                        // .and(issuedCoupon.member.id.eq(memberId)))
                 .where(coupon.isDeleted.eq(false)
                     .and(coupon.isHidden.eq(false))
                     .and(coupon.deadLine.after(LocalDateTime.now())))

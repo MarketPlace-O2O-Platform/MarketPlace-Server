@@ -62,18 +62,20 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketRes(
+                .selectDistinct(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
-                        favorite.id.isNotNull(),
+                        memberId != null ?
+                                favorite.id.isNotNull() :
+                                Expressions.FALSE,
                         coupon.id.isNotNull()))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
-                        .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
+                        .and(memberId != null ? favorite.member.id.eq(memberId) : null ))) // 자신이 찜한 매장
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -91,18 +93,20 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major) {
         return jpaQueryFactory
-                .select(new QMarketRes(
+                .selectDistinct(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
-                        favorite.id.isNotNull(),
+                        memberId != null ?
+                                favorite.id.isNotNull() :
+                                Expressions.FALSE,
                         coupon.id.isNotNull()))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
-                        .and(favorite.member.id.eq(memberId))))
+                                .and(memberId != null ? favorite.member.id.eq(memberId) : null )))
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -122,18 +126,20 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size) {
         return jpaQueryFactory
-                .select(new QMarketRes(
+                .selectDistinct(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
-                        metro.name.concat(" ").concat(local.name),
+                        market.address, // metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
-                        favorite.id.isNotNull(),
+                        memberId != null ?
+                                favorite.id.isNotNull() :
+                                Expressions.FALSE,
                         coupon.id.isNotNull()))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
-                                .and(favorite.member.id.eq(memberId)))) // 자신이 찜한 매장
+                                .and(memberId != null ? favorite.member.id.eq(memberId) : null )))  // 자신이 찜한 매장
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -152,18 +158,20 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     @Override
     public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major) {
         return jpaQueryFactory
-                .select(new QMarketRes(
+                .selectDistinct(new QMarketRes(
                         market.id,
                         market.name,
                         market.description,
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
-                        favorite.id.isNotNull(),
+                        memberId != null ?
+                                favorite.id.isNotNull() :
+                                Expressions.FALSE,
                         coupon.id.isNotNull()))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
-                                .and(favorite.member.id.eq(memberId))))
+                                .and(memberId != null ? favorite.member.id.eq(memberId) : null )))
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -211,6 +219,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .orderBy(favorite.modifiedAt.desc())
                 .limit(size + 1)
                 .fetch();
+
+
 //        return jpaQueryFactory
 //                .select(new QMarketRes(
 //                        market.id,
@@ -331,27 +341,5 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         }
         return builder;
 
-    }
-
-    private BooleanBuilder booleanBuilderSubQuery() {
-        QCoupon subCoupon = new QCoupon("subCoupon");
-
-        BooleanBuilder whereClause = new BooleanBuilder();
-
-        // 서브쿼리: 각 market_id 그룹별 최신 쿠폰의 createdAt을 구함
-        JPQLQuery<Tuple> subQuery = JPAExpressions
-                .select(market.id, subCoupon.createdAt.max())
-                .from(subCoupon)
-                .innerJoin(subCoupon.market, market)
-                .where(subCoupon.isDeleted.eq(false)
-                        .and(subCoupon.isHidden.eq(false))
-                        .and(subCoupon.stock.gt(0))
-                        .and(subCoupon.deadLine.after(LocalDateTime.now())))
-                .groupBy(market.id);
-
-        // 기본 조건
-        whereClause.and(Expressions.list(coupon.market.id, coupon.createdAt).in(subQuery)); // 서브쿼리와 매칭
-
-        return whereClause;
     }
 }

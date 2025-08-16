@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +34,12 @@ public class CouponController {
             "couponId는 다음 페이징 처리를 위해 사용되는 파라미터 입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getCouponList(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @RequestParam Long marketId,
             @RequestParam(required = false) Long couponId,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        Long memberId = Long.parseLong(userDetails.getUsername());
+        Long memberId = extractMemberId(authentication);
         return ResponseEntity.status(COUPON_FOUND.getStatus())
                 .body(CommonResponse.from(COUPON_FOUND.getMessage(),couponService.getCouponList(memberId, marketId, couponId, size)));
     }
@@ -50,18 +50,18 @@ public class CouponController {
     )
     @GetMapping("/latest")
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getLatestCoupon(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @Parameter(description = "각 페이지의 마지막 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )")
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastCouponId") Long couponId,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
-        Long memberId = Long.parseLong(userDetails.getUsername());
+
+        Long memberId = extractMemberId(authentication);
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         couponService.getLatestCouponPage(memberId, lastCreatedAt, couponId,size)));
     }
-
 
     @Operation(summary = "인기 쿠폰 더보기 조회",
             description = "인기 쿠폰을 등록순으로 정렬 <br>" +
@@ -69,13 +69,15 @@ public class CouponController {
     )
     @GetMapping("/popular")
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getPopularCoupon(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @Parameter(description = "페이지의 마지막 issuedCount")
             @RequestParam(required = false, name = "lastIssuedCount") Long count,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastCouponId") Long couponId,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
-        Long memberId = Long.parseLong(userDetails.getUsername());
+
+        Long memberId = extractMemberId(authentication);
+
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         couponService.getPopularCouponPage(memberId, count, couponId,size)));
@@ -110,5 +112,15 @@ public class CouponController {
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         couponService.getTopPopularCoupon(size)));
     }
-  
+
+    private Long extractMemberId(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getPrincipal())) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return Long.parseLong(userDetails.getUsername());
+        }
+        return null;
+    }
+
+
 }
