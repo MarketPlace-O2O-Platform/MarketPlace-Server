@@ -8,4 +8,6 @@ public interface NotificationService {
     NotificationRes createNotification(Long memberId, NotificationReq notificationReq);
 
     NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size);
+
+    void setNotificationRead(Long notificationId);
 }

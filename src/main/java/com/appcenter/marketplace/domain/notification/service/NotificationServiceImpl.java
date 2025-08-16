@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.notification.service;
 
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
+import com.appcenter.marketplace.domain.notification.Notification;
 import com.appcenter.marketplace.domain.notification.dto.req.NotificationReq;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationPageRes;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationRes;
@@ -31,11 +32,21 @@ public class NotificationServiceImpl implements NotificationService{
         return NotificationRes.from(notificationRepository.save(notificationReq.toEntity(member)));
     }
 
+    @Transactional
+    @Override
+    public void setNotificationRead(Long notificationId) {
+        Notification notification= notificationRepository.findById(notificationId)
+                .orElseThrow(()  -> new CustomException(StatusCode.NOTIFICATION_NOT_EXIST));
+
+        notification.setIsReadTrue();
+    }
+
     @Override
     public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size) {
         List<NotificationRes> notificationList = notificationRepository.getNotificationList(memberId, notificationId, size);
         return checkNextPageAndReturn(notificationList, size);
     }
+
 
     private <T> NotificationPageRes<T> checkNextPageAndReturn(List<T> notificationList, Integer size) {
         boolean hasNext = false;

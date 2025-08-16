@@ -3,7 +3,6 @@ package com.appcenter.marketplace.domain.notification;
 
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.global.common.BaseEntity;
-import com.appcenter.marketplace.global.common.TargetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,4 +47,7 @@ public class Notification extends BaseEntity {
         this.isRead = isRead;
         this.member = member;
     }
+
+    public void setIsReadTrue() { this.isRead = true; }
+
 }

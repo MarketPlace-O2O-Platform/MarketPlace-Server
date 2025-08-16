@@ -3,7 +3,7 @@ package com.appcenter.marketplace.domain.notification.dto.req;
 
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.notification.Notification;
-import com.appcenter.marketplace.global.common.TargetType;
+import com.appcenter.marketplace.domain.notification.TargetType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;

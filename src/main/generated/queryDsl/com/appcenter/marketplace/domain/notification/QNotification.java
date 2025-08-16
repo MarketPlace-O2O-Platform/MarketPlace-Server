@@ -40,7 +40,7 @@ public class QNotification extends EntityPathBase<Notification> {
 
     public final NumberPath<Long> targetId = createNumber("targetId", Long.class);
 
-    public final EnumPath<com.appcenter.marketplace.global.common.TargetType> targetType = createEnum("targetType", com.appcenter.marketplace.global.common.TargetType.class);
+    public final EnumPath<TargetType> targetType = createEnum("targetType", TargetType.class);
 
     public final StringPath title = createString("title");
 

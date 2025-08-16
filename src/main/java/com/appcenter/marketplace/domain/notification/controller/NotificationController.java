@@ -16,8 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.global.common.StatusCode.NOTIFICATION_CREATE;
-import static com.appcenter.marketplace.global.common.StatusCode.NOTIFICATION_FOUND;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Tag(name = "[알림 기록]", description = "[회원] 알림 기록 생성 및 조회")
 @RestController
@@ -48,6 +47,16 @@ public class NotificationController {
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(NOTIFICATION_FOUND.getStatus())
                 .body(CommonResponse.from(NOTIFICATION_FOUND.getMessage(),notificationService.getNotificationList(memberId,notificationId,size)));
+    }
+
+    @Operation(summary = "알림 기록 읽음 처리", description = "알림 기록을 읽음 처리합니다.")
+    @PatchMapping
+    public ResponseEntity<CommonResponse<Object>> setNotificationRead(
+            @RequestParam Long notificationId) {
+
+        notificationService.setNotificationRead(notificationId);
+        return ResponseEntity.status(NOTIFICATION_READ.getStatus())
+                .body(CommonResponse.from(NOTIFICATION_READ.getMessage()));
     }
 
 }

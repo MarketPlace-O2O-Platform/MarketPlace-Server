@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.favorite.Favorite;
 import com.appcenter.marketplace.domain.favorite.repository.FavoriteRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
-import com.appcenter.marketplace.global.common.TargetType;
+import com.appcenter.marketplace.domain.notification.TargetType;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.FcmException;
 import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;

@@ -1,7 +1,7 @@
 package com.appcenter.marketplace.domain.notification.dto.res;
 
 import com.appcenter.marketplace.domain.notification.Notification;
-import com.appcenter.marketplace.global.common.TargetType;
+import com.appcenter.marketplace.domain.notification.TargetType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
