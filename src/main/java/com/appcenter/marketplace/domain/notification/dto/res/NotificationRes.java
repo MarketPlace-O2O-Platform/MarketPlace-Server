@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.notification.dto.res;
 
 import com.appcenter.marketplace.domain.notification.Notification;
 import com.appcenter.marketplace.global.common.TargetType;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class NotificationRes {
     private final TargetType targetType;
     private final Boolean isRead;
 
+    @QueryProjection
     @Builder
     public NotificationRes(Long id, String title, String body, Long targetId, TargetType targetType, Boolean isRead) {
         this.id = id;

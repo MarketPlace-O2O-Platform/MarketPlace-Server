@@ -3,6 +3,7 @@ package com.appcenter.marketplace.domain.notification.service;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.notification.dto.req.NotificationReq;
+import com.appcenter.marketplace.domain.notification.dto.res.NotificationPageRes;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationRes;
 import com.appcenter.marketplace.domain.notification.repository.NotificationRepository;
 import com.appcenter.marketplace.global.common.StatusCode;
@@ -10,6 +11,8 @@ import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
@@ -26,5 +29,22 @@ public class NotificationServiceImpl implements NotificationService{
                 .orElseThrow(() -> new CustomException(StatusCode.MEMBER_NOT_EXIST));
 
         return NotificationRes.from(notificationRepository.save(notificationReq.toEntity(member)));
+    }
+
+    @Override
+    public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size) {
+        List<NotificationRes> notificationList = notificationRepository.getNotificationList(memberId, notificationId, size);
+        return checkNextPageAndReturn(notificationList, size);
+    }
+
+    private <T> NotificationPageRes<T> checkNextPageAndReturn(List<T> notificationList, Integer size) {
+        boolean hasNext = false;
+
+        if(notificationList.size() > size){
+            hasNext = true;
+            notificationList.remove(size.intValue());
+        }
+
+        return new NotificationPageRes<>(notificationList, hasNext);
     }
 }
