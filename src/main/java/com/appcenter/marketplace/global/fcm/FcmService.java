@@ -4,7 +4,7 @@ import com.appcenter.marketplace.domain.favorite.Favorite;
 import com.appcenter.marketplace.domain.favorite.repository.FavoriteRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
-import com.appcenter.marketplace.global.common.EntityType;
+import com.appcenter.marketplace.global.common.TargetType;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.FcmException;
 import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
@@ -74,7 +74,7 @@ public class FcmService {
                                 .build()
                 )
                 .putData("id", String.valueOf(event.getMarket().getId()))   // 대상 ID
-                .putData("type", EntityType.MARKET.name())                  // 대상 엔티티 타입
+                .putData("type", TargetType.MARKET.name())                  // 대상 엔티티 타입
                 .setTopic("market-" + event.getMarket().getId())
                 .build();
 
