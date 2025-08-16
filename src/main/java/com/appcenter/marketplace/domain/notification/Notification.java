@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.notification;
 
 
 import com.appcenter.marketplace.domain.member.Member;
+import com.appcenter.marketplace.global.common.BaseEntity;
 import com.appcenter.marketplace.global.common.TargetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,11 +10,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "coupon")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

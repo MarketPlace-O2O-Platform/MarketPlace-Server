@@ -42,6 +42,12 @@ public enum StatusCode {
     MEMBER_ACCOUNT_DENY(OK,"회원 주거래은행/계좌번호 저장 거부"),
     MEMBER_UPGRADE_PERMISSION(OK,"회원 권한 관리자 승급 완료"),
 
+    // Notification
+    NOTIFICATION_CREATE(CREATED,"알림 기록 생성 완료"),
+    NOTIFICATION_FOUND(OK,"알림 기록 조회 완료"),
+
+
+
     // FCM
     FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
     FCM_SEND_FAIL(INTERNAL_SERVER_ERROR, "알림 메시지 전송에 실패하였습니다."),
