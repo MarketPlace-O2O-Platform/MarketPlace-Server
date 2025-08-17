@@ -24,7 +24,7 @@ public class Notification extends BaseEntity {
     @Column(nullable = false)
     private String body;
 
-    @Column(name = "target_id",nullable = false)
+    @Column(name = "target_id",nullable = true)
     private Long targetId;
 
     @Column(name = "target_type", nullable = false)
