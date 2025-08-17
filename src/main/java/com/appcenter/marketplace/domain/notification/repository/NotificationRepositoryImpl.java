@@ -1,5 +1,6 @@
 package com.appcenter.marketplace.domain.notification.repository;
 
+import com.appcenter.marketplace.domain.notification.TargetType;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationRes;
 import com.appcenter.marketplace.domain.notification.dto.res.QNotificationRes;
 import com.querydsl.core.BooleanBuilder;
@@ -16,7 +17,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size) {
+    public List<NotificationRes> getNotificationList(Long memberId, Long notificationId, TargetType targetType, Integer size) {
         return jpaQueryFactory.select(new QNotificationRes(
                 notification.id,
                 notification.title,
@@ -26,7 +27,10 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
                 notification.isRead))
                 .from(notification)
                 .join(member).on(member.id.eq(memberId))
-                .where(ltNotificationId(notificationId))
+                .where(
+                        ltNotificationId(notificationId),
+                        notification.targetType.eq(targetType)
+                )
                 .orderBy(notification.id.desc())
                 .limit(size + 1)
                 .fetch();

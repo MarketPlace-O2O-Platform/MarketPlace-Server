@@ -3,6 +3,7 @@ package com.appcenter.marketplace.domain.notification.service;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.notification.Notification;
+import com.appcenter.marketplace.domain.notification.TargetType;
 import com.appcenter.marketplace.domain.notification.dto.req.NotificationReq;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationPageRes;
 import com.appcenter.marketplace.domain.notification.dto.res.NotificationRes;
@@ -42,8 +43,10 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size) {
-        List<NotificationRes> notificationList = notificationRepository.getNotificationList(memberId, notificationId, size);
+    public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, String type, Integer size) {
+
+        TargetType targetType = TargetType.valueOf(type.toUpperCase());
+        List<NotificationRes> notificationList = notificationRepository.getNotificationList(memberId, notificationId, targetType, size);
         return checkNextPageAndReturn(notificationList, size);
     }
 

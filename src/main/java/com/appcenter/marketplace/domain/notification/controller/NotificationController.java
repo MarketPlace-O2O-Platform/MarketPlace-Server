@@ -36,17 +36,19 @@ public class NotificationController {
                 .body(CommonResponse.from(NOTIFICATION_CREATE.getMessage(),notificationService.createNotification(memberId,notificationReq)));
     }
 
-    @Operation(summary = "알림 기록 리스트 조회", description = "알림 기록 리스트를 조회합니다.")
+    @Operation(summary = "알림 기록 리스트 조회", description = "알림 기록 리스트를 조회합니다. <br>" +
+    "type은 'MARKET(쿠폰발급)', 'COUPON(쿠폰만료 - 예정), 'NOTICE(공지- 예정)' 중에서 작성해주시면 됩니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<NotificationPageRes<NotificationRes>>> getNotificationList(
             @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "직전 페이지의 마지막 id")
             @RequestParam(required = false) Long notificationId,
+            @RequestParam String type,
             @RequestParam(defaultValue = "10") Integer size) {
 
         Long memberId = Long.parseLong(userDetails.getUsername());
         return ResponseEntity.status(NOTIFICATION_FOUND.getStatus())
-                .body(CommonResponse.from(NOTIFICATION_FOUND.getMessage(),notificationService.getNotificationList(memberId,notificationId,size)));
+                .body(CommonResponse.from(NOTIFICATION_FOUND.getMessage(),notificationService.getNotificationList(memberId,notificationId, type, size)));
     }
 
     @Operation(summary = "알림 기록 읽음 처리", description = "알림 기록을 읽음 처리합니다.")
