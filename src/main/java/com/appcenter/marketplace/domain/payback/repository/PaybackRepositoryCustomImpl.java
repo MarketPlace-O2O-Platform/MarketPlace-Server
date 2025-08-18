@@ -45,7 +45,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
     public List<PaybackRes> findCouponsForMembersByMarketId(Long marketId, Long memberId, Long couponId, Integer size) {
         QMemberPayback paybackCoupon = new QMemberPayback("paybackCoupon");
 
-        return queryFactory.select(new QPaybackRes(
+        return queryFactory.selectDistinct(new QPaybackRes(
                         payback.id,
                         payback.name,
                         payback.description,
