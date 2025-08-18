@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.favorite.Favorite;
 import com.appcenter.marketplace.domain.favorite.repository.FavoriteRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
+import com.appcenter.marketplace.domain.notification.TargetType;
 import com.appcenter.marketplace.global.common.StatusCode;
 import com.appcenter.marketplace.global.exception.FcmException;
 import com.appcenter.marketplace.global.fcm.event.SendNewCouponFcmEvent;
@@ -72,6 +73,8 @@ public class FcmService {
                                 .setBody(event.getCoupon().getDescription())
                                 .build()
                 )
+                .putData("id", String.valueOf(event.getMarket().getId()))   // 대상 ID
+                .putData("type", TargetType.MARKET.name())                  // 대상 엔티티 타입
                 .setTopic("market-" + event.getMarket().getId())
                 .build();
 
@@ -104,7 +107,7 @@ public class FcmService {
             FirebaseMessaging
                     .getInstance()
                     .subscribeToTopic(Collections.singletonList(event.getMember().getFcmToken())
-                            , ("market-" + event.getMarket().getId().toString()));
+                            , ("market-" + event.getMarket().getId()));
         } catch (FirebaseMessagingException e) {
             MessagingErrorCode errorCode = e.getMessagingErrorCode();
             if (errorCode.equals(MessagingErrorCode.INTERNAL) || errorCode.equals(MessagingErrorCode.UNAVAILABLE)) {
@@ -130,7 +133,7 @@ public class FcmService {
             FirebaseMessaging
                     .getInstance()
                     .unsubscribeFromTopic(Collections.singletonList(event.getMember().getFcmToken())
-                            , ("market-" + event.getMarket().getId().toString()));
+                            , ("market-" + event.getMarket().getId()));
         } catch (FirebaseMessagingException e) {
             MessagingErrorCode errorCode = e.getMessagingErrorCode();
             if (errorCode.equals(MessagingErrorCode.INTERNAL) || errorCode.equals(MessagingErrorCode.UNAVAILABLE)) {

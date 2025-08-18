@@ -43,6 +43,13 @@ public enum StatusCode {
     MEMBER_ACCOUNT_DENY(OK,"회원 주거래은행/계좌번호 저장 거부"),
     MEMBER_UPGRADE_PERMISSION(OK,"회원 권한 관리자 승급 완료"),
 
+    // Notification
+    NOTIFICATION_CREATE(CREATED,"알림 기록 생성 완료"),
+    NOTIFICATION_FOUND(OK,"알림 기록 조회 완료"),
+    NOTIFICATION_READ(OK,"알림 기록 읽음 처리 완료"),
+
+
+
     // FCM
     FCM_SEND_SUCCESS(OK, "알림 메시지 전송에 성공하였습니다."),
     FCM_SEND_FAIL(INTERNAL_SERVER_ERROR, "알림 메시지 전송에 실패하였습니다."),
@@ -76,6 +83,7 @@ public enum StatusCode {
     COUPON_IS_DELETED(NOT_FOUND, "이미 삭제된 쿠폰입니다."),
     IMAGE_NOT_EXIST(NOT_FOUND,"존재하지 않는 이미지입니다."),
     ADDRESS_NOT_EXIST(NOT_FOUND,"존재하지 않는 주소입니다."),
+    NOTIFICATION_NOT_EXIST(NOT_FOUND,"존재하지 않는 알림 기록입니다."),
 
     /* 409 CONFLICT : 리소스 충돌 */
     COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급된 쿠폰입니다."),
