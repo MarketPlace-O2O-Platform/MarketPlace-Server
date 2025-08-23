@@ -16,15 +16,38 @@ import static com.appcenter.marketplace.domain.notification.QNotification.notifi
 public class NotificationRepositoryImpl implements NotificationRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
+
     @Override
-    public List<NotificationRes> getNotificationList(Long memberId, Long notificationId, TargetType targetType, Integer size) {
+    public List<NotificationRes> getNotificationList(Long memberId, Long notificationId, Integer size) {
+        return jpaQueryFactory.select(new QNotificationRes(
+                        notification.id,
+                        notification.title,
+                        notification.body,
+                        notification.targetId,
+                        notification.targetType,
+                        notification.isRead,
+                        notification.createdAt))
+                .from(notification)
+                .join(member).on(member.id.eq(memberId))
+                .where(
+                        ltNotificationId(notificationId)
+                )
+                .orderBy(notification.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
+
+
+    @Override
+    public List<NotificationRes> getNotificationListByType(Long memberId, Long notificationId, TargetType targetType, Integer size) {
         return jpaQueryFactory.select(new QNotificationRes(
                 notification.id,
                 notification.title,
                 notification.body,
                 notification.targetId,
                 notification.targetType,
-                notification.isRead))
+                notification.isRead,
+                notification.createdAt))
                 .from(notification)
                 .join(member).on(member.id.eq(memberId))
                 .where(
@@ -36,6 +59,10 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
                 .fetch();
     }
 
+
+
+
+
     private BooleanBuilder ltNotificationId(Long notificationId) {
         BooleanBuilder builder = new BooleanBuilder();
         if( notificationId !=  null){
@@ -43,4 +70,6 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
         }
         return builder;
     }
+
+
 }
