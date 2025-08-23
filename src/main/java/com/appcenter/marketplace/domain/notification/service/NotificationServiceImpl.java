@@ -45,6 +45,12 @@ public class NotificationServiceImpl implements NotificationService{
         notification.setIsReadTrue();
     }
 
+    @Transactional
+    @Override
+    public void setAllNotificationRead(Long memberId) {
+        notificationRepository.setAllNotificationAsReadByMemberId(memberId);
+    }
+
     @Override
     public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, String type, Integer size) {
         List<NotificationRes> notificationList=new ArrayList<>();

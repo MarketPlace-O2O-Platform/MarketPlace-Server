@@ -10,4 +10,6 @@ public interface NotificationService {
     NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, String type, Integer size);
 
     void setNotificationRead(Long notificationId);
+
+    void setAllNotificationRead(Long memberId);
 }

@@ -62,4 +62,15 @@ public class NotificationController {
                 .body(CommonResponse.from(NOTIFICATION_READ.getMessage()));
     }
 
+    @Operation(summary = "알림 기록 전체 읽음 처리", description = "알림 기록을 전체 읽음 처리합니다.")
+    @PatchMapping("/all")
+    public ResponseEntity<CommonResponse<Object>> setAllNotificationRead(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        notificationService.setAllNotificationRead(memberId);
+        return ResponseEntity.status(NOTIFICATION_READ.getStatus())
+                .body(CommonResponse.from(NOTIFICATION_READ.getMessage()));
+    }
+
 }
