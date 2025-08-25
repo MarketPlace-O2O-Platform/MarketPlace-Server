@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.appcenter.marketplace.global.common.StatusCode.NOTIFICATION_NOT_EXIST;
 
 @Transactional(readOnly = true)
 @Service
@@ -37,16 +40,31 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void setNotificationRead(Long notificationId) {
         Notification notification= notificationRepository.findById(notificationId)
-                .orElseThrow(()  -> new CustomException(StatusCode.NOTIFICATION_NOT_EXIST));
+                .orElseThrow(()  -> new CustomException(NOTIFICATION_NOT_EXIST));
 
         notification.setIsReadTrue();
     }
 
+    @Transactional
+    @Override
+    public void setAllNotificationRead(Long memberId) {
+        notificationRepository.setAllNotificationAsReadByMemberId(memberId);
+    }
+
     @Override
     public NotificationPageRes<NotificationRes> getNotificationList(Long memberId, Long notificationId, String type, Integer size) {
+        List<NotificationRes> notificationList=new ArrayList<>();
 
-        TargetType targetType = TargetType.valueOf(type.toUpperCase());
-        List<NotificationRes> notificationList = notificationRepository.getNotificationList(memberId, notificationId, targetType, size);
+        if(type==null){
+            notificationList = notificationRepository.getNotificationList(memberId, notificationId,  size);
+        }
+        else if(TargetType.exists(type)){
+            TargetType targetType = TargetType.valueOf(type.toUpperCase());
+            notificationList = notificationRepository.getNotificationListByType(memberId, notificationId, targetType, size);
+        }
+        else throw new CustomException(NOTIFICATION_NOT_EXIST);
+
+
         return checkNextPageAndReturn(notificationList, size);
     }
 
