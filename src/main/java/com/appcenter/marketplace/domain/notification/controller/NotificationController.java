@@ -37,13 +37,14 @@ public class NotificationController {
     }
 
     @Operation(summary = "알림 기록 리스트 조회", description = "알림 기록 리스트를 조회합니다. <br>" +
-    "type은 'MARKET(쿠폰발급)', 'COUPON(쿠폰만료 - 예정), 'NOTICE(공지- 예정)' 중에서 작성해주시면 됩니다.")
+    "type은 'MARKET(쿠폰발급)', 'COUPON(쿠폰만료 - 예정), 'NOTICE(공지- 예정)' 중에서 작성해주시면 됩니다. <br>" +
+    "type이 없을 시, 전체 알림 조회입니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<NotificationPageRes<NotificationRes>>> getNotificationList(
             @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(description = "직전 페이지의 마지막 id")
             @RequestParam(required = false) Long notificationId,
-            @RequestParam String type,
+            @RequestParam(required = false) String type,
             @RequestParam(defaultValue = "10") Integer size) {
 
         Long memberId = Long.parseLong(userDetails.getUsername());
@@ -57,6 +58,17 @@ public class NotificationController {
             @RequestParam Long notificationId) {
 
         notificationService.setNotificationRead(notificationId);
+        return ResponseEntity.status(NOTIFICATION_READ.getStatus())
+                .body(CommonResponse.from(NOTIFICATION_READ.getMessage()));
+    }
+
+    @Operation(summary = "알림 기록 전체 읽음 처리", description = "알림 기록을 전체 읽음 처리합니다.")
+    @PatchMapping("/all")
+    public ResponseEntity<CommonResponse<Object>> setAllNotificationRead(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        notificationService.setAllNotificationRead(memberId);
         return ResponseEntity.status(NOTIFICATION_READ.getStatus())
                 .body(CommonResponse.from(NOTIFICATION_READ.getMessage()));
     }
