@@ -2,7 +2,6 @@ package com.appcenter.marketplace.domain.member_coupon.dto.res;
 
 import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_coupon.MemberCoupon;
-import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,13 +19,15 @@ public class IssuedCouponRes {
     private final Boolean used;
     // 증정형 / 환급형 구분용
     private final CouponType couponType;
+    // 영수증 제출 여부
+    private final Boolean isSubmit;
 
-    private  LocalDateTime deadLine;
-    private  Boolean expired;
+    private LocalDateTime deadLine;
+    private Boolean expired;
 
     @QueryProjection
     @Builder
-    public IssuedCouponRes(Long memberCouponId, Long couponId, String marketName, String thumbnail, String couponName, String description, LocalDateTime deadLine, Boolean used, Boolean expired, CouponType couponType) {
+    public IssuedCouponRes(Long memberCouponId, Long couponId, String marketName, String thumbnail, String couponName, String description, LocalDateTime deadLine, Boolean used, Boolean expired, CouponType couponType, Boolean isSubmit) {
         this.memberCouponId = memberCouponId;
         this.couponId = couponId;
         this.marketName = marketName;
@@ -37,10 +38,11 @@ public class IssuedCouponRes {
         this.used = used;
         this.expired = expired;
         this.couponType = couponType;
+        this.isSubmit = isSubmit;
     }
 
     @QueryProjection
-    public IssuedCouponRes(Long memberCouponId, Long couponId, String marketName, String thumbnail, String couponName, String description, Boolean used, Boolean expired, CouponType couponType ) {
+    public IssuedCouponRes(Long memberCouponId, Long couponId, String marketName, String thumbnail, String couponName, String description, Boolean used, Boolean expired, CouponType couponType, Boolean isSubmit) {
         this.memberCouponId = memberCouponId;
         this.couponId = couponId;
         this.marketName = marketName;
@@ -50,6 +52,7 @@ public class IssuedCouponRes {
         this.used = used;
         this.expired = expired;
         this.couponType = couponType;
+        this.isSubmit = isSubmit;
     }
 
     public static IssuedCouponRes toDto(MemberCoupon memberCoupon){
@@ -63,6 +66,7 @@ public class IssuedCouponRes {
                 .deadLine(memberCoupon.getCoupon().getDeadLine())
                 .used(memberCoupon.getIsUsed())
                 .expired(memberCoupon.getIsExpired())
+                .isSubmit(false)
                 .build();
     }
 }

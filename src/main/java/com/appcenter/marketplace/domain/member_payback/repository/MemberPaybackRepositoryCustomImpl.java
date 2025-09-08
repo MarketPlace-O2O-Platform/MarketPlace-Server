@@ -51,9 +51,10 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                     payback.market.thumbnail,
                     payback.name,
                     payback.description,
-                    memberPayback.isPayback,
+                    memberPayback.isPayback, // payback 완료 여부
                     memberPayback.isExpired,
-                    Expressions.constant(CouponType.PAYBACK)))
+                    Expressions.constant(CouponType.PAYBACK),
+                    memberPayback.receipt.isNotNull()))
                 .from(payback)
                 .join(memberPayback).on(memberPayback.payback.id.eq(payback.id))
                 .join(market).on(market.id.eq(payback.market.id))
@@ -76,7 +77,8 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                         payback.description,
                         memberPayback.isPayback,
                         memberPayback.isExpired,
-                        Expressions.constant(CouponType.PAYBACK)))
+                        Expressions.constant(CouponType.PAYBACK),
+                        memberPayback.receipt.isNotNull()))
                 .from(payback)
                 .join(memberPayback).on(memberPayback.payback.id.eq(payback.id))
                 .join(market).on(market.id.eq(payback.market.id))

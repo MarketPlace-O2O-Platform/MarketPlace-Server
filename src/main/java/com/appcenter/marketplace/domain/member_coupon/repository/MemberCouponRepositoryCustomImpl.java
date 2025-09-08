@@ -42,7 +42,8 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
                         coupon.deadLine,
                         memberCoupon.isUsed,
                         memberCoupon.isExpired,
-                        Expressions.constant(CouponType.GIFT)))
+                        Expressions.constant(CouponType.GIFT),
+                        Expressions.constant(false)))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))
@@ -68,7 +69,8 @@ public class MemberCouponRepositoryCustomImpl implements MemberCouponRepositoryC
                     coupon.deadLine,
                     memberCoupon.isUsed,
                     memberCoupon.isExpired,
-                    Expressions.constant(CouponType.GIFT)))
+                    Expressions.constant(CouponType.GIFT),
+                    Expressions.constant(false)))
                 .from(coupon)
                 .join(memberCoupon).on(memberCoupon.coupon.id.eq(coupon.id))
                 .join(market).on(market.id.eq(coupon.market.id))

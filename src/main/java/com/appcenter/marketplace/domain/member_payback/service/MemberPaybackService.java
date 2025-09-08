@@ -7,6 +7,8 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 public interface MemberPaybackService {
 
     // 환급 쿠폰 발급

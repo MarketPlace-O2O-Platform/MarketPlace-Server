@@ -135,6 +135,11 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
         String receiptFileName = UUID.randomUUID() + "_" + receiptImage.getOriginalFilename();
 
         try {
+            File uploadDir = new File(uploadFolder);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+            
             File uploadFile = new File(uploadFolder + receiptFileName);
             receiptImage.transferTo(uploadFile);
             return receiptFileName;
