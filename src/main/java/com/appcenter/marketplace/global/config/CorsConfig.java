@@ -11,6 +11,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Value("${cors.web.url}")
     private String localUrl;
 
+
     @Value("${cors.web.prod.url}")
     private String prodUrl;
 

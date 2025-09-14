@@ -19,10 +19,14 @@ public interface MarketRepositoryCustom {
 
     List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
+    List<MarketRes> findMarketListForAdmin(Long marketId, Integer size);
+
+    List<MarketRes> findMarketListByCategoryForAdmin(Long marketId, Integer size, String major);
+
 //    List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
 //
 //    // 찜 수가 가장 많은 매장 Top 조회
 //    List<MarketRes> findTopFavoriteMarkets(Long memberId, Integer size);
-    
+
 }
 

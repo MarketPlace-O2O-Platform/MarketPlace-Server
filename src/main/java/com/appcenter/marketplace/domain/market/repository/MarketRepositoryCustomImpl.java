@@ -342,4 +342,58 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         return builder;
 
     }
+
+    // 관리자용 전체 매장 조회 (멤버 ID 없이)
+    @Override
+    public List<MarketRes> findMarketListForAdmin(Long marketId, Integer size) {
+        return jpaQueryFactory
+                .select(new QMarketRes(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
+                        coupon.id.isNotNull()))
+                .from(market)
+                .leftJoin(coupon).on(coupon.market.eq(market)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7))))
+                .innerJoin(market.local, local)
+                .innerJoin(local.metro, metro)
+                .where(ltMarketId(marketId)
+                        .and(market.isDeleted.eq(false)))
+                .orderBy(market.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
+
+    // 관리자용 카테고리별 매장 조회
+    @Override
+    public List<MarketRes> findMarketListByCategoryForAdmin(Long marketId, Integer size, String major) {
+        return jpaQueryFactory
+                .select(new QMarketRes(
+                        market.id,
+                        market.name,
+                        market.description,
+                        metro.name.concat(" ").concat(local.name),
+                        market.thumbnail,
+                        Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
+                        coupon.id.isNotNull()))
+                .from(market)
+                .innerJoin(market.category, category)
+                .leftJoin(coupon).on(coupon.market.eq(market)
+                        .and(coupon.isDeleted.eq(false))
+                        .and(coupon.isHidden.eq(false))
+                        .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7))))
+                .innerJoin(market.local, local)
+                .innerJoin(local.metro, metro)
+                .where(ltMarketId(marketId)
+                        .and(category.major.eq(Major.valueOf(major)))
+                        .and(market.isDeleted.eq(false)))
+                .orderBy(market.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
 }
