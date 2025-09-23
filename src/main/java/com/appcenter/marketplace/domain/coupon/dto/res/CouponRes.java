@@ -44,6 +44,19 @@ public class CouponRes {
         this.isHidden = isHidden;
     }
 
+    // 관리자 전체 쿠폰 조회
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Integer stock, Boolean isHidden, Long marketId, String marketName) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.couponDescription = couponDescription;
+        this.deadLine = deadLine;
+        this.stock = stock;
+        this.isHidden = isHidden;
+        this.marketId = marketId;
+        this.marketName = marketName;
+    }
+
     // 매장 별 쿠폰 페이징 조회
     @QueryProjection
     public CouponRes(Long couponId, String couponName, String couponDescription, LocalDateTime deadLine, Boolean isAvailable, Boolean isMemberIssued, CouponType couponType) {
