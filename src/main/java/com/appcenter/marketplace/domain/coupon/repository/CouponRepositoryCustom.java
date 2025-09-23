@@ -20,4 +20,6 @@ public interface CouponRepositoryCustom {
 
     List<TopPopularCouponRes> findTopPopularCouponList(Integer size);
 
+    List<CouponRes> findCouponsForAdmin(Long couponId, Long marketId, Integer size);
+
 }

@@ -75,5 +75,32 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
         return builder;
     }
 
+    // 관리자용 전체 환급 쿠폰 조회
+    @Override
+    public List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Long marketId, Integer size) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(payback.isDeleted.eq(false));
+
+        if (couponId != null) {
+            whereClause.and(ltCouponId(couponId));
+        }
+
+        if (marketId != null) {
+            whereClause.and(payback.market.id.eq(marketId));
+        }
+
+        return queryFactory.select(new QPaybackRes(
+                        payback.id,
+                        payback.name,
+                        payback.description,
+                        payback.isHidden,
+                        Expressions.constant(CouponType.PAYBACK)))
+                .from(payback)
+                .innerJoin(payback.market, market)
+                .where(whereClause)
+                .orderBy(payback.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
 
 }

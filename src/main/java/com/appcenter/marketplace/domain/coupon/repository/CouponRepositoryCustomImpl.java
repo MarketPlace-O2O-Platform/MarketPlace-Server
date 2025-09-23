@@ -246,4 +246,35 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
         return builder;
 
     }
+
+    // 관리자용 전체 쿠폰 조회
+    @Override
+    public List<CouponRes> findCouponsForAdmin(Long couponId, Long marketId, Integer size) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(coupon.isDeleted.eq(false));
+
+        if (couponId != null) {
+            whereClause.and(ltCouponId(couponId));
+        }
+
+        if (marketId != null) {
+            whereClause.and(coupon.market.id.eq(marketId));
+        }
+
+        return jpaQueryFactory.select(new QCouponRes(
+                        coupon.id,
+                        coupon.name,
+                        coupon.description,
+                        coupon.deadLine,
+                        coupon.stock,
+                        coupon.isHidden))
+                .from(coupon)
+                .innerJoin(coupon.market, market)
+                .innerJoin(market.local, local)
+                .innerJoin(local.metro, metro)
+                .where(whereClause)
+                .orderBy(coupon.id.desc())
+                .limit(size + 1)
+                .fetch();
+    }
 }
