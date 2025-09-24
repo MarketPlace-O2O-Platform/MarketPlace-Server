@@ -2,17 +2,22 @@ package com.appcenter.marketplace.global.exception;
 
 import com.appcenter.marketplace.global.common.ErrorResponse;
 import io.sentry.Sentry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
+
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private String maxFileSize;
     /*
         MethodArgumentNotValidException는 유효성 검사에서 실패하면 나타나는 예외로 bindingReult에 오류를 담는다.
         bindingResult가 없으면 400오류가 발생해 컨트롤러를 호출하지않고 오류페이지로 이동한다.
@@ -52,6 +57,19 @@ public class ExceptionControllerAdvice {
         Sentry.captureException(e);
 
         return ResponseEntity.status(MULTI_PART_FILE_INVALID.getStatus())
+                .body(errorResponse);
+    }
+
+    // 파일 업로드 크기 제한을 초과했을 때 발생하는 예외
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        String message = String.format("파일 크기가 허용된 최대 크기를 초과했습니다. 최대 허용 크기: %s", maxFileSize);
+        ErrorResponse errorResponse= ErrorResponse.builder()
+                .message(message)
+                .build();
+        Sentry.captureException(e);
+
+        return ResponseEntity.status(FILE_SIZE_EXCEEDED.getStatus())
                 .body(errorResponse);
     }
 

@@ -62,6 +62,7 @@ public enum StatusCode {
     ADDRESS_INVALID(BAD_REQUEST,"유효하지 않은 주소입니다."),
     MULTI_PART_FILE_INVALID(BAD_REQUEST,"MultiPartFile이 존재하지 않습니다"),
     MULTI_PART_FILE_SEQUENCE_INVALID(BAD_REQUEST,"MultipartFile과 순서 리스트의 개수가 맞지 않습니다."),
+    FILE_SIZE_EXCEEDED(BAD_REQUEST,"파일 크기가 허용된 최대 크기를 초과했습니다"),
     FILE_SAVE_INVALID(BAD_REQUEST,"파일 저장 중 오류가 발생했습니다."),
     FILE_DELETE_INVALID(BAD_REQUEST,"파일 삭제 중 오류가 발생했습니다."),
     DATA_INTEGRITY_VIOLATION(BAD_REQUEST,"이미 존재하는 값이거나 필수 필드에 null이 있습니다."),
