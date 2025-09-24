@@ -269,7 +269,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.stock,
                         coupon.isHidden,
                         market.id,
-                        market.name))
+                        market.name,
+                        Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(market.local, local)

@@ -17,6 +17,8 @@ import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.market.service.AdminMarketService;
 import com.appcenter.marketplace.domain.market.service.MarketService;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
+import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackService;
+import com.appcenter.marketplace.domain.payback.service.PaybackService;
 import com.appcenter.marketplace.global.common.Major;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,8 @@ public class AdminMarketServiceImpl implements AdminMarketService {
     private final ImageService imageService;
     private final CouponOwnerService couponOwnerService;
     private final MemberCouponService memberCouponService;
+    private final PaybackService paybackService;
+    private final MemberPaybackService memberPaybackService;
 
     @Override
     public MarketPageRes<MarketRes> getAllMarkets(Long marketId, Integer size, String major) {
@@ -109,6 +113,8 @@ public class AdminMarketServiceImpl implements AdminMarketService {
 
         memberCouponService.hardDeleteCoupon(couponIds);
         couponOwnerService.hardDeleteCoupon(market.getId());
+        memberPaybackService.hardDeletePaybacksByMarket(market.getId());
+        paybackService.hardDeleteCouponsByMarket(market.getId());
         imageService.softDeleteImage(marketId);
         market.softDeleteMarket();
     }

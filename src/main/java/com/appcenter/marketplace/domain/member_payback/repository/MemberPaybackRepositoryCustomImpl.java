@@ -127,4 +127,15 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
         return builder;
     }
 
+    @Override
+    public List<MemberPayback> findMemberPaybacksByMarketId(Long marketId) {
+        return jpaQueryFactory
+                .select(memberPayback)
+                .from(memberPayback)
+                .join(memberPayback.payback, payback)
+                .join(payback.market, market)
+                .where(market.id.eq(marketId))
+                .fetch();
+    }
+
 }

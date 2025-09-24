@@ -26,4 +26,7 @@ public interface PaybackService {
     // 환급 쿠폰 삭제 메서드
     void softDeleteCoupon(Long couponId);
 
+    // 매장별 환급 쿠폰 일괄 삭제 메서드 (매장 삭제용)
+    void hardDeleteCouponsByMarket(Long marketId);
+
 }

@@ -73,6 +73,13 @@ public class PaybackServiceImpl implements PaybackService {
         payback.softDeleteCoupon();
     }
 
+    @Override
+    @Transactional
+    public void hardDeleteCouponsByMarket(Long marketId) {
+        List<Payback> paybacks = paybackRepository.findPaybacksByMarketId(marketId);
+        paybackRepository.deleteAll(paybacks);
+    }
+
     private Market findMarketById(Long marketId) {
         return marketRepository.findById(marketId).orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
     }

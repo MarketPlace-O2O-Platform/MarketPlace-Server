@@ -26,5 +26,8 @@ public interface MemberPaybackService {
     // 3일뒤 만료 처리
     void check3DaysCoupons();
 
+    // 매장별 회원 환급 쿠폰 일괄 삭제 메서드 (매장 삭제용)
+    void hardDeletePaybacksByMarket(Long marketId);
+
 }
 

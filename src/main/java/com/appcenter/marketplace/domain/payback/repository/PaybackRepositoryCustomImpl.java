@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.payback.repository;
 
 import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_payback.QMemberPayback;
+import com.appcenter.marketplace.domain.payback.Payback;
 import com.appcenter.marketplace.domain.payback.dto.res.PaybackRes;
 import com.appcenter.marketplace.domain.payback.dto.res.QPaybackRes;
 import com.querydsl.core.BooleanBuilder;
@@ -102,6 +103,16 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .where(whereClause)
                 .orderBy(payback.id.desc())
                 .limit(size + 1)
+                .fetch();
+    }
+
+    @Override
+    public List<Payback> findPaybacksByMarketId(Long marketId) {
+        return queryFactory
+                .select(payback)
+                .from(payback)
+                .where(payback.market.id.eq(marketId)
+                        .and(payback.isDeleted.eq(false)))
                 .fetch();
     }
 

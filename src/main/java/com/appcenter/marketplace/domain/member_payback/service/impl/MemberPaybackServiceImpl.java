@@ -103,6 +103,13 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
         memberPaybackRepository.check3DaysCoupons();
     }
 
+    @Override
+    @Transactional
+    public void hardDeletePaybacksByMarket(Long marketId) {
+        List<MemberPayback> memberPaybacks = memberPaybackRepository.findMemberPaybacksByMarketId(marketId);
+        memberPaybackRepository.deleteAll(memberPaybacks);
+    }
+
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));
