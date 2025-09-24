@@ -16,7 +16,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.COUPON_USED;
 
 @Tag(name = "[관리자 환급 쿠폰 관리]", description = "[관리자] 회원의 환급 쿠폰 관리")
 @RestController
-@RequestMapping("/api/admin/payback-coupons")
+@RequestMapping("/api/admins/payback-coupons")
 @RequiredArgsConstructor
 public class MemberPaybackAdminController {
 

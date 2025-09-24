@@ -21,7 +21,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_HIDDEN;
 @Tag(name ="[관리자 공감매장]", description = "[관리자] 관리자 공감매장 관리")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/temp-markets")
+@RequestMapping("/api/admins/temp-markets")
 public class TempMarketAdminController {
     private final TempMarketAdminService tempMarketAdminService;
 
