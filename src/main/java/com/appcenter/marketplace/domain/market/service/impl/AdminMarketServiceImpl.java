@@ -8,6 +8,7 @@ import com.appcenter.marketplace.domain.image.service.ImageService;
 import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.Market;
+import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
 import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketPageRes;
@@ -84,6 +85,14 @@ public class AdminMarketServiceImpl implements AdminMarketService {
         Market market = findMarketByMarketId(marketId);
         Category category = findCategoryByMajor(marketReq.getMajor());
         market.updateMarketInfo(marketReq, category);
+        return marketService.getMarketDetails(market.getId());
+    }
+
+    @Override
+    @Transactional
+    public MarketDetailsRes updateMarketImage(Long marketId, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multipartFileList) {
+        Market market = findMarketByMarketId(marketId);
+        imageService.updateImage(market, marketImageUpdateReq, multipartFileList);
         return marketService.getMarketDetails(market.getId());
     }
 

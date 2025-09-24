@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.dto.res;
 
 import com.appcenter.marketplace.domain.image.dto.res.ImageRes;
+import com.appcenter.marketplace.global.common.Major;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
@@ -16,9 +17,10 @@ public class MarketDetailsRes {
     private final String phoneNumber;
     private final String address;
     private final List<ImageRes> imageResList;
+    private final Major major;
 
     @QueryProjection
-    public MarketDetailsRes(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageRes> imageResList) {
+    public MarketDetailsRes(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageRes> imageResList, Major major) {
         this.marketId = marketId;
         this.name = name;
         this.description = description;
@@ -27,5 +29,6 @@ public class MarketDetailsRes {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.imageResList = imageResList;
+        this.major = major;
     }
 }
