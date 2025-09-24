@@ -98,14 +98,16 @@ public class CouponRes {
     }
 
     public static CouponRes toDto(Coupon coupon){
-        return CouponRes.builder()
-                .couponId(coupon.getId())
-                .couponName(coupon.getName())
-                .couponDescription(coupon.getDescription())
-                .deadLine(coupon.getDeadLine())
-                .stock(coupon.getStock())
-                .isHidden(coupon.getIsHidden())
-                .build();
+        return new CouponRes(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getDescription(),
+                coupon.getDeadLine(),
+                coupon.getStock(),
+                coupon.getIsHidden(),
+                coupon.getMarket().getId(),
+                coupon.getMarket().getName()
+        );
     }
 
 }

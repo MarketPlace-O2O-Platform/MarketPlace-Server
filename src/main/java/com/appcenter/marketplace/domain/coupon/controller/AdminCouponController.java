@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Tag(name = "[관리자 쿠폰]", description = "[관리자] 모든 쿠폰 관리 (일반/환급/베타)")
@@ -82,6 +84,14 @@ public class AdminCouponController {
                 .ok(CommonResponse.from(COUPON_DELETE.getMessage()));
     }
 
+    @Operation(summary = "일반 쿠폰 일괄 삭제", description = "관리자가 여러 일반 쿠폰을 일괄 삭제합니다.")
+    @DeleteMapping("/batch")
+    public ResponseEntity<CommonResponse<Object>> deleteCoupons(@RequestBody List<Long> couponIds) {
+        adminCouponService.softDeleteCoupons(couponIds);
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_DELETE.getMessage()));
+    }
+
     // ===== 환급 쿠폰 관리 =====
     @Operation(summary = "전체 환급 쿠폰 조회", description = "관리자가 모든 환급 쿠폰을 조회합니다.")
     @GetMapping("/payback")
@@ -136,6 +146,14 @@ public class AdminCouponController {
     @DeleteMapping("/payback/{couponId}")
     public ResponseEntity<CommonResponse<Object>> deletePaybackCoupon(@PathVariable Long couponId) {
         adminCouponService.softDeletePaybackCoupon(couponId);
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_DELETE.getMessage()));
+    }
+
+    @Operation(summary = "환급 쿠폰 일괄 삭제", description = "관리자가 여러 환급 쿠폰을 일괄 삭제합니다.")
+    @DeleteMapping("/payback/batch")
+    public ResponseEntity<CommonResponse<Object>> deletePaybackCoupons(@RequestBody List<Long> couponIds) {
+        adminCouponService.softDeletePaybackCoupons(couponIds);
         return ResponseEntity
                 .ok(CommonResponse.from(COUPON_DELETE.getMessage()));
     }

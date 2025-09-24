@@ -94,7 +94,9 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         payback.name,
                         payback.description,
                         payback.isHidden,
-                        Expressions.constant(CouponType.PAYBACK)))
+                        Expressions.constant(CouponType.PAYBACK),
+                        market.id,
+                        market.name))
                 .from(payback)
                 .innerJoin(payback.market, market)
                 .where(whereClause)

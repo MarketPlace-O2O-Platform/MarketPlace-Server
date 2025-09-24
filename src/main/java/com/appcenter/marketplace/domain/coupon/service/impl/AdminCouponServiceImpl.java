@@ -84,6 +84,14 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         coupon.softDeleteCoupon();
     }
 
+    @Override
+    @Transactional
+    @CacheEvict(cacheNames = {"CLOSING_COUPONS", "LATEST_COUPONS", "POPULAR_COUPONS"}, allEntries = true)
+    public void softDeleteCoupons(List<Long> couponIds) {
+        List<Coupon> coupons = couponRepository.findAllById(couponIds);
+        coupons.forEach(Coupon::softDeleteCoupon);
+    }
+
     // ===== 환급 쿠폰 관리 =====
     @Override
     public CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Long marketId, Integer size) {
@@ -124,6 +132,13 @@ public class AdminCouponServiceImpl implements AdminCouponService {
     public void softDeletePaybackCoupon(Long couponId) {
         Payback payback = findPaybackById(couponId);
         payback.softDeleteCoupon();
+    }
+
+    @Override
+    @Transactional
+    public void softDeletePaybackCoupons(List<Long> couponIds) {
+        List<Payback> paybacks = paybackRepository.findAllById(couponIds);
+        paybacks.forEach(Payback::softDeleteCoupon);
     }
 
     // ===== Private Helper Methods =====

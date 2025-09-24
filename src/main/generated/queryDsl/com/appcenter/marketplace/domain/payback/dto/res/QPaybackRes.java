@@ -19,6 +19,10 @@ public class QPaybackRes extends ConstructorExpression<PaybackRes> {
         super(PaybackRes.class, new Class<?>[]{long.class, String.class, String.class, boolean.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, couponDescription, isHidden, couponType);
     }
 
+    public QPaybackRes(Expression<Long> couponId, Expression<String> couponName, Expression<String> couponDescription, Expression<Boolean> isHidden, Expression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType, Expression<Long> marketId, Expression<String> marketName) {
+        super(PaybackRes.class, new Class<?>[]{long.class, String.class, String.class, boolean.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class, long.class, String.class}, couponId, couponName, couponDescription, isHidden, couponType, marketId, marketName);
+    }
+
     public QPaybackRes(NumberExpression<Long> couponId, StringExpression couponName, StringExpression couponDescription, EnumExpression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType, BooleanExpression isMemberIssued) {
         super(PaybackRes.class, new Class<?>[]{long.class, String.class, String.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class, boolean.class}, couponId, couponName, couponDescription, couponType, isMemberIssued);
     }
