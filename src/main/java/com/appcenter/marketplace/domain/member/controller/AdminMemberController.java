@@ -25,10 +25,12 @@ public class AdminMemberController {
     public ResponseEntity<CommonResponse<MemberPageRes<AdminMemberRes>>> getAllMembers(
             @Parameter(description = "페이지의 마지막 memberId")
             @RequestParam(required = false, name = "lastPageIndex") Long memberId,
-            @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size,
+            @Parameter(description = "권한별 필터 (USER, ADMIN)")
+            @RequestParam(required = false, name = "role") String role) {
         return ResponseEntity
                 .ok(CommonResponse.from(MEMBER_FOUND.getMessage(),
-                        adminMemberService.getAllMembers(memberId, size)));
+                        adminMemberService.getAllMembers(memberId, size, role)));
     }
 
     @Operation(summary = "회원 상세 조회", description = "관리자가 특정 회원의 상세 정보를 조회합니다.")

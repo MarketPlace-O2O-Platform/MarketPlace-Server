@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.member.repository;
 
 import com.appcenter.marketplace.domain.member.dto.res.AdminMemberRes;
+import com.appcenter.marketplace.domain.member.Role;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,7 +25,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<AdminMemberRes> findMembersForAdmin(Long memberId, Integer size) {
+    public List<AdminMemberRes> findMembersForAdmin(Long memberId, Integer size, String role) {
         return jpaQueryFactory
                 .select(Projections.constructor(AdminMemberRes.class,
                         member.id,
@@ -36,7 +37,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         member.createdAt,
                         member.modifiedAt))
                 .from(member)
-                .where(ltMemberId(memberId))
+                .where(ltMemberId(memberId)
+                        .and(eqRole(role)))
                 .orderBy(member.id.desc())
                 .limit(size + 1)
                 .fetch();
@@ -46,6 +48,14 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
         if (memberId != null) {
             builder.and(member.id.lt(memberId));
+        }
+        return builder;
+    }
+
+    private BooleanBuilder eqRole(String role) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (role != null && Role.exists(role)) {
+            builder.and(member.role.eq(Role.valueOf(role)));
         }
         return builder;
     }

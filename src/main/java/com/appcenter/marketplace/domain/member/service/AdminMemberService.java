@@ -5,7 +5,7 @@ import com.appcenter.marketplace.domain.member.dto.res.MemberPageRes;
 
 public interface AdminMemberService {
 
-    MemberPageRes<AdminMemberRes> getAllMembers(Long memberId, Integer size);
+    MemberPageRes<AdminMemberRes> getAllMembers(Long memberId, Integer size, String role);
 
     AdminMemberRes getMemberDetails(Long memberId);
 

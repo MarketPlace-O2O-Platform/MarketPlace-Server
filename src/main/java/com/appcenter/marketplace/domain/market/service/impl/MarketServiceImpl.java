@@ -90,7 +90,8 @@ public class MarketServiceImpl implements MarketService {
                 .append("market.description AS description, ")
                 .append("CONCAT(metropolitan_government.name, ' ', local_government.name) AS location, ")
                 .append("market.thumbnail AS thumbnail, ")
-                .append("(coupon.id IS NOT NULL) AS has_coupon ");
+                .append("(coupon.id IS NOT NULL) AS has_coupon, ")
+                .append("category.major AS major ");
 
         // FROM 절
         sb.append("FROM market ")
@@ -102,7 +103,9 @@ public class MarketServiceImpl implements MarketService {
                 .append("INNER JOIN local_government ")
                 .append("ON market.local_government_id = local_government.id ")
                 .append("INNER JOIN metropolitan_government ")
-                .append("ON local_government.metropolitan_government_id = metropolitan_government.id ");
+                .append("ON local_government.metropolitan_government_id = metropolitan_government.id ")
+                .append("INNER JOIN category ")
+                .append("ON market.category_id = category.id ");
 
         // WHERE 절
         sb.append("WHERE MATCH(market.name) AGAINST(:name IN NATURAL LANGUAGE MODE) ");

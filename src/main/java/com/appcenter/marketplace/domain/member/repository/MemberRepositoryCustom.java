@@ -7,5 +7,5 @@ import java.util.List;
 public interface MemberRepositoryCustom {
     long resetCheerTickets();
 
-    List<AdminMemberRes> findMembersForAdmin(Long memberId, Integer size);
+    List<AdminMemberRes> findMembersForAdmin(Long memberId, Integer size, String role);
 }

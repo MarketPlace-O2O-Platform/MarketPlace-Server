@@ -40,6 +40,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         return  jpaQueryFactory
                 .from(market)
                 .innerJoin(image).on(image.market.eq(market))
+                .innerJoin(market.category, category)
                 .where(market.id.eq(marketId)) // 매장 ID로 필터링
                 .orderBy(image.sequence.asc())
                 // transfrom을 통해 쿼리 결과를 원하는 형태로 변환한다.
@@ -53,8 +54,9 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.closedDays,
                         market.phoneNumber,
                         market.address,
-                        list(new QImageRes(image.id, image.sequence, image.name)
-                        ))));
+                        list(new QImageRes(image.id, image.sequence, image.name)),
+                        category.major
+                        )));
     }
 
 
@@ -71,7 +73,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         memberId != null ?
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
@@ -82,6 +85,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7)))) // 7일 전 보다 크거나 같은 쿠폰
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
+                .innerJoin(category).on(market.category.eq(category))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
@@ -102,7 +106,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         memberId != null ?
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
@@ -135,7 +140,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         memberId != null ?
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
@@ -147,6 +153,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
+                .innerJoin(category).on(market.category.eq(category))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
@@ -167,7 +174,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         memberId != null ?
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
@@ -201,11 +209,13 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         favorite.id.isNotNull(),
                         coupon.id.isNotNull(),
-                        favorite.modifiedAt))
+                        favorite.modifiedAt,
+                        category.major))
                 .from(favorite)
                 .innerJoin(favorite.market, market)
                 .innerJoin(market.local, local)
                 .innerJoin(local.metro, metro)
+                .innerJoin(market.category, category)
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
                         .and(coupon.isHidden.eq(false))
@@ -354,7 +364,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
@@ -362,6 +373,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7))))
                 .innerJoin(market.local, local)
                 .innerJoin(local.metro, metro)
+                .innerJoin(market.category, category)
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.id.desc())
@@ -380,7 +392,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
-                        coupon.id.isNotNull()))
+                        coupon.id.isNotNull(),
+                        category.major))
                 .from(market)
                 .innerJoin(market.category, category)
                 .leftJoin(coupon).on(coupon.market.eq(market)

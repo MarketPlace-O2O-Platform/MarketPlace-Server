@@ -23,8 +23,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public MemberPageRes<AdminMemberRes> getAllMembers(Long memberId, Integer size) {
-        List<AdminMemberRes> memberList = memberRepository.findMembersForAdmin(memberId, size);
+    public MemberPageRes<AdminMemberRes> getAllMembers(Long memberId, Integer size, String role) {
+        List<AdminMemberRes> memberList = memberRepository.findMembersForAdmin(memberId, size, role);
         return checkNextPageAndReturn(memberList, size);
     }
 
