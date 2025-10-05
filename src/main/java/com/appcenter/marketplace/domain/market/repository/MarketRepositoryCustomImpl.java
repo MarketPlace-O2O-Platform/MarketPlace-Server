@@ -90,7 +90,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(category).on(market.category.eq(category))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
@@ -125,7 +125,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
                         .and(category.major.eq(Major.valueOf(major))))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
@@ -160,7 +160,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(category).on(market.category.eq(category))
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
@@ -196,7 +196,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false))
                         .and(category.major.eq(Major.valueOf(major))))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
@@ -382,7 +382,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(market.category, category)
                 .where(ltMarketId(marketId)
                         .and(market.isDeleted.eq(false)))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
@@ -412,7 +412,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .where(ltMarketId(marketId)
                         .and(category.major.eq(Major.valueOf(major)))
                         .and(market.isDeleted.eq(false)))
-                .orderBy(market.id.desc())
+                .orderBy(market.orderNo.asc())
                 .limit(size + 1)
                 .fetch();
     }
