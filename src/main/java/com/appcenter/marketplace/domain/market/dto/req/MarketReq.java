@@ -29,14 +29,17 @@ public class MarketReq {
     @NotBlank(message = "카테고리 대분류는 필수입력값입니다.")
     private String major;
 
+    private Integer orderNo;
+
     @Builder
-    public MarketReq(String marketName, String description, String operationHours, String closedDays, String phoneNumber, String address) {
+    public MarketReq(String marketName, String description, String operationHours, String closedDays, String phoneNumber, String address, Integer orderNo) {
         this.marketName = marketName;
         this.description = description;
         this.operationHours = operationHours;
         this.closedDays = closedDays;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.orderNo = orderNo;
     }
 
     public Market toEntity(Category category, Local local){
@@ -50,6 +53,7 @@ public class MarketReq {
                 .category(category)
                 .local(local)
                 .isDeleted(false)
+                .orderNo(orderNo)
                 .build();
     }
 }

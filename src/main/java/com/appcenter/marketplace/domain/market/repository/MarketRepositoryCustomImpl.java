@@ -55,7 +55,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.phoneNumber,
                         market.address,
                         list(new QImageRes(image.id, image.sequence, image.name)),
-                        category.major
+                        category.major,
+                        market.orderNo
                         )));
     }
 
@@ -74,7 +75,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
@@ -107,7 +109,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
@@ -141,7 +144,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false)
@@ -175,7 +179,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                                 favorite.id.isNotNull() :
                                 Expressions.FALSE,
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .leftJoin(favorite).on(market.eq(favorite.market)
                         .and(favorite.isDeleted.eq(false) // 자신이 찜한 매장
@@ -365,7 +370,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .leftJoin(coupon).on(coupon.market.eq(market)
                         .and(coupon.isDeleted.eq(false))
@@ -393,7 +399,8 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.thumbnail,
                         Expressions.constant(false), // 관리자는 찜 기능이 없으므로 false
                         coupon.id.isNotNull(),
-                        category.major))
+                        category.major,
+                        market.orderNo))
                 .from(market)
                 .innerJoin(market.category, category)
                 .leftJoin(coupon).on(coupon.market.eq(market)

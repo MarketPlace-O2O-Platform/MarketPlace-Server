@@ -54,8 +54,11 @@ public class Market extends BaseEntity {
     @Column(name= "is_deleted", nullable = false)
     private Boolean isDeleted;
 
+    @Column(name = "order_no", nullable = true)
+    private Integer orderNo;
+
     @Builder
-    public Market(String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail, Category category, Local local, Boolean isDeleted) {
+    public Market(String name, String description, String operationHours, String closedDays, String phoneNumber, String address, String thumbnail, Category category, Local local, Boolean isDeleted, Integer orderNo) {
         this.name = name;
         this.description = description;
         this.operationHours = operationHours;
@@ -66,6 +69,7 @@ public class Market extends BaseEntity {
         this.category = category;
         this.local=local;
         this.isDeleted=isDeleted;
+        this.orderNo=orderNo;
     }
 
     public void updateMarketInfo(MarketReq marketReq, Category category){
@@ -76,9 +80,13 @@ public class Market extends BaseEntity {
         this.phoneNumber = marketReq.getPhoneNumber();
         this.address = marketReq.getAddress();
         this.category= category;
+        this.orderNo = marketReq.getOrderNo();
     }
     public void updateThumbnailPath(String thumbnail){
         this.thumbnail= thumbnail;
+    }
+    public void updateOrderNo(Integer orderNo){
+        this.orderNo = orderNo;
     }
     public void softDeleteMarket(){this.isDeleted= true;}
 }

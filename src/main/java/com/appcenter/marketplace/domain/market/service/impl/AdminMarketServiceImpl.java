@@ -9,6 +9,7 @@ import com.appcenter.marketplace.domain.local.Local;
 import com.appcenter.marketplace.domain.local.repository.LocalRepository;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketOrderItem;
 import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketPageRes;
@@ -98,6 +99,15 @@ public class AdminMarketServiceImpl implements AdminMarketService {
         Market market = findMarketByMarketId(marketId);
         imageService.updateImage(market, marketImageUpdateReq, multipartFileList);
         return marketService.getMarketDetails(market.getId());
+    }
+
+    @Override
+    @Transactional
+    public void updateMarketOrder(List<MarketOrderItem> orders) {
+        orders.forEach(orderItem -> {
+            Market market = findMarketByMarketId(orderItem.getMarketId());
+            market.updateOrderNo(orderItem.getOrderNo());
+        });
     }
 
     @Override

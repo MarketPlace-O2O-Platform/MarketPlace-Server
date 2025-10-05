@@ -18,9 +18,10 @@ public class MarketDetailsRes {
     private final String address;
     private final List<ImageRes> imageResList;
     private final Major major;
+    private final Integer orderNo;
 
     @QueryProjection
-    public MarketDetailsRes(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageRes> imageResList, Major major) {
+    public MarketDetailsRes(Long marketId, String name, String description, String operationHours, String closedDays, String phoneNumber, String address, List<ImageRes> imageResList, Major major, Integer orderNo) {
         this.marketId = marketId;
         this.name = name;
         this.description = description;
@@ -30,5 +31,6 @@ public class MarketDetailsRes {
         this.address = address;
         this.imageResList = imageResList;
         this.major = major;
+        this.orderNo = orderNo;
     }
 }

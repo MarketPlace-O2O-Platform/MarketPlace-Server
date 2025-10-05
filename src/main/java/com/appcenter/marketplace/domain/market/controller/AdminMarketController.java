@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.controller;
 
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketOrderItem;
 import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketPageRes;
@@ -81,6 +82,16 @@ public class AdminMarketController {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_IMAGE_UPDATE.getMessage(),
                         adminMarketService.updateMarketImage(marketId, marketImageUpdateReq, multipartFileList)));
+    }
+
+    @Operation(summary = "매장 노출 순서 일괄 변경", description = "관리자가 여러 매장의 노출 순서를 한 번에 변경합니다. <br>" +
+            "예시) [{marketId: 1, orderNo: 3}, {marketId: 2, orderNo: 1}, {marketId: 3, orderNo: 2}]")
+    @PatchMapping("/order")
+    public ResponseEntity<CommonResponse<Object>> updateMarketOrder(
+            @RequestBody @Valid List<MarketOrderItem> orders) {
+        adminMarketService.updateMarketOrder(orders);
+        return ResponseEntity
+                .ok(CommonResponse.from(MARKET_UPDATE.getMessage()));
     }
 
     @Operation(summary = "매장 삭제", description = "관리자가 매장을 삭제합니다.")

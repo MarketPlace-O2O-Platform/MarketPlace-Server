@@ -91,7 +91,8 @@ public class MarketServiceImpl implements MarketService {
                 .append("CONCAT(metropolitan_government.name, ' ', local_government.name) AS location, ")
                 .append("market.thumbnail AS thumbnail, ")
                 .append("(coupon.id IS NOT NULL) AS has_coupon, ")
-                .append("category.major AS major ");
+                .append("category.major AS major, ")
+                .append("market.order_no AS orderNo ");
 
         // FROM 절
         sb.append("FROM market ")

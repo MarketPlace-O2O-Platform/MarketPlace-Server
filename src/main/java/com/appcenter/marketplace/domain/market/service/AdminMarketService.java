@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.market.service;
 
 import com.appcenter.marketplace.domain.market.dto.req.MarketImageUpdateReq;
+import com.appcenter.marketplace.domain.market.dto.req.MarketOrderItem;
 import com.appcenter.marketplace.domain.market.dto.req.MarketReq;
 import com.appcenter.marketplace.domain.market.dto.res.MarketDetailsRes;
 import com.appcenter.marketplace.domain.market.dto.res.MarketPageRes;
@@ -20,6 +21,8 @@ public interface AdminMarketService {
     MarketDetailsRes updateMarket(Long marketId, MarketReq marketReq);
 
     MarketDetailsRes updateMarketImage(Long marketId, MarketImageUpdateReq marketImageUpdateReq, List<MultipartFile> multipartFileList);
+
+    void updateMarketOrder(List<MarketOrderItem> orders);
 
     void deleteMarket(Long marketId);
 }
