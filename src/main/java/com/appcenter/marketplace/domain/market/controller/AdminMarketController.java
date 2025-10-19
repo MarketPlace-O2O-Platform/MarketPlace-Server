@@ -35,7 +35,7 @@ public class AdminMarketController {
             @Parameter(description = "페이지의 마지막 marketId")
             @RequestParam(required = false, name = "lastPageIndex") Long marketId,
             @RequestParam(required = false, name = "category") String major,
-            @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
+            @RequestParam(defaultValue = "50", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
                         adminMarketService.getAllMarkets(marketId, size, major)));

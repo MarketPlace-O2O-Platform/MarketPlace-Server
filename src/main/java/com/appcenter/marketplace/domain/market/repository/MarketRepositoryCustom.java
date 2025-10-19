@@ -19,9 +19,9 @@ public interface MarketRepositoryCustom {
 
     List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size);
 
-    List<MarketRes> findMarketListForAdmin(Long marketId, Integer size);
+    List<MarketRes> findMarketListForAdmin(Integer lastOrderNo, Integer size);
 
-    List<MarketRes> findMarketListByCategoryForAdmin(Long marketId, Integer size, String major);
+    List<MarketRes> findMarketListByCategoryForAdmin(Integer lastOrderNo, Integer size, String major);
 
 //    List<MarketRes> findFavoriteMarketList(Long memberId,Long marketId, Long count, Integer size);
 //

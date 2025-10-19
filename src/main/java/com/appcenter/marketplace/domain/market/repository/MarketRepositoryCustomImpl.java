@@ -333,6 +333,15 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     }
 
+    // gt= greater than = >(~보다 큰)
+    private BooleanBuilder gtOrderNo(Integer orderNo){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (orderNo != null) {
+            builder.and(market.orderNo.gt(orderNo));  // orderNo가 존재하면 gt 조건을 추가
+        }
+        return builder;
+    }
+
 //    // loe= less or equal = <=(~보다 작거나 같은)
 //    private BooleanBuilder loeFavoriteCountAndLtMarketId(Long count,Long marketId){
 //        BooleanBuilder builder = new BooleanBuilder();
@@ -360,7 +369,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 관리자용 전체 매장 조회 (멤버 ID 없이)
     @Override
-    public List<MarketRes> findMarketListForAdmin(Long marketId, Integer size) {
+    public List<MarketRes> findMarketListForAdmin(Integer lastOrderNo, Integer size) {
         return jpaQueryFactory
                 .select(new QMarketRes(
                         market.id,
@@ -380,7 +389,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(market.local, local)
                 .innerJoin(local.metro, metro)
                 .innerJoin(market.category, category)
-                .where(ltMarketId(marketId)
+                .where(gtOrderNo(lastOrderNo)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.orderNo.asc())
                 .limit(size + 1)
@@ -389,7 +398,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
 
     // 관리자용 카테고리별 매장 조회
     @Override
-    public List<MarketRes> findMarketListByCategoryForAdmin(Long marketId, Integer size, String major) {
+    public List<MarketRes> findMarketListByCategoryForAdmin(Integer lastOrderNo, Integer size, String major) {
         return jpaQueryFactory
                 .select(new QMarketRes(
                         market.id,
@@ -409,7 +418,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(coupon.createdAt.goe(LocalDateTime.now().minusDays(7))))
                 .innerJoin(market.local, local)
                 .innerJoin(local.metro, metro)
-                .where(ltMarketId(marketId)
+                .where(gtOrderNo(lastOrderNo)
                         .and(category.major.eq(Major.valueOf(major)))
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.orderNo.asc())

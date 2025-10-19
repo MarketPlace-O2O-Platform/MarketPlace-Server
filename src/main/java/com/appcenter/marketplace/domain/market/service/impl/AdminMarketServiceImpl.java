@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static com.appcenter.marketplace.domain.local.QLocal.local;
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Transactional(readOnly = true)
@@ -52,10 +53,19 @@ public class AdminMarketServiceImpl implements AdminMarketService {
     @Override
     public MarketPageRes<MarketRes> getAllMarkets(Long marketId, Integer size, String major) {
         List<MarketRes> marketResList;
+
+        // marketId를 orderNo로 변환 (marketId가 null이 아닌 경우)
+        Integer lastOrderNo = null;
+        if (marketId != null) {
+            Market market = marketRepository.findById(marketId)
+                    .orElseThrow(() -> new CustomException(MARKET_NOT_EXIST));
+            lastOrderNo = market.getOrderNo();
+        }
+
         if (major == null) {
-            marketResList = marketRepository.findMarketListForAdmin(marketId, size);
+            marketResList = marketRepository.findMarketListForAdmin(lastOrderNo, size);
         } else if (Major.exists(major)) {
-            marketResList = marketRepository.findMarketListByCategoryForAdmin(marketId, size, major);
+            marketResList = marketRepository.findMarketListByCategoryForAdmin(lastOrderNo, size, major);
         } else throw new CustomException(CATEGORY_NOT_EXIST);
 
         return checkNextPageAndReturn(marketResList, size);
@@ -79,7 +89,26 @@ public class AdminMarketServiceImpl implements AdminMarketService {
 
         Local local = localRepository.findByAdress(st.nextToken(), st.nextToken());
 
-        Market market = marketRepository.save(marketReq.toEntity(category, local));
+        // 순서 자동 등록: orderNo가 null이면 마지막 번호 + 1 할당
+        Integer orderNo = marketReq.getOrderNo();
+        if (orderNo == null) {
+            orderNo = marketRepository.findMaxOrderNo().orElse(0) + 1;
+        }
+
+        Market market = Market.builder()
+                .name(marketReq.getMarketName())
+                .description(marketReq.getDescription())
+                .operationHours(marketReq.getOperationHours())
+                .closedDays(marketReq.getClosedDays())
+                .phoneNumber(marketReq.getPhoneNumber())
+                .address(marketReq.getAddress())
+                .category(category)
+                .local(local)
+                .isDeleted(false)
+                .orderNo(orderNo)
+                .build();
+
+        marketRepository.save(market);
         imageService.createImage(market, multipartFileList);
         return marketService.getMarketDetails(market.getId());
     }
@@ -104,6 +133,7 @@ public class AdminMarketServiceImpl implements AdminMarketService {
     @Override
     @Transactional
     public void updateMarketOrder(List<MarketOrderItem> orders) {
+        // 전체 수정 변경
         orders.forEach(orderItem -> {
             Market market = findMarketByMarketId(orderItem.getMarketId());
             market.updateOrderNo(orderItem.getOrderNo());
