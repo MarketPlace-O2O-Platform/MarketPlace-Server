@@ -19,7 +19,7 @@ public class LocalRepositoryCustomImpl implements LocalRepositoryCustom{
                 .select(local)
                 .from(local)
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(metro.name.eq(metroGovern)
+                .where(metro.name.startsWith(metroGovern)
                         .and(local.name.eq(localGovern)))
                 .fetchOne();
 
