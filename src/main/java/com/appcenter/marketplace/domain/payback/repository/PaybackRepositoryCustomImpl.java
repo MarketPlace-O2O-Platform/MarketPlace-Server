@@ -159,7 +159,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .innerJoin(payback.market, market)
                 .where(payback.isDeleted.eq(false)
                         .and(payback.isHidden.eq(false)))
-                .orderBy(market.orderNo.asc().nullsLast(), payback.id.desc())
+                .orderBy(payback.createdAt.desc(), market.orderNo.asc().nullsLast())
                 .limit(size)
                 .fetch();
     }
