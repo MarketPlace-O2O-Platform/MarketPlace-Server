@@ -5,6 +5,7 @@ import com.appcenter.marketplace.domain.coupon.repository.CouponRepository;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
 import com.appcenter.marketplace.domain.market.Market;
 import com.appcenter.marketplace.domain.market.repository.MarketRepository;
+import com.appcenter.marketplace.domain.payback.repository.PaybackRepository;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIST;
@@ -22,6 +24,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.MARKET_NOT_EXIS
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final PaybackRepository paybackRepository;
     private final MarketRepository marketRepository;
 
     @Override
@@ -46,25 +49,61 @@ public class CouponServiceImpl implements CouponService {
         return checkNextPageAndReturn(resDtoList, size);
     }
 
-    // 마감 임박 쿠폰 TOP 조회
+    // 마감 임박 쿠폰 TOP 조회 (일반 쿠폰 + Payback 쿠폰)
     @Override
     @Cacheable(value = "CLOSING_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopClosingCouponRes> getTopClosingCoupon(Integer size) {
-        return couponRepository.findTopClosingCouponList(size);
+        List<TopClosingCouponRes> coupons = couponRepository.findTopClosingCouponList(size);
+
+        // 일반 쿠폰이 size보다 적으면 Payback으로 대체
+        if (coupons.size() < size) {
+            int remainingSize = size - coupons.size();
+            List<TopClosingCouponRes> paybacks = paybackRepository.findTopClosingPaybackList(remainingSize);
+
+            List<TopClosingCouponRes> result = new ArrayList<>(coupons);
+            result.addAll(paybacks);
+            return result;
+        }
+
+        return coupons;
     }
 
-    // 최신 등록 쿠폰 TOP 조회
+    // 최신 등록 쿠폰 TOP 조회 (일반 쿠폰 + Payback 쿠폰)
     @Override
     @Cacheable(value = "LATEST_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopLatestCouponRes> getTopLatestCoupon(Integer size) {
-        return couponRepository.findTopLatestCouponList(size);
+        List<TopLatestCouponRes> coupons = couponRepository.findTopLatestCouponList(size);
+
+        // 일반 쿠폰이 size보다 적으면 Payback으로 대체
+        if (coupons.size() < size) {
+            int remainingSize = size - coupons.size();
+            List<TopLatestCouponRes> paybacks = paybackRepository.findTopLatestPaybackList(remainingSize);
+
+            List<TopLatestCouponRes> result = new ArrayList<>(coupons);
+            result.addAll(paybacks);
+            return result;
+        }
+
+        return coupons;
     }
 
-    // 인기 쿠폰 TOP 조회
+    // 인기 쿠폰 TOP 조회 (일반 쿠폰 + Payback 쿠폰)
     @Override
     @Cacheable(value = "POPULAR_COUPONS", key = "#size", unless = "#result.isEmpty()")
     public List<TopPopularCouponRes> getTopPopularCoupon(Integer size) {
-        return couponRepository.findTopPopularCouponList(size);
+        List<TopPopularCouponRes> coupons = couponRepository.findTopPopularCouponList(size);
+
+        // 일반 쿠폰이 size보다 적으면 Payback으로 대체
+        if (coupons.size() < size) {
+            int remainingSize = size - coupons.size();
+            List<TopPopularCouponRes> paybacks = paybackRepository.findTopPopularPaybackList(remainingSize);
+
+            List<TopPopularCouponRes> result = new ArrayList<>(coupons);
+            result.addAll(paybacks);
+            return result;
+        }
+
+        return coupons;
     }
 
     private Market findMarketById(Long marketId) {

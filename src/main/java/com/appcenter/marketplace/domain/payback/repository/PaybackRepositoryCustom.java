@@ -1,5 +1,8 @@
 package com.appcenter.marketplace.domain.payback.repository;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopLatestCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopPopularCouponRes;
 import com.appcenter.marketplace.domain.payback.Payback;
 import com.appcenter.marketplace.domain.payback.dto.res.PaybackRes;
 
@@ -13,4 +16,10 @@ public interface PaybackRepositoryCustom {
     List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Long marketId, Integer size);
 
     List<Payback> findPaybacksByMarketId(Long marketId);
+
+    List<TopClosingCouponRes> findTopClosingPaybackList(Integer size);
+
+    List<TopLatestCouponRes> findTopLatestPaybackList(Integer size);
+
+    List<TopPopularCouponRes> findTopPopularPaybackList(Integer size);
 }

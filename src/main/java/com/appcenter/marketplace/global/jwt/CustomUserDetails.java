@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Getter
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
@@ -21,7 +23,9 @@ public class CustomUserDetails implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(member.getRole().toString()));
+        String role = member.getRole().toString();
+        log.info("CustomUserDetails.getAuthorities: memberId={}, role={}", member.getId(), role);
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @JsonIgnore

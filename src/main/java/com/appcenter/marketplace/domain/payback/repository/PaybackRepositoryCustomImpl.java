@@ -1,5 +1,11 @@
 package com.appcenter.marketplace.domain.payback.repository;
 
+import com.appcenter.marketplace.domain.coupon.dto.res.QTopClosingCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.QTopLatestCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.QTopPopularCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopClosingCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopLatestCouponRes;
+import com.appcenter.marketplace.domain.coupon.dto.res.TopPopularCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_payback.QMemberPayback;
 import com.appcenter.marketplace.domain.payback.Payback;
@@ -113,6 +119,76 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .from(payback)
                 .where(payback.market.id.eq(marketId)
                         .and(payback.isDeleted.eq(false)))
+                .fetch();
+    }
+
+    // 마감 임박 Payback TOP 조회 (매장 orderNo 순)
+    @Override
+    public List<TopClosingCouponRes> findTopClosingPaybackList(Integer size) {
+        return queryFactory.select(new QTopClosingCouponRes(
+                        payback.id,
+                        payback.name,
+                        Expressions.nullExpression(), // deadline 없음
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        Expressions.constant(CouponType.PAYBACK)))
+                .from(payback)
+                .innerJoin(payback.market, market)
+                .where(payback.isDeleted.eq(false)
+                        .and(payback.isHidden.eq(false)))
+                .orderBy(market.orderNo.asc().nullsLast(), payback.id.desc())
+                .limit(size)
+                .fetch();
+    }
+
+    // 최신 등록 Payback TOP 조회 (매장 orderNo 순)
+    @Override
+    public List<TopLatestCouponRes> findTopLatestPaybackList(Integer size) {
+        return queryFactory
+                .select(new QTopLatestCouponRes(
+                        payback.id,
+                        payback.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        payback.createdAt,
+                        Expressions.constant(CouponType.PAYBACK)
+                ))
+                .from(payback)
+                .innerJoin(payback.market, market)
+                .where(payback.isDeleted.eq(false)
+                        .and(payback.isHidden.eq(false)))
+                .orderBy(market.orderNo.asc().nullsLast(), payback.id.desc())
+                .limit(size)
+                .fetch();
+    }
+
+    // 인기 Payback TOP 조회 (매장 orderNo 순)
+    @Override
+    public List<TopPopularCouponRes> findTopPopularPaybackList(Integer size) {
+        return queryFactory
+                .select(new QTopPopularCouponRes(
+                        payback.id,
+                        payback.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        memberPayback.id.count(),
+                        Expressions.constant(CouponType.PAYBACK)))
+                .from(payback)
+                .innerJoin(payback.market, market)
+                .leftJoin(memberPayback).on(payback.eq(memberPayback.payback))
+                .where(payback.isDeleted.eq(false)
+                        .and(payback.isHidden.eq(false)))
+                .groupBy(payback.id,
+                        payback.name,
+                        market.id,
+                        market.name,
+                        market.thumbnail,
+                        market.orderNo)
+                .orderBy(market.orderNo.asc().nullsLast(), payback.id.desc())
+                .limit(size)
                 .fetch();
     }
 

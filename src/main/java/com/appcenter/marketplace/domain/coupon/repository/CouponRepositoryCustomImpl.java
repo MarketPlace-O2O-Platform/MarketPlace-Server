@@ -154,7 +154,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.deadLine,
                         market.id,
                         market.name,
-                        market.thumbnail))
+                        market.thumbnail,
+                        Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .where(coupon.isDeleted.eq(false)
@@ -176,7 +177,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         market.id,
                         market.name,
                         market.thumbnail,
-                        coupon.createdAt
+                        coupon.createdAt,
+                        Expressions.constant(CouponType.GIFT)
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
@@ -198,7 +200,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         market.id,
                         market.name,
                         market.thumbnail,
-                        memberCoupon.id.count()))
+                        memberCoupon.id.count(),
+                        Expressions.constant(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon))

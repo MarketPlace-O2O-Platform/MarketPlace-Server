@@ -13,8 +13,8 @@ public class QTopClosingCouponRes extends ConstructorExpression<TopClosingCoupon
 
     private static final long serialVersionUID = -1548977033L;
 
-    public QTopClosingCouponRes(com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<java.time.LocalDateTime> deadline, com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> thumbnail) {
-        super(TopClosingCouponRes.class, new Class<?>[]{long.class, String.class, java.time.LocalDateTime.class, long.class, String.class, String.class}, couponId, couponName, deadline, marketId, marketName, thumbnail);
+    public QTopClosingCouponRes(com.querydsl.core.types.Expression<Long> couponId, com.querydsl.core.types.Expression<String> couponName, com.querydsl.core.types.Expression<java.time.LocalDateTime> deadline, com.querydsl.core.types.Expression<Long> marketId, com.querydsl.core.types.Expression<String> marketName, com.querydsl.core.types.Expression<String> thumbnail, com.querydsl.core.types.Expression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType) {
+        super(TopClosingCouponRes.class, new Class<?>[]{long.class, String.class, java.time.LocalDateTime.class, long.class, String.class, String.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, deadline, marketId, marketName, thumbnail, couponType);
     }
 
 }
