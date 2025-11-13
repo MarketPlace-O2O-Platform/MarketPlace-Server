@@ -41,6 +41,19 @@ public class MemberPaybackAdminController {
                         memberPaybackAdminService.getReceiptsForAdmin(memberPaybackId, marketId, size)));
     }
 
+    @Operation(summary = "영수증 상세 조회",
+            description = "관리자가 특정 영수증의 상세 정보를 조회합니다. <br>" +
+                    "회원 정보, 쿠폰명, 발급일시, 영수증 제출일시, 영수증 파일명, 환급 여부를 확인할 수 있습니다.")
+    @GetMapping("/receipts/{memberPaybackId}")
+    public ResponseEntity<CommonResponse<AdminReceiptRes>> getReceiptDetail(
+            @Parameter(description = "조회할 memberPaybackId")
+            @PathVariable(name = "memberPaybackId") Long memberPaybackId) {
+
+        return ResponseEntity.status(COUPON_FOUND.getStatus())
+                .body(CommonResponse.from(COUPON_FOUND.getMessage(),
+                        memberPaybackAdminService.getReceiptDetail(memberPaybackId)));
+    }
+
     @Operation(summary = "환급 쿠폰 사용 처리", description = "관리자는 영수증을 토대로, 환급을 진행한 후 사용처리를 완료합니다." )
     @PutMapping("/complete/{memberPaybackId}")
     public ResponseEntity<CommonResponse<CouponHandleRes>> manageCoupon(@PathVariable(name = "memberPaybackId") Long memberPaybackId) {

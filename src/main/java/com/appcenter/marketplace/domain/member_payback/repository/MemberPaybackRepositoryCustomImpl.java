@@ -175,4 +175,26 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .fetch();
     }
 
+    // 관리자용 영수증 상세 조회
+    @Override
+    public AdminReceiptRes findReceiptDetailForAdmin(Long memberPaybackId) {
+        return jpaQueryFactory
+                .select(new QAdminReceiptRes(
+                        memberPayback.id,
+                        member.id,
+                        payback.name,
+                        memberPayback.createdAt,
+                        memberPayback.modifiedAt,
+                        memberPayback.receipt,
+                        memberPayback.isPayback,
+                        member.account,
+                        member.accountNumber))
+                .from(memberPayback)
+                .innerJoin(memberPayback.payback, payback)
+                .innerJoin(memberPayback.member, member)
+                .innerJoin(payback.market, market)
+                .where(memberPayback.id.eq(memberPaybackId))
+                .fetchOne();
+    }
+
 }

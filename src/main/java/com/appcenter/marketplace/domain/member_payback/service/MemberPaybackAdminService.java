@@ -10,4 +10,6 @@ public interface MemberPaybackAdminService {
 
     CouponPageRes<AdminReceiptRes> getReceiptsForAdmin(Long memberPaybackId, Long marketId, Integer size);
 
+    AdminReceiptRes getReceiptDetail(Long memberPaybackId);
+
 }

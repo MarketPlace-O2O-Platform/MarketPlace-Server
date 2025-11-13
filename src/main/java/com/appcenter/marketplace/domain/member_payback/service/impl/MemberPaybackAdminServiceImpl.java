@@ -40,6 +40,15 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
         return checkNextPageAndReturn(receipts, size);
     }
 
+    @Override
+    public AdminReceiptRes getReceiptDetail(Long memberPaybackId) {
+        AdminReceiptRes receipt = memberPaybackRepository.findReceiptDetailForAdmin(memberPaybackId);
+        if (receipt == null) {
+            throw new CustomException(COUPON_NOT_EXIST);
+        }
+        return receipt;
+    }
+
     private MemberPayback findMemberPaybackById(Long couponId) {
         return memberPaybackRepository.findById(couponId)
                 .orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));

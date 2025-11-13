@@ -17,4 +17,5 @@ public interface MemberPaybackRepositoryCustom {
     ReceiptRes findReceiptByMemberId(Long memberPaybackId, Long couponId);
     List<MemberPayback> findMemberPaybacksByMarketId(Long marketId);
     List<AdminReceiptRes> findReceiptsForAdmin(Long memberPaybackId, Long marketId, Integer size);
+    AdminReceiptRes findReceiptDetailForAdmin(Long memberPaybackId);
 }
