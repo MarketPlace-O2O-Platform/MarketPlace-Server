@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.member_payback.repository;
 
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
+import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface MemberPaybackRepositoryCustom {
     void check3DaysCoupons();
     ReceiptRes findReceiptByMemberId(Long memberPaybackId, Long couponId);
     List<MemberPayback> findMemberPaybacksByMarketId(Long marketId);
+    List<AdminReceiptRes> findReceiptsForAdmin(Long memberPaybackId, Long marketId, Integer size);
 }

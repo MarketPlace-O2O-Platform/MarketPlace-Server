@@ -4,6 +4,8 @@ import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
+import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.QAdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import com.querydsl.core.BooleanBuilder;
@@ -135,6 +137,41 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .join(memberPayback.payback, payback)
                 .join(payback.market, market)
                 .where(market.id.eq(marketId))
+                .fetch();
+    }
+
+    // 관리자용 영수증 제출 내역 조회 (receipt이 있는 것만)
+    @Override
+    public List<AdminReceiptRes> findReceiptsForAdmin(Long memberPaybackId, Long marketId, Integer size) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(memberPayback.receipt.isNotNull());
+
+        if (memberPaybackId != null) {
+            whereClause.and(ltMemberPaybackId(memberPaybackId));
+        }
+
+        if (marketId != null) {
+            whereClause.and(market.id.eq(marketId));
+        }
+
+        return jpaQueryFactory
+                .select(new QAdminReceiptRes(
+                        memberPayback.id,
+                        member.id,
+                        payback.name,
+                        memberPayback.createdAt,
+                        memberPayback.modifiedAt,
+                        memberPayback.receipt,
+                        memberPayback.isPayback,
+                        member.account,
+                        member.accountNumber))
+                .from(memberPayback)
+                .innerJoin(memberPayback.payback, payback)
+                .innerJoin(memberPayback.member, member)
+                .innerJoin(payback.market, market)
+                .where(whereClause)
+                .orderBy(memberPayback.id.desc())
+                .limit(size + 1)
                 .fetch();
     }
 
