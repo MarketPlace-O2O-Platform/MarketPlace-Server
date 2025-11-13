@@ -173,7 +173,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         market.id,
                         market.name,
                         market.description,
-                        metro.name.concat(" ").concat(local.name),
+                        market.address, //metro.name.concat(" ").concat(local.name),
                         market.thumbnail,
                         memberId != null ?
                                 favorite.id.isNotNull() :
