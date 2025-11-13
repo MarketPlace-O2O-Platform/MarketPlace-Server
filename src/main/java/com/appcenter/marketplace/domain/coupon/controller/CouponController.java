@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.coupon.controller;
 
 import com.appcenter.marketplace.domain.coupon.dto.res.*;
 import com.appcenter.marketplace.domain.coupon.service.CouponService;
+import com.appcenter.marketplace.domain.member_coupon.CouponType;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,8 +46,9 @@ public class CouponController {
     }
 
     @Operation(summary = "최신 등록 쿠폰 더보기 조회",
-            description = "최신 쿠폰을 등록순으로 정렬 <br>" +
-                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>"
+            description = "최신 쿠폰을 등록순으로 정렬 (일반 쿠폰 + 환급 쿠폰 통합) <br>" +
+                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>" +
+                    "다음 페이지 요청 시: lastCreatedAt, lastCouponId, couponType 필수 <br>"
     )
     @GetMapping("/latest")
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getLatestCoupon(
@@ -55,32 +57,39 @@ public class CouponController {
             @RequestParam(required = false, name = "lastCreatedAt") LocalDateTime lastCreatedAt,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastCouponId") Long couponId,
+            @Parameter(description = "각 페이지의 마지막 쿠폰 타입 (GIFT 또는 PAYBACK)")
+            @RequestParam(required = false, name = "couponType") CouponType couponType,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
 
         Long memberId = extractMemberId(authentication);
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        couponService.getLatestCouponPage(memberId, lastCreatedAt, couponId,size)));
+                        couponService.getLatestCouponPage(memberId, lastCreatedAt, couponId, couponType, size)));
     }
 
     @Operation(summary = "인기 쿠폰 더보기 조회",
-            description = "인기 쿠폰을 등록순으로 정렬 <br>" +
-                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>"
+            description = "인기 쿠폰을 발급 횟수 순 + 환급 쿠폰을 매장 순서로 정렬 <br>" +
+                    "처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>" +
+                    "다음 페이지 요청 시: <br>" +
+                    "- 일반 쿠폰(GIFT): lastIssuedCount, lastCouponId, couponType=GIFT <br>" +
+                    "- 환급 쿠폰(PAYBACK): lastOrderNo (응답의 orderNo 값), lastCouponId, couponType=PAYBACK <br>"
     )
     @GetMapping("/popular")
     public ResponseEntity<CommonResponse<CouponPageRes<CouponRes>>> getPopularCoupon(
             Authentication authentication,
-            @Parameter(description = "페이지의 마지막 issuedCount")
+            @Parameter(description = "페이지의 마지막 issuedCount (일반 쿠폰) 또는 orderNo (환급 쿠폰)")
             @RequestParam(required = false, name = "lastIssuedCount") Long count,
             @Parameter(description = "각 페이지의 마지막 couponId (e.g. 5)")
             @RequestParam(required = false, name = "lastCouponId") Long couponId,
+            @Parameter(description = "각 페이지의 마지막 쿠폰 타입 (GIFT 또는 PAYBACK)")
+            @RequestParam(required = false, name = "couponType") CouponType couponType,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
 
         Long memberId = extractMemberId(authentication);
 
         return ResponseEntity
                 .ok(CommonResponse.from(MARKET_FOUND.getMessage(),
-                        couponService.getPopularCouponPage(memberId, count, couponId,size)));
+                        couponService.getPopularCouponPage(memberId, count, couponId, couponType, size)));
     }
 
     @Operation(summary = "마감 임박 쿠폰 TOP 조회",

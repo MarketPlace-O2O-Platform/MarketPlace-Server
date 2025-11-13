@@ -201,7 +201,6 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .fetch();
     }
 
-
     // 회원이 찜한 매장 페이징 조회
     @Override
     public List<MarketRes> findMyFavoriteMarketList(Long memberId, LocalDateTime lastModifiedAt, Integer size) {

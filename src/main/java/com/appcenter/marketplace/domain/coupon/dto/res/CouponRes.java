@@ -31,6 +31,7 @@ public class CouponRes {
     private String thumbnail;
     private LocalDateTime couponCreatedAt;
     private Long issuedCount;
+    private Integer orderNo; // 매장 순서 (Payback 페이징용)
 
     // 사장님 매장 쿠폰 페이징 조회
     @QueryProjection
@@ -72,7 +73,7 @@ public class CouponRes {
 
     // 최신 쿠폰 페이징 조회
     @QueryProjection
-    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, LocalDateTime couponCreatedAt) {
+    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, LocalDateTime couponCreatedAt, CouponType couponType) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.marketId = marketId;
@@ -82,11 +83,12 @@ public class CouponRes {
         this.isAvailable = isAvailable;
         this.isMemberIssued = isMemberIssued;
         this.couponCreatedAt = couponCreatedAt;
+        this.couponType = couponType;
     }
 
     // 인기 쿠폰 페이징 조회
     @QueryProjection
-    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, Long issuedCount) {
+    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, Long issuedCount, CouponType couponType) {
         this.couponId = couponId;
         this.couponName = couponName;
         this.marketId = marketId;
@@ -96,6 +98,23 @@ public class CouponRes {
         this.isAvailable = isAvailable;
         this.isMemberIssued = isMemberIssued;
         this.issuedCount = issuedCount;
+        this.couponType = couponType;
+    }
+
+    // 인기 쿠폰 페이징 조회 (orderNo 포함)
+    @QueryProjection
+    public CouponRes(Long couponId, String couponName, Long marketId, String marketName, String address, String thumbnail, Boolean isAvailable, Boolean isMemberIssued, Long issuedCount, Integer orderNo, CouponType couponType) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.marketId = marketId;
+        this.marketName = marketName;
+        this.address = address;
+        this.thumbnail = thumbnail;
+        this.isAvailable = isAvailable;
+        this.isMemberIssued = isMemberIssued;
+        this.issuedCount = issuedCount;
+        this.orderNo = orderNo;
+        this.couponType = couponType;
     }
 
     public static CouponRes toDto(Coupon coupon){

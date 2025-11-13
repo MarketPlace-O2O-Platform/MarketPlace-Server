@@ -84,8 +84,8 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         memberId != null ?
                                 memberCoupon.id.isNotNull() :
                                 Expressions.FALSE,
-                        coupon.createdAt
-                ))
+                        coupon.createdAt,
+                        Expressions.asEnum(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(local).on(market.local.eq(local))
@@ -118,7 +118,9 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         memberId != null ?
                                 issuedCoupon.id.isNotNull() :
                                 Expressions.FALSE,
-                        memberCoupon.id.count()))
+                        memberCoupon.id.count(),
+                        Expressions.constant(0), // orderNo = 0 (GIFT는 orderNo 사용 안함)
+                        Expressions.asEnum(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(local).on(market.local.eq(local))
@@ -155,7 +157,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         market.id,
                         market.name,
                         market.thumbnail,
-                        Expressions.constant(CouponType.GIFT)))
+                        Expressions.asEnum(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .where(coupon.isDeleted.eq(false)
@@ -178,7 +180,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         market.name,
                         market.thumbnail,
                         coupon.createdAt,
-                        Expressions.constant(CouponType.GIFT)
+                        Expressions.asEnum(CouponType.GIFT)
                 ))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
@@ -201,7 +203,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         market.name,
                         market.thumbnail,
                         memberCoupon.id.count(),
-                        Expressions.constant(CouponType.GIFT)))
+                        Expressions.asEnum(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .leftJoin(memberCoupon).on(coupon.eq(memberCoupon.coupon))
@@ -273,7 +275,7 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
                         coupon.isHidden,
                         market.id,
                         market.name,
-                        Expressions.constant(CouponType.GIFT)))
+                        Expressions.asEnum(CouponType.GIFT)))
                 .from(coupon)
                 .innerJoin(coupon.market, market)
                 .innerJoin(market.local, local)

@@ -27,12 +27,16 @@ public class QCouponRes extends ConstructorExpression<CouponRes> {
         super(CouponRes.class, new Class<?>[]{long.class, String.class, String.class, java.time.LocalDateTime.class, boolean.class, boolean.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, couponDescription, deadLine, isAvailable, isMemberIssued, couponType);
     }
 
-    public QCouponRes(NumberExpression<Long> couponId, StringExpression couponName, NumberExpression<Long> marketId, StringExpression marketName, StringExpression address, StringExpression thumbnail, BooleanExpression isAvailable, BooleanExpression isMemberIssued, TemporalExpression<java.time.LocalDateTime> couponCreatedAt) {
-        super(CouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, java.time.LocalDateTime.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, couponCreatedAt);
+    public QCouponRes(Expression<Long> couponId, Expression<String> couponName, Expression<Long> marketId, Expression<String> marketName, Expression<String> address, Expression<String> thumbnail, Expression<Boolean> isAvailable, Expression<Boolean> isMemberIssued, Expression<java.time.LocalDateTime> couponCreatedAt, Expression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType) {
+        super(CouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, java.time.LocalDateTime.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, couponCreatedAt, couponType);
     }
 
-    public QCouponRes(NumberExpression<Long> couponId, StringExpression couponName, NumberExpression<Long> marketId, StringExpression marketName, StringExpression address, StringExpression thumbnail, BooleanExpression isAvailable, BooleanExpression isMemberIssued, NumberExpression<Long> issuedCount) {
-        super(CouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, long.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, issuedCount);
+    public QCouponRes(NumberExpression<Long> couponId, StringExpression couponName, NumberExpression<Long> marketId, StringExpression marketName, StringExpression address, StringExpression thumbnail, BooleanExpression isAvailable, BooleanExpression isMemberIssued, NumberExpression<Long> issuedCount, EnumExpression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType) {
+        super(CouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, long.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, issuedCount, couponType);
+    }
+
+    public QCouponRes(Expression<Long> couponId, Expression<String> couponName, Expression<Long> marketId, Expression<String> marketName, Expression<String> address, Expression<String> thumbnail, Expression<Boolean> isAvailable, Expression<Boolean> isMemberIssued, Expression<Long> issuedCount, Expression<Integer> orderNo, Expression<com.appcenter.marketplace.domain.member_coupon.CouponType> couponType) {
+        super(CouponRes.class, new Class<?>[]{long.class, String.class, long.class, String.class, String.class, String.class, boolean.class, boolean.class, long.class, int.class, com.appcenter.marketplace.domain.member_coupon.CouponType.class}, couponId, couponName, marketId, marketName, address, thumbnail, isAvailable, isMemberIssued, issuedCount, orderNo, couponType);
     }
 
 }
