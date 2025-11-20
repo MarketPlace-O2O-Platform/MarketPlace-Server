@@ -19,9 +19,4 @@ public class Category {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Major major;
-
-
-//    @Column(nullable = false)
-//    @Enumerated(EnumType.STRING)
-//    private String minor;
 }

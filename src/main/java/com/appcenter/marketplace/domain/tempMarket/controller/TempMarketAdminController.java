@@ -47,16 +47,19 @@ public class TempMarketAdminController {
                 .body(CommonResponse.from(MARKET_UPDATE.getMessage(), tempMarketAdminService.updateMarket(marketId, tempMarketReq, multipartFile)));
     }
 
-    @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다. <br>" +
-            "pageNum의 기본값은 1입니다. (1페이지) <br>" +
-            "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다. <br>" +
-            "이미지는 /image/tempMarket/{이미지_파일명}으로 fetch 하셔야 합니다.")
+    @Operation(summary = "매장 정보 전체 조회",
+            description = "매장 전체를 조회합니다. <br>" +
+                    "pageNum의 기본값은 1입니다. (1페이지) <br>" +
+                    "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다. <br>" +
+                    "categoryId를 지정하면 해당 카테고리의 매장만 조회됩니다. (선택사항) <br>" +
+                    "이미지는 /image/tempMarket/{이미지_파일명}으로 fetch 하셔야 합니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<Page<TempMarketDetailRes>>> getAllTempMarket(
             @RequestParam(defaultValue = "1", name= "page") Integer page,
-            @RequestParam(defaultValue = "10", name = "size") Integer size
+            @RequestParam(defaultValue = "10", name = "size") Integer size,
+            @RequestParam(required = false, name = "categoryId") Long categoryId
     ) {
-        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList(page, size)));
+        return ResponseEntity.ok(CommonResponse.from(MARKET_FOUND.getMessage(), tempMarketAdminService.getMarketList(page, size, categoryId)));
     }
 
     @Operation(summary = "매장 정보 상세 조회", description = "매장 정보를 상세 조회합니다.")

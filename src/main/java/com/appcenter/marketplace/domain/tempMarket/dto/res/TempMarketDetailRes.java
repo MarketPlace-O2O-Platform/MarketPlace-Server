@@ -1,6 +1,7 @@
 package com.appcenter.marketplace.domain.tempMarket.dto.res;
 
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
+import com.appcenter.marketplace.global.common.Major;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,9 +14,10 @@ public class TempMarketDetailRes {
     private final String thumbnail;
     private final Integer cheerCount;
     private final Boolean isHidden;
+    private final Major category;
 
     @Builder
-    private TempMarketDetailRes(Long marketId, String marketName, String description, String address, String thumbnail, Integer cheerCount, Boolean isHidden) {
+    private TempMarketDetailRes(Long marketId, String marketName, String description, String address, String thumbnail, Integer cheerCount, Boolean isHidden, Major  category) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.description = description;
@@ -23,6 +25,7 @@ public class TempMarketDetailRes {
         this.thumbnail = thumbnail;
         this.cheerCount = cheerCount;
         this.isHidden = isHidden;
+        this.category = category;
     }
 
     public static TempMarketDetailRes toDto(TempMarket tempMarket) {
@@ -34,6 +37,7 @@ public class TempMarketDetailRes {
                 .thumbnail(tempMarket.getThumbnail())
                 .cheerCount(tempMarket.getCheerCount())
                 .isHidden(tempMarket.getIsHidden())
+                .category(tempMarket.getCategory().getMajor())
                 .build();
     }
 }

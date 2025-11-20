@@ -81,11 +81,18 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
-    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size) {
+    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size, Long categoryId) {
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        Page<TempMarket> tempMarketPage = tempMarketRepository.findAll(pageable);
+        Page<TempMarket> tempMarketPage;
+        if (categoryId != null) {
+            // 카테고리 필터링
+            tempMarketPage = tempMarketRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            // 전체 조회
+            tempMarketPage = tempMarketRepository.findAll(pageable);
+        }
 
         return tempMarketPage.map(TempMarketDetailRes::toDto);
     }
