@@ -11,7 +11,7 @@ public interface TempMarketAdminService {
 
     TempMarketDetailRes updateMarket(Long marketId, TempMarketReq marketReq, MultipartFile multipartFile);
 
-    Page<TempMarketDetailRes> getMarketList(Integer page, Integer size, Long categoryId);
+    Page<TempMarketDetailRes> getMarketList(Integer page, Integer size);
 
     TempMarketDetailRes getMarket(Long marketId);
 

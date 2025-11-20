@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.tempMarket;
 
 
 import com.appcenter.marketplace.domain.category.Category;
+import com.appcenter.marketplace.domain.cheer.Cheer;
 import com.appcenter.marketplace.domain.tempMarket.dto.req.TempMarketReq;
 import com.appcenter.marketplace.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -9,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "temp_market")
 @Entity

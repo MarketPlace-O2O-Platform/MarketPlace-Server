@@ -2,6 +2,7 @@ package com.appcenter.marketplace.domain.tempMarket.service.impl;
 
 import com.appcenter.marketplace.domain.category.Category;
 import com.appcenter.marketplace.domain.category.CategoryRepository;
+import com.appcenter.marketplace.domain.cheer.CheerRepository;
 import com.appcenter.marketplace.domain.requestMarket.RequestMarket;
 import com.appcenter.marketplace.domain.requestMarket.service.RequestMarketService;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
@@ -32,6 +33,7 @@ import static com.appcenter.marketplace.global.common.StatusCode.FILE_DELETE_INV
 public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     private final TempMarketRepository tempMarketRepository;
     private final CategoryRepository categoryRepository;
+    private final CheerRepository cheerRepository;
 
     private final RequestMarketService requestMarketService;
 
@@ -81,18 +83,11 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     }
 
     @Override
-    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size, Long categoryId) {
+    public Page<TempMarketDetailRes> getMarketList(Integer page, Integer size) {
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        Page<TempMarket> tempMarketPage;
-        if (categoryId != null) {
-            // 카테고리 필터링
-            tempMarketPage = tempMarketRepository.findByCategoryId(categoryId, pageable);
-        } else {
-            // 전체 조회
-            tempMarketPage = tempMarketRepository.findAll(pageable);
-        }
+        Page<TempMarket> tempMarketPage = tempMarketRepository.findAll(pageable);
 
         return tempMarketPage.map(TempMarketDetailRes::toDto);
     }
@@ -115,6 +110,11 @@ public class TempMarketAdminServiceImpl implements TempMarketAdminService {
     @Transactional
     public void hardDeleteMarket(Long marketId) {
         TempMarket tempMarket = findMarket(marketId);
+
+        // 1. 해당 매장의 Cheer 먼저 삭제
+        cheerRepository.deleteByTempMarketId(marketId);
+
+        // 2. TempMarket 삭제
         tempMarketRepository.deleteById(tempMarket.getId());
     }
 
