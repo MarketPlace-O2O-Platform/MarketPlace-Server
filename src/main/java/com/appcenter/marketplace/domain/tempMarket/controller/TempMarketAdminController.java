@@ -49,7 +49,8 @@ public class TempMarketAdminController {
 
     @Operation(summary = "매장 정보 전체 조회", description = "매장 전체를 조회합니다. <br>" +
             "pageNum의 기본값은 1입니다. (1페이지) <br>" +
-            "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다.")
+            "size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다. <br>" +
+            "이미지는 /image/tempMarket/{이미지_파일명}으로 fetch 하셔야 합니다.")
     @GetMapping
     public ResponseEntity<CommonResponse<Page<TempMarketDetailRes>>> getAllTempMarket(
             @RequestParam(defaultValue = "1", name= "page") Integer page,
