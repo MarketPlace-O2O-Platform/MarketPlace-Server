@@ -16,7 +16,8 @@ public class MarketRes {
     private String address;
     private final String thumbnail;
     private Boolean isFavorite;
-    private Boolean isNewCoupon;
+    private Boolean isNewCoupon; // 신규 쿠폰 태그
+    private Boolean isClosingCoupon; // 마감 임박 태그 (검색용)
     private LocalDateTime favoriteModifiedAt;
     private Major major;
     private Integer orderNo;
@@ -72,17 +73,15 @@ public class MarketRes {
     }
 
     // 검색 매장 조회
-    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Long isNewCoupon, Major major) {
+    public MarketRes(Long marketId, String marketName, String marketDescription, String address, String thumbnail, Long isNewCoupon, Long isClosingCoupon, String major, Integer orderNo) {
         this.marketId = marketId;
         this.marketName = marketName;
         this.marketDescription = marketDescription;
         this.address = address;
         this.thumbnail = thumbnail;
-        this.major = major;
-        if (isNewCoupon > 0) { // db에서 Boolean값은 존재하지않아 쿼리결과에서 Long 값을 Boolean값으로 변환해줘야한다.
-            this.isNewCoupon = true;
-        } else {
-            this.isNewCoupon = false;
-        }
+        this.major = Major.valueOf(major); // String → Major enum 변환
+        this.orderNo = orderNo;
+        this.isNewCoupon = (isNewCoupon != null && isNewCoupon > 0);
+        this.isClosingCoupon = (isClosingCoupon != null && isClosingCoupon > 0);
     }
 }
