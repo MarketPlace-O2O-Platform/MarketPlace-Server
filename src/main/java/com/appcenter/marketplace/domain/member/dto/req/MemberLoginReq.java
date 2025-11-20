@@ -20,7 +20,7 @@ public class MemberLoginReq {
     public Member toEntity(Long studentId) {
         return Member.builder()
                 .id(studentId)
-                .cheerTicket(1000) // 1로 수정 예정
+                .cheerTicket(3) // 3으로 최종 수정.
                 .role(Role.ROLE_USER)
                 .build();
     }

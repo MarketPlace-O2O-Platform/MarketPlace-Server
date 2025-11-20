@@ -1,5 +1,7 @@
 package com.appcenter.marketplace.domain.cheer.service;
 
+import com.appcenter.marketplace.domain.cheer.dto.CheerCountRes;
+
 public interface CheerService {
-    void cheerTempMarket(Long memberId, Long marketId);
+    CheerCountRes cheerTempMarket(Long memberId, Long marketId);
 }

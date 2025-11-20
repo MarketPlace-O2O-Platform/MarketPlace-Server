@@ -92,6 +92,7 @@ public enum StatusCode {
     COUPON_ALREADY_USED(CONFLICT, "쿠폰이 이미 사용되었습니댜."),
     COUPON_SOLD_OUT(CONFLICT, "쿠폰이 모두 소진되었습니다."),
     TICKET_SOLD_OUT(CONFLICT, "공감권이 소진되었습니다."),
+    ALREADY_CHEERED(CONFLICT, "이미 공감한 매장입니다."),
     /* 503 UNAVAILABLE : 서비스 이용 불가  */
     FCM_UNAVAILABLE(SERVICE_UNAVAILABLE, "알림 기능을 이용할 수 없습니다.");
 
