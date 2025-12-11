@@ -32,7 +32,8 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
 
         return jpaQueryFactory.selectFrom(memberPayback)
                 .where(memberPayback.member.id.eq(memberId)
-                        .and(memberPayback.payback.id.eq(paybackId)))
+                        .and(memberPayback.payback.id.eq(paybackId))
+                        .and(memberPayback.isPayback.eq(false))) // 사용하지 않은 쿠폰만 체크
                 .fetchFirst() != null;
     }
 
