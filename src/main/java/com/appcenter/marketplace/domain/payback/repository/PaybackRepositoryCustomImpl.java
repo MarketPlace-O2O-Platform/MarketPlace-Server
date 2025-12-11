@@ -56,7 +56,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         payback.description,
                         Expressions.asEnum(CouponType.PAYBACK),
                         memberId != null ?
-                                paybackCoupon.id.isNotNull() :
+                                paybackCoupon.id.isNotNull().and(paybackCoupon.isPayback.eq(false)) :
                                 Expressions.FALSE))
                 .from(payback)
                 .join(market).on(payback.market.id.eq(market.id))
@@ -205,7 +205,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         market.thumbnail,
                         Expressions.TRUE, // Payback은 항상 available
                         memberId != null ?
-                                savedPayback.id.isNotNull() :
+                                savedPayback.id.isNotNull().and(savedPayback.isPayback.eq(false)) : // 다시 발급 받을 수 있음
                                 Expressions.FALSE,
                         payback.createdAt,
                         Expressions.asEnum(CouponType.PAYBACK)
@@ -240,7 +240,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         market.thumbnail,
                         Expressions.TRUE, // Payback은 항상 available
                         memberId != null ?
-                                savedPayback.id.isNotNull() :
+                                savedPayback.id.isNotNull().and(savedPayback.isPayback.eq(false)) :
                                 Expressions.FALSE,
                         issuedPayback.id.count(),
                         market.orderNo, // orderNo 추가
