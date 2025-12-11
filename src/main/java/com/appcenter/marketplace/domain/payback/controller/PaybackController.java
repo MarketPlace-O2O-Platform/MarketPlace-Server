@@ -20,13 +20,13 @@ import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
 @Tag(name = "[회원 환급 쿠폰]", description = "[회원] 매장별 환급 쿠폰 조회")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/payback-coupons")
 public class PaybackController {
 
     private final PaybackService paybackService;
 
     @Operation(summary = "매장별 전체 생성된 환급 쿠폰 조회", description = "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
-    @GetMapping("/payback-coupons")
+    @GetMapping
     public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getCouponList(
             Authentication authentication,
             @RequestParam(name = "marketId")Long marketId,
