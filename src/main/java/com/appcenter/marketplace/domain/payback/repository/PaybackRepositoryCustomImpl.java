@@ -203,9 +203,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         market.thumbnail,
                         Expressions.TRUE, // Payback은 항상 available
                         memberId != null ?
-                                savedPayback.id.isNotNull()
-                                        .and(savedPayback.isPayback.eq(false)) // 환급 진행중 or 미사용
-                                        .and(savedPayback.isExpired.eq(false)):  // 만료 전
+                                savedPayback.id.count().gt(0L) : // 미사용+미만료 쿠폰이 1개 이상 있으면 true
                                 Expressions.FALSE,
                         payback.createdAt,
                         Expressions.asEnum(CouponType.PAYBACK)
@@ -215,7 +213,9 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .innerJoin(market.local, local)
                 .innerJoin(local.metro, metro)
                 .leftJoin(savedPayback).on(payback.eq(savedPayback.payback)
-                        .and(memberId != null ? savedPayback.member.id.eq(memberId) : null))
+                        .and(memberId != null ? savedPayback.member.id.eq(memberId) : null)
+                        .and(savedPayback.isPayback.eq(false))  // 환급 전
+                        .and(savedPayback.isExpired.eq(false))) // 만료 전
                 .where(loeCreateAtAndLtPaybackId(lastCreatedAt, lastPaybackId)
                         .and(payback.isDeleted.eq(false))
                         .and(payback.isHidden.eq(false)))
@@ -227,8 +227,8 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
     // 인기 Payback 페이징 조회 (매장 orderNo 순)
     @Override
     public List<CouponRes> findPopularPaybackList(Long memberId, Integer lastOrderNo, Long lastPaybackId, Integer size) {
-        QMemberPayback savedPayback = new QMemberPayback("savedPayback");
-        QMemberPayback issuedPayback = new QMemberPayback("issuedPayback");
+        QMemberPayback savedPayback = new QMemberPayback("savedPayback"); // 현재 로그인한 회원 개인화 
+        QMemberPayback issuedPayback = new QMemberPayback("issuedPayback"); // 회원의 발급수 집계
 
         return queryFactory
                 .select(new QCouponRes(
@@ -240,9 +240,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         market.thumbnail,
                         Expressions.TRUE, // Payback은 항상 available
                         memberId != null ?
-                                savedPayback.id.isNotNull()
-                                        .and(savedPayback.isPayback.eq(false)) // 환급 진행 중 or 미사용상태
-                                        .and(savedPayback.isExpired.eq(false)) : // 만료전
+                                savedPayback.id.count().gt(0L) : // 미사용+미만료 쿠폰이 1개 이상 있으면 true
                                 Expressions.FALSE,
                         issuedPayback.id.count(),
                         market.orderNo, // orderNo 추가
@@ -254,7 +252,9 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .innerJoin(local.metro, metro)
                 .leftJoin(issuedPayback).on(payback.eq(issuedPayback.payback))
                 .leftJoin(savedPayback).on(payback.eq(savedPayback.payback)
-                        .and(memberId != null ? savedPayback.member.id.eq(memberId) : null))
+                        .and(memberId != null ? savedPayback.member.id.eq(memberId) : null)
+                        .and(savedPayback.isPayback.eq(false))  // 환급 전
+                        .and(savedPayback.isExpired.eq(false))) // 만료 전
                 .where(payback.isDeleted.eq(false)
                         .and(payback.isHidden.eq(false))
                         .and(goeOrderNoAndGtPaybackId(lastOrderNo, lastPaybackId)))
@@ -265,8 +265,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                         metro.name,
                         local.name,
                         market.thumbnail,
-                        market.orderNo,
-                        savedPayback.id)
+                        market.orderNo)
                 .orderBy(market.orderNo.asc().nullsLast(), payback.id.desc())
                 .limit(size + 1)
                 .fetch();
