@@ -227,7 +227,7 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
     // 인기 Payback 페이징 조회 (매장 orderNo 순)
     @Override
     public List<CouponRes> findPopularPaybackList(Long memberId, Integer lastOrderNo, Long lastPaybackId, Integer size) {
-        QMemberPayback savedPayback = new QMemberPayback("savedPayback"); // 현재 로그인한 회원 개인화 
+        QMemberPayback savedPayback = new QMemberPayback("savedPayback"); // 현재 로그인한 회원 개인화 근
         QMemberPayback issuedPayback = new QMemberPayback("issuedPayback"); // 회원의 발급수 집계
 
         return queryFactory

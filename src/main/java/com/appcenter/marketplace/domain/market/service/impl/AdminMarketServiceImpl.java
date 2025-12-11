@@ -172,11 +172,10 @@ public class AdminMarketServiceImpl implements AdminMarketService {
     }
 
     private <T> MarketPageRes<T> checkNextPageAndReturn(List<T> marketResList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = marketResList.size() > size;
 
-        if (marketResList.size() > size) {
-            hasNext = true;
-            marketResList.remove(size.intValue());
+        if (hasNext) {
+            marketResList =  marketResList.subList(0,size);
         }
 
         return new MarketPageRes<>(marketResList, hasNext);

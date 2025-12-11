@@ -94,11 +94,10 @@ public class PaybackServiceImpl implements PaybackService {
     }
 
     private <T> CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = couponList.size() > size;
 
-        if(couponList.size() > size){
-            hasNext = true;
-            couponList.remove(size.intValue());
+        if (hasNext) {
+            couponList = couponList.subList(0, size);
         }
 
         return new CouponPageRes<>(couponList, hasNext);

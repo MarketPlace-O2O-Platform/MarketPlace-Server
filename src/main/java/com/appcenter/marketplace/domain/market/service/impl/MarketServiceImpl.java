@@ -165,12 +165,11 @@ public class MarketServiceImpl implements MarketService {
 //    }
 
     private <T> MarketPageRes<T> checkNextPageAndReturn(List<T> marketResDtoList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = marketResDtoList.size() > size;
 
         // 가져온 갯수가 페이지 사이즈보다 많으면 다음 페이지가 있는 것이고, 사이즈에 맞게 조정한다.
-        if (marketResDtoList.size() > size) {
-            hasNext = true;
-            marketResDtoList.remove(size.intValue());
+        if (hasNext) {
+            marketResDtoList = marketResDtoList.subList(0,size);
         }
 
         return new MarketPageRes<>(marketResDtoList, hasNext);

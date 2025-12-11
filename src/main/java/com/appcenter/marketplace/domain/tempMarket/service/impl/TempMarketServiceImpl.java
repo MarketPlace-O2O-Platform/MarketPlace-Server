@@ -99,11 +99,10 @@ public class TempMarketServiceImpl implements TempMarketService {
     }
 
     private <T> TempMarketPageRes<T> checkNextPageAndReturn(List<T> marketResDtoList, Integer size){
-        boolean hasNext = false;
+        boolean hasNext = marketResDtoList.size() > size;
 
-        if(marketResDtoList != null && marketResDtoList.size() > size){
-            hasNext = true;
-            marketResDtoList.remove(size.intValue());
+        if(hasNext){
+            marketResDtoList = marketResDtoList.subList(0, size);
         }
 
         return new TempMarketPageRes<>(marketResDtoList, hasNext);

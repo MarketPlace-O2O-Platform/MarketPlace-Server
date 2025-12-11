@@ -55,11 +55,10 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     }
 
     private <T> CouponPageRes<T> checkNextPageAndReturn(List<T> list, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = list.size() > size;
 
-        if (list.size() > size) {
-            hasNext = true;
-            list.remove(size.intValue());
+        if (hasNext) {
+            list = list.subList(0,size);
         }
 
         return new CouponPageRes<>(list, hasNext);

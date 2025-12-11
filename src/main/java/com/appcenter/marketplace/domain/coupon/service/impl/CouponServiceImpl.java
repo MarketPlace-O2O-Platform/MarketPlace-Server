@@ -42,8 +42,8 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponPageRes<CouponRes> getLatestCouponPage(Long memberId, LocalDateTime lastCreatedAt, Long couponId, CouponType couponType, Integer size) {
         // Coupon과 Payback을 각각 조회 (size + 1개씩)
-        List<CouponRes> coupons = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size + 1);
-        List<CouponRes> paybacks = paybackRepository.findLatestPaybackList(memberId, lastCreatedAt, couponId, size + 1);
+        List<CouponRes> coupons = couponRepository.findLatestCouponList(memberId, lastCreatedAt, couponId, size);
+        List<CouponRes> paybacks = paybackRepository.findLatestPaybackList(memberId, lastCreatedAt, couponId, size);
 
         // createdAt 기준으로 병합 정렬
         List<CouponRes> mergedList = Stream.concat(coupons.stream(), paybacks.stream())
@@ -82,12 +82,12 @@ public class CouponServiceImpl implements CouponService {
 
         if (couponType == null || couponType == CouponType.GIFT) {
             // Coupon 조회
-            List<CouponRes> coupons = couponRepository.findPopularCouponList(memberId, count, couponId, size + 1);
+            List<CouponRes> coupons = couponRepository.findPopularCouponList(memberId, count, couponId, size);
             result.addAll(coupons);
 
             // Coupon이 size보다 적으면 Payback 추가
-            if (result.size() <= size) {
-                int remainingSize = size + 1 - result.size();
+            if (result.size() < size) {
+                int remainingSize = size - result.size();
                 List<CouponRes> paybacks = paybackRepository.findPopularPaybackList(memberId, null, null, remainingSize);
                 result.addAll(paybacks);
             }
@@ -95,7 +95,7 @@ public class CouponServiceImpl implements CouponService {
             // PAYBACK 타입이면 Payback만 조회
             // count 값을 orderNo로 해석
             Integer orderNo = count != null ? count.intValue() : null;
-            List<CouponRes> paybacks = paybackRepository.findPopularPaybackList(memberId, orderNo, couponId, size + 1);
+            List<CouponRes> paybacks = paybackRepository.findPopularPaybackList(memberId, orderNo, couponId, size);
             result.addAll(paybacks);
         }
 
@@ -165,11 +165,10 @@ public class CouponServiceImpl implements CouponService {
     }
 
     private <T>CouponPageRes<T> checkNextPageAndReturn(List<T> couponList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = couponList.size() > size;
 
-        if(couponList.size() > size){
-            hasNext = true;
-            couponList.remove(size.intValue());
+        if (hasNext) {
+            couponList = couponList.subList(0, size);
         }
 
         return new CouponPageRes<>(couponList, hasNext);

@@ -53,11 +53,10 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     }
 
     private <T> MemberPageRes<T> checkNextPageAndReturn(List<T> memberList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = memberList.size() > size;
 
-        if (memberList.size() > size) {
-            hasNext = true;
-            memberList.remove(size.intValue());
+        if (hasNext) {
+            memberList = memberList.subList(0, size);
         }
 
         return new MemberPageRes<>(memberList, hasNext);

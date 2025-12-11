@@ -70,11 +70,10 @@ public class NotificationServiceImpl implements NotificationService{
 
 
     private <T> NotificationPageRes<T> checkNextPageAndReturn(List<T> notificationList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = notificationList.size() > size;
 
-        if(notificationList.size() > size){
-            hasNext = true;
-            notificationList.remove(size.intValue());
+        if(hasNext){
+            notificationList = notificationList.subList(0, size);
         }
 
         return new NotificationPageRes<>(notificationList, hasNext);

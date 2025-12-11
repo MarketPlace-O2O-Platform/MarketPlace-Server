@@ -49,11 +49,10 @@ public class BetaCouponServiceImpl implements BetaCouponService {
 
 
     private <T> BetaCouponPageRes<T> checkNextPageAndReturn(List<T> betaCouponResList, Integer size) {
-        boolean hasNext = false;
+        boolean hasNext = betaCouponResList.size() > size;
 
-        if(betaCouponResList.size() > size){
-            hasNext = true;
-            betaCouponResList.remove(size.intValue());
+        if(hasNext){
+            betaCouponResList = betaCouponResList.subList(0,size);
         }
 
         return new BetaCouponPageRes<>(betaCouponResList, hasNext);
