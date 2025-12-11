@@ -24,19 +24,4 @@ public interface AdminCouponService {
     void softDeleteCoupon(Long couponId);
 
     void softDeleteCoupons(List<Long> couponIds);
-
-    // 환급 쿠폰 관리
-    CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Integer size);
-
-    PaybackRes getPaybackCoupon(Long couponId);
-
-    PaybackRes createPaybackCoupon(PaybackReq paybackReq, Long marketId);
-
-    PaybackRes updatePaybackCoupon(PaybackReq paybackReq, Long couponId);
-
-    void updatePaybackCouponHidden(Long couponId);
-
-    void softDeletePaybackCoupon(Long couponId);
-
-    void softDeletePaybackCoupons(List<Long> couponIds);
 }

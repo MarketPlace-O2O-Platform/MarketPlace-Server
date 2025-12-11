@@ -6,11 +6,14 @@ import com.appcenter.marketplace.domain.payback.dto.res.PaybackRes;
 import com.appcenter.marketplace.domain.payback.service.PaybackService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -28,6 +31,17 @@ public class PaybackAdminController {
         return ResponseEntity.status(COUPON_CREATE.getStatus()).body(CommonResponse.from(COUPON_CREATE.getMessage(), paybackAdminService.createCoupon(req, marketId)));
     }
 
+    @Operation(summary = "전체 환급 쿠폰 조회", description = "관리자가 모든 환급 쿠폰을 조회합니다.")
+    @GetMapping("/payback")
+    public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getAllPaybackCoupons(
+            @Parameter(description = "페이지의 마지막 couponId")
+            @RequestParam(required = false, name = "lastPageIndex") Long couponId,
+            @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_FOUND.getMessage(),
+                        paybackAdminService.getAllPaybackCoupons(couponId, size)));
+    }
+
     @Operation(summary = "매장별 전체 생성된 환급 쿠폰 조회", description = "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
     @GetMapping("/payback-coupons")
     public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getCouponList(@RequestParam(name = "marketId")Long marketId,
@@ -37,6 +51,13 @@ public class PaybackAdminController {
         return ResponseEntity.status(COUPON_FOUND.getStatus()).body(CommonResponse.from(COUPON_FOUND.getMessage(),paybackAdminService.getCouponListForAdmin(marketId, couponId, size)));
     }
 
+    @Operation(summary = "환급 쿠폰 상세 조회", description = "관리자가 특정 환급 쿠폰의 상세 정보를 조회합니다.")
+    @GetMapping("/payback/{couponId}")
+    public ResponseEntity<CommonResponse<PaybackRes>> getPaybackCoupon(@PathVariable Long couponId) {
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_FOUND.getMessage(),
+                        paybackAdminService.getPaybackCoupon(couponId)));
+    }
 
     @Operation(summary = "쿠폰 내용 수정", description = "관리자(혹은 사장님)이 생성한 쿠폰의 내용을 수정합니다. " +
             "<br> '숨김처리'를 제외한 쿠폰 제목/내용을 수정할 수 있습니다. ")
@@ -59,5 +80,13 @@ public class PaybackAdminController {
     public ResponseEntity<CommonResponse<Object>> deleteCoupon(@PathVariable Long couponId) {
         paybackAdminService.softDeleteCoupon(couponId);
         return ResponseEntity.status(COUPON_DELETE.getStatus()).body(CommonResponse.from(COUPON_DELETE.getMessage()));
+    }
+
+    @Operation(summary = "환급 쿠폰 일괄 삭제", description = "관리자가 여러 환급 쿠폰을 일괄 삭제합니다.")
+    @DeleteMapping("/payback/batch")
+    public ResponseEntity<CommonResponse<Object>> deletePaybackCoupons(@RequestBody List<Long> couponIds) {
+        paybackAdminService.softDeletePaybackCoupons(couponIds);
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_DELETE.getMessage()));
     }
 }

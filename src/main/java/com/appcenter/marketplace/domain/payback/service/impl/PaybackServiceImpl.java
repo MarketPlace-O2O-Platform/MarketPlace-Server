@@ -60,17 +60,37 @@ public class PaybackServiceImpl implements PaybackService {
     }
 
     @Override
+    public CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Integer size) {
+        List<PaybackRes> paybackList = paybackRepository.findPaybackCouponsForAdmin(couponId, size);
+        return checkNextPageAndReturn(paybackList, size);
+    }
+
+    @Override
+    public PaybackRes getPaybackCoupon(Long couponId) {
+        return PaybackRes.toDto(findPaybackById(couponId));
+    }
+
+    // [회원용] 매장별 쿠폰 리스트 조회
+    @Override
     public CouponPageRes<PaybackRes> getCouponListForMembers(Long marketId, Long memberId, Long couponId, Integer size) {
         Market market = findMarketById(marketId);
         List<PaybackRes> paybackResList = paybackRepository.findCouponsForMembersByMarketId(market.getId(), memberId, couponId, size);
         return checkNextPageAndReturn(paybackResList, size);
     }
 
+
     @Override
     @Transactional
     public void softDeleteCoupon(Long couponId) {
         Payback payback = findPaybackById(couponId);
         payback.softDeleteCoupon();
+    }
+
+    @Override
+    @Transactional
+    public void softDeletePaybackCoupons(List<Long> couponIds) {
+        List<Payback> paybacks = paybackRepository.findAllById(couponIds);
+        paybacks.forEach(Payback::softDeleteCoupon);
     }
 
     @Override

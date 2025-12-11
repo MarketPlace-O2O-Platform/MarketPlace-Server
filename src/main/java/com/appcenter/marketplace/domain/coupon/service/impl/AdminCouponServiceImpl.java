@@ -92,63 +92,9 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         coupons.forEach(Coupon::softDeleteCoupon);
     }
 
-    // ===== 환급 쿠폰 관리 =====
-    @Override
-    public CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Integer size) {
-        List<PaybackRes> paybackList = paybackRepository.findPaybackCouponsForAdmin(couponId, size);
-        return checkNextPageAndReturn(paybackList, size);
-    }
-
-    @Override
-    public PaybackRes getPaybackCoupon(Long couponId) {
-        return PaybackRes.toDto(findPaybackById(couponId));
-    }
-
-    @Override
-    @Transactional
-    public PaybackRes createPaybackCoupon(PaybackReq paybackReq, Long marketId) {
-        Market market = findMarketById(marketId);
-        Payback payback = paybackRepository.save(paybackReq.ofCreate(market));
-        return PaybackRes.toDto(payback);
-    }
-
-    @Override
-    @Transactional
-    public PaybackRes updatePaybackCoupon(PaybackReq paybackReq, Long couponId) {
-        Payback payback = findPaybackById(couponId);
-        payback.update(paybackReq);
-        return PaybackRes.toDto(payback);
-    }
-
-    @Override
-    @Transactional
-    public void updatePaybackCouponHidden(Long couponId) {
-        Payback payback = findPaybackById(couponId);
-        payback.updateHidden();
-    }
-
-    @Override
-    @Transactional
-    public void softDeletePaybackCoupon(Long couponId) {
-        Payback payback = findPaybackById(couponId);
-        payback.softDeleteCoupon();
-    }
-
-    @Override
-    @Transactional
-    public void softDeletePaybackCoupons(List<Long> couponIds) {
-        List<Payback> paybacks = paybackRepository.findAllById(couponIds);
-        paybacks.forEach(Payback::softDeleteCoupon);
-    }
-
     // ===== Private Helper Methods =====
     private Coupon findCouponById(Long couponId) {
         return couponRepository.findById(couponId)
-                .orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
-    }
-
-    private Payback findPaybackById(Long couponId) {
-        return paybackRepository.findById(couponId)
                 .orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));
     }
 
