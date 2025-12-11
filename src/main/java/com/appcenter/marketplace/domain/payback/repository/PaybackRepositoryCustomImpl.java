@@ -82,16 +82,12 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
 
     // 관리자용 전체 환급 쿠폰 조회
     @Override
-    public List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Long marketId, Integer size) {
+    public List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Integer size) {
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(payback.isDeleted.eq(false));
 
         if (couponId != null) {
             whereClause.and(ltCouponId(couponId));
-        }
-
-        if (marketId != null) {
-            whereClause.and(payback.market.id.eq(marketId));
         }
 
         return queryFactory.select(new QPaybackRes(

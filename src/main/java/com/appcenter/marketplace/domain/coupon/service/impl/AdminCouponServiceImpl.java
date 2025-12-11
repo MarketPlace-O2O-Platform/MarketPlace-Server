@@ -94,8 +94,8 @@ public class AdminCouponServiceImpl implements AdminCouponService {
 
     // ===== 환급 쿠폰 관리 =====
     @Override
-    public CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Long marketId, Integer size) {
-        List<PaybackRes> paybackList = paybackRepository.findPaybackCouponsForAdmin(couponId, marketId, size);
+    public CouponPageRes<PaybackRes> getAllPaybackCoupons(Long couponId, Integer size) {
+        List<PaybackRes> paybackList = paybackRepository.findPaybackCouponsForAdmin(couponId, size);
         return checkNextPageAndReturn(paybackList, size);
     }
 

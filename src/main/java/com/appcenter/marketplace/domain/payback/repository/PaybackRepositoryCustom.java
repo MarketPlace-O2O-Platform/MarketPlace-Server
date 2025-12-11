@@ -15,7 +15,7 @@ public interface PaybackRepositoryCustom {
 
     List<PaybackRes> findCouponsForMembersByMarketId(Long marketId, Long memberId, Long couponId, Integer size);
 
-    List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Long marketId, Integer size);
+    List<PaybackRes> findPaybackCouponsForAdmin(Long couponId, Integer size);
 
     List<Payback> findPaybacksByMarketId(Long marketId);
 

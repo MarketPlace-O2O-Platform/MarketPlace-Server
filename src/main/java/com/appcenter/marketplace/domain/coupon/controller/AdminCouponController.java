@@ -98,11 +98,10 @@ public class AdminCouponController {
     public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getAllPaybackCoupons(
             @Parameter(description = "페이지의 마지막 couponId")
             @RequestParam(required = false, name = "lastPageIndex") Long couponId,
-            @RequestParam(required = false, name = "marketId") Long marketId,
             @RequestParam(defaultValue = "10", name = "pageSize") Integer size) {
         return ResponseEntity
                 .ok(CommonResponse.from(COUPON_FOUND.getMessage(),
-                        adminCouponService.getAllPaybackCoupons(couponId, marketId, size)));
+                        adminCouponService.getAllPaybackCoupons(couponId, size)));
     }
 
     @Operation(summary = "환급 쿠폰 상세 조회", description = "관리자가 특정 환급 쿠폰의 상세 정보를 조회합니다.")
