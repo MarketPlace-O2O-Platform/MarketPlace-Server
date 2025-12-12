@@ -43,7 +43,7 @@ public class PaybackAdminController {
     }
 
     @Operation(summary = "매장별 전체 생성된 환급 쿠폰 조회", description = "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.")
-    @GetMapping("/{marketId}")
+    @GetMapping("/market/{marketId}")
     public ResponseEntity<CommonResponse<CouponPageRes<PaybackRes>>> getCouponList(@PathVariable Long marketId,
                                                                                   @RequestParam(name = "couponId", required = false) Long couponId,
                                                                                   @RequestParam(name = "size", defaultValue = "10") Integer size
