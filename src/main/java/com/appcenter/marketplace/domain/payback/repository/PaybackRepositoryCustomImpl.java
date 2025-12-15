@@ -219,6 +219,14 @@ public class PaybackRepositoryCustomImpl implements PaybackRepositoryCustom {
                 .where(loeCreateAtAndLtPaybackId(lastCreatedAt, lastPaybackId)
                         .and(payback.isDeleted.eq(false))
                         .and(payback.isHidden.eq(false)))
+                .groupBy(payback.id,    //  savedPayback.id.count().gt(0L)  -> 집계함수사용을 위해 group by 로 묶어야 정상 작동
+                        payback.name,
+                        market.id,
+                        market.name,
+                        metro.name,
+                        local.name,
+                        market.thumbnail,
+                        payback.createdAt)
                 .orderBy(payback.createdAt.desc(), payback.id.desc())
                 .limit(size + 1)
                 .fetch();
