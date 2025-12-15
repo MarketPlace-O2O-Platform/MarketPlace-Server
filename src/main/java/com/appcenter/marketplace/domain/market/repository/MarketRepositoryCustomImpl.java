@@ -64,6 +64,16 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     // 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketList(Long memberId, Long marketId, Integer size) {
+        // marketId로부터 orderNo 조회
+        Integer lastOrderNo = null;
+        if (marketId != null) {
+            lastOrderNo = jpaQueryFactory
+                    .select(market.orderNo)
+                    .from(market)
+                    .where(market.id.eq(marketId))
+                    .fetchOne();
+        }
+
         return jpaQueryFactory
                 .selectDistinct(new QMarketRes(
                         market.id,
@@ -88,7 +98,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .innerJoin(category).on(market.category.eq(category))
-                .where(ltMarketId(marketId)
+                .where(goeOrderNoAndLtMarketId(lastOrderNo, marketId)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.orderNo.asc().nullsLast(), market.id.desc())
                 .limit(size + 1)
@@ -98,6 +108,16 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     // 카테고리 별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByCategory(Long memberId, Long marketId, Integer size, String major) {
+        // marketId로부터 orderNo 조회
+        Integer lastOrderNo = null;
+        if (marketId != null) {
+            lastOrderNo = jpaQueryFactory
+                    .select(market.orderNo)
+                    .from(market)
+                    .where(market.id.eq(marketId))
+                    .fetchOne();
+        }
+
         return jpaQueryFactory
                 .selectDistinct(new QMarketRes(
                         market.id,
@@ -122,7 +142,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(category).on(market.category.eq(category))
                 .innerJoin(local).on(market.local.eq(local))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId)
+                .where(goeOrderNoAndLtMarketId(lastOrderNo, marketId)
                         .and(market.isDeleted.eq(false))
                         .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.orderNo.asc().nullsLast(), market.id.desc())
@@ -133,6 +153,16 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     // 주소별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddress(Long memberId, Long marketId, Long localId, Integer size) {
+        // marketId로부터 orderNo 조회
+        Integer lastOrderNo = null;
+        if (marketId != null) {
+            lastOrderNo = jpaQueryFactory
+                    .select(market.orderNo)
+                    .from(market)
+                    .where(market.id.eq(marketId))
+                    .fetchOne();
+        }
+
         return jpaQueryFactory
                 .selectDistinct(new QMarketRes(
                         market.id,
@@ -158,7 +188,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
                 .innerJoin(category).on(market.category.eq(category))
-                .where(ltMarketId(marketId)
+                .where(goeOrderNoAndLtMarketId(lastOrderNo, marketId)
                         .and(market.isDeleted.eq(false)))
                 .orderBy(market.orderNo.asc().nullsLast(), market.id.desc())
                 .limit(size + 1)
@@ -168,6 +198,16 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
     // 주소&카테고리 별 매장 페이징 조회
     @Override
     public List<MarketRes> findMarketListByAddressAndCategory(Long memberId, Long marketId, Long localId, Integer size, String major) {
+        // marketId로부터 orderNo 조회
+        Integer lastOrderNo = null;
+        if (marketId != null) {
+            lastOrderNo = jpaQueryFactory
+                    .select(market.orderNo)
+                    .from(market)
+                    .where(market.id.eq(marketId))
+                    .fetchOne();
+        }
+
         return jpaQueryFactory
                 .selectDistinct(new QMarketRes(
                         market.id,
@@ -193,7 +233,7 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
                 .innerJoin(local).on(market.local.eq(local)
                         .and(market.local.id.eq(localId)))
                 .innerJoin(metro).on(local.metro.eq(metro))
-                .where(ltMarketId(marketId)
+                .where(goeOrderNoAndLtMarketId(lastOrderNo, marketId)
                         .and(market.isDeleted.eq(false))
                         .and(category.major.eq(Major.valueOf(major))))
                 .orderBy(market.orderNo.asc().nullsLast(), market.id.desc())
@@ -337,6 +377,21 @@ public class MarketRepositoryCustomImpl implements MarketRepositoryCustom{
         BooleanBuilder builder = new BooleanBuilder();
         if (orderNo != null) {
             builder.and(market.orderNo.gt(orderNo));  // orderNo가 존재하면 gt 조건을 추가
+        }
+        return builder;
+    }
+
+    // orderNo 기반 커서 페이징 (orderNo ASC, id DESC 정렬에 사용)
+    private BooleanBuilder goeOrderNoAndLtMarketId(Integer orderNo, Long marketId) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (orderNo != null && marketId != null) {
+            // orderNo가 더 크거나, 같으면 id가 더 작아야 함 (id는 DESC)
+            builder.and(market.orderNo.gt(orderNo).or(
+                    market.orderNo.eq(orderNo).and(market.id.lt(marketId))
+            ));
+        } else if (marketId != null) {
+            // orderNo 없이 marketId만 있는 경우
+            builder.and(market.id.lt(marketId));
         }
         return builder;
     }
