@@ -40,8 +40,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public String login(MemberLoginReq memberLoginReq) {
-        //Long studentId = validateAndParseStudentId(memberLoginReq);
-        Long studentId = Long.parseLong(memberLoginReq.getStudentId()); // 로컬 테스트 시
+        Long studentId = validateAndParseStudentId(memberLoginReq);
+        //Long studentId = Long.parseLong(memberLoginReq.getStudentId()); // 로컬 테스트 시
         Member existMember = memberRepository.findById(studentId).orElse(null);
 
         // 회원 정보 반환
