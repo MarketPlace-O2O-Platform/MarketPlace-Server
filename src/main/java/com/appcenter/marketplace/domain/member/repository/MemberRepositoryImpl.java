@@ -20,7 +20,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     public long resetCheerTickets() {
         return jpaQueryFactory
                 .update(member)
-                .set(member.cheerTicket, 10) // 공감권 10개로 수정
+                .set(member.cheerTicket, 3) // 공감권 3개로 수정 완료 ( 배포 시)
                 .execute();
     }
 
