@@ -12,14 +12,16 @@ public class RequestMarketRes {
     private final String name;
     private final String address;
     private final Integer count;
+    private final Boolean isEnroll;
 
     @QueryProjection
     @Builder
-    public RequestMarketRes(Long id, String name, String address, Integer count) {
+    public RequestMarketRes(Long id, String name, String address, Integer count, Boolean isEnroll) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.count = count;
+        this.isEnroll = isEnroll;
     }
 
     public static RequestMarketRes from(RequestMarket requestMarket){
@@ -28,6 +30,7 @@ public class RequestMarketRes {
                 .name(requestMarket.getName())
                 .address(requestMarket.getAddress())
                 .count(requestMarket.getCount())
+                .isEnroll(requestMarket.getIsEnroll())
                 .build();
     }
 }
