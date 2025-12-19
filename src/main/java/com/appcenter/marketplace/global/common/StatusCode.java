@@ -17,6 +17,7 @@ public enum StatusCode {
     MARKET_DELETE(OK,"매장 삭제 완료"),
     MARKET_ALREADY_EXISTS(BAD_REQUEST, "이미 존재하는 매장입니다."),
     MARKET_HIDDEN(OK, "매장 숨김(공개) 처리 완료"),
+    REQUEST_MARKET_ENROLLED(OK, "요청 매장 등록 완료 처리 성공"),
 
     // Coupon
     COUPON_CREATE(CREATED,"쿠폰 생성 완료"),

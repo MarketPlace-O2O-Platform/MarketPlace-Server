@@ -52,7 +52,6 @@ public class JwtTokenProvider {
     //인증 성공후 SecurityContextHolder 에 담을 객체(Authentication) 생성
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getMemberId(token));
-        log.info("JwtTokenProvider.getAuthentication:  userDetails 가져옴 - {}", userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

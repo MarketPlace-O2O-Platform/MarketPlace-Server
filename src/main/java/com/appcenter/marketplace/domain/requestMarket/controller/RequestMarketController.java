@@ -11,10 +11,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_CREATE;
-import static com.appcenter.marketplace.global.common.StatusCode.MARKET_FOUND;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
+
 
 @Tag(name = "[요청 매장]", description = "[회원,관리자] 요청 매장 생성, 조회")
 @RestController
@@ -44,5 +45,15 @@ public class RequestMarketController {
                 .status(MARKET_FOUND.getStatus())
                 .body(CommonResponse.from(MARKET_FOUND.getMessage()
                         ,requestMarketService.getRequestMarkets(page,size)));
+    }
+
+    @Operation(summary = "요청 매장 등록 완료 처리", description = "요청 매장을 등록 완료 상태로 변경합니다. (관리자 전용)")
+    @PatchMapping("/{id}/enroll")
+    public ResponseEntity<CommonResponse<RequestMarketRes>> enrollRequestMarket(
+            @PathVariable("id") Long requestMarketId) {
+        return ResponseEntity
+                .status(REQUEST_MARKET_ENROLLED.getStatus())
+                .body(CommonResponse.from(REQUEST_MARKET_ENROLLED.getMessage()
+                        ,requestMarketService.enrollRequestMarket(requestMarketId)));
     }
 }

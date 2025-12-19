@@ -25,12 +25,20 @@ public class RequestMarket {
     @Column(nullable = false)
     private Integer count;
 
+    @Column(nullable = false)
+    private Boolean isEnroll;
+
     @Builder
-    public RequestMarket(String name, String address, Integer count) {
+    public RequestMarket(String name, String address, Integer count, Boolean isEnroll) {
         this.name = name;
         this.address = address;
         this.count = count;
+        this.isEnroll = isEnroll;
     }
 
     public void plusCount(){ this.count++;}
+
+    public void completeEnroll() {
+        this.isEnroll = true;
+    }
 }

@@ -16,4 +16,6 @@ public interface RequestMarketService {
     void hardDeleteRequestMarket(Long marketId);
 
     RequestMarket getRequestMarketName(String marketName);
+
+    RequestMarketRes enrollRequestMarket(Long requestMarketId);
 }
