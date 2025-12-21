@@ -43,6 +43,7 @@ public enum StatusCode {
     MEMBER_ACCOUNT_PERMIT(OK,"회원 주거래은행/계좌번호 저장"),
     MEMBER_ACCOUNT_DENY(OK,"회원 주거래은행/계좌번호 저장 거부"),
     MEMBER_UPGRADE_PERMISSION(OK,"회원 권한 관리자 승급 완료"),
+    STATS_FOUND(OK, "통계 조회 완료"),
 
     // Notification
     NOTIFICATION_CREATE(CREATED,"알림 기록 생성 완료"),

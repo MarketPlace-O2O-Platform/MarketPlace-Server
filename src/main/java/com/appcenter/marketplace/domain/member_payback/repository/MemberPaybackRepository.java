@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberPaybackRepository extends JpaRepository<MemberPayback, Long>, MemberPaybackRepositoryCustom {
 
+    long countByIsPayback(Boolean isPayback);
+
 }

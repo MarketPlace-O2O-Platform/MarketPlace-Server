@@ -2,6 +2,8 @@ package com.appcenter.marketplace.domain.member.service;
 
 import com.appcenter.marketplace.domain.member.dto.res.AdminMemberRes;
 import com.appcenter.marketplace.domain.member.dto.res.MemberPageRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberSignupDailyStatsRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberSignupStatsRes;
 
 public interface AdminMemberService {
 
@@ -12,4 +14,8 @@ public interface AdminMemberService {
     void upgradePermission(Long memberId);
 
     long resetCheerTickets();
+
+    MemberSignupStatsRes getMemberSignupStats();
+
+    MemberSignupDailyStatsRes getMemberSignupDailyStats();
 }

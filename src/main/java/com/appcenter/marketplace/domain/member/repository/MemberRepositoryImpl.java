@@ -7,6 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.domain.member.QMember.member;
@@ -58,5 +59,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             builder.and(member.role.eq(Role.valueOf(role)));
         }
         return builder;
+    }
+
+    @Override
+    public long countByCreatedAtBetween(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        Long count = jpaQueryFactory
+                .select(member.count())
+                .from(member)
+                .where(member.createdAt.between(startDateTime, endDateTime))
+                .fetchOne();
+        return count != null ? count : 0L;
     }
 }

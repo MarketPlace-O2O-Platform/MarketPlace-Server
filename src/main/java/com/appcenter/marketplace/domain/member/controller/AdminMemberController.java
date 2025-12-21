@@ -2,6 +2,8 @@ package com.appcenter.marketplace.domain.member.controller;
 
 import com.appcenter.marketplace.domain.member.dto.res.AdminMemberRes;
 import com.appcenter.marketplace.domain.member.dto.res.MemberPageRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberSignupDailyStatsRes;
+import com.appcenter.marketplace.domain.member.dto.res.MemberSignupStatsRes;
 import com.appcenter.marketplace.domain.member.service.AdminMemberService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,5 +57,25 @@ public class AdminMemberController {
         long resetCount = adminMemberService.resetCheerTickets();
         return ResponseEntity
                 .ok(CommonResponse.from("총 " + resetCount + "명의 응원티켓이 초기화되었습니다."));
+    }
+
+    @Operation(summary = "회원 가입 통계 조회",
+            description = "관리자가 회원 가입 통계를 조회합니다. <br>" +
+                    "오늘 하루 가입수와 최근 7일 가입 변화량을 제공합니다.")
+    @GetMapping("/stats/signup")
+    public ResponseEntity<CommonResponse<MemberSignupStatsRes>> getMemberSignupStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        adminMemberService.getMemberSignupStats()));
+    }
+
+    @Operation(summary = "회원 가입 일별 통계 조회",
+            description = "관리자가 최근 7일간 일별 회원 가입 통계를 조회합니다. <br>" +
+                    "7일 전부터 오늘까지 각 날짜별 가입 수를 제공합니다.")
+    @GetMapping("/stats/signup/daily")
+    public ResponseEntity<CommonResponse<MemberSignupDailyStatsRes>> getMemberSignupDailyStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        adminMemberService.getMemberSignupDailyStats()));
     }
 }

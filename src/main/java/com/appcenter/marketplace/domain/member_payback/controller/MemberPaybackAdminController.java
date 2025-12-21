@@ -3,6 +3,7 @@ package com.appcenter.marketplace.domain.member_payback.controller;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.appcenter.marketplace.global.common.StatusCode.COUPON_FOUND;
-import static com.appcenter.marketplace.global.common.StatusCode.COUPON_USED;
+import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @Tag(name = "[관리자 환급 쿠폰 관리]", description = "[관리자] 회원의 환급 쿠폰 관리")
 @RestController
@@ -60,5 +60,15 @@ public class MemberPaybackAdminController {
 
         return ResponseEntity.status(COUPON_USED.getStatus())
                 .body(CommonResponse.from(COUPON_USED.getMessage(),  memberPaybackAdminService.manageCoupon(memberPaybackId)));
+    }
+
+    @Operation(summary = "쿠폰 및 환급 통계 조회",
+            description = "관리자가 쿠폰 다운로드 및 환급 통계를 조회합니다. <br>" +
+                    "한명당 쿠폰 다운수와 쿠폰 다운 대비 환급율을 제공합니다.")
+    @GetMapping("/stats")
+    public ResponseEntity<CommonResponse<CouponPaybackStatsRes>> getCouponPaybackStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getCouponPaybackStats()));
     }
 }
