@@ -4,6 +4,7 @@ import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
 import com.appcenter.marketplace.global.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,5 +71,15 @@ public class MemberPaybackAdminController {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
                         memberPaybackAdminService.getCouponPaybackStats()));
+    }
+
+    @Operation(summary = "최근 7일 가입 회원 환급 쿠폰 통계 조회",
+            description = "관리자가 최근 7일간 가입한 회원들의 환급 쿠폰 통계를 조회합니다. <br>" +
+                    "최근 7일 가입 회원 수와 회원당 평균 환급 쿠폰 다운로드 수를 제공합니다.")
+    @GetMapping("/stats/recent")
+    public ResponseEntity<CommonResponse<RecentMemberPaybackStatsRes>> getRecentMemberPaybackStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getRecentMemberPaybackStats()));
     }
 }

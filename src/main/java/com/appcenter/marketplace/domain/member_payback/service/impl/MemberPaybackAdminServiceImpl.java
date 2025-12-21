@@ -7,6 +7,7 @@ import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRep
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.repository.MemberPaybackRepository;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
 import com.appcenter.marketplace.global.exception.CustomException;
@@ -14,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_NOT_EXIST;
@@ -79,6 +83,26 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
                 : 0.0;
 
         return CouponPaybackStatsRes.of(avgCouponDownloadPerMember, paybackRate);
+    }
+
+    @Override
+    public RecentMemberPaybackStatsRes getRecentMemberPaybackStats() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime sevenDaysAgoStart = LocalDateTime.of(today.minusDays(7), LocalTime.MIN);
+        LocalDateTime todayEnd = LocalDateTime.of(today, LocalTime.MAX);
+
+        // 최근 7일간 가입한 회원 수
+        long recentMemberCount = memberRepository.countByCreatedAtBetween(sevenDaysAgoStart, todayEnd);
+
+        // 최근 7일간 가입한 회원들의 환급 쿠폰 다운로드 수
+        long recentMemberPaybackCount = memberPaybackRepository.countByMemberCreatedAtBetween(sevenDaysAgoStart, todayEnd);
+
+        // 회원당 평균 환급 쿠폰 다운로드 수
+        double avgPaybackCouponDownloadPerMember = recentMemberCount > 0
+                ? (double) recentMemberPaybackCount / recentMemberCount
+                : 0.0;
+
+        return RecentMemberPaybackStatsRes.of(recentMemberCount, avgPaybackCouponDownloadPerMember);
     }
 
     private MemberPayback findMemberPaybackById(Long couponId) {

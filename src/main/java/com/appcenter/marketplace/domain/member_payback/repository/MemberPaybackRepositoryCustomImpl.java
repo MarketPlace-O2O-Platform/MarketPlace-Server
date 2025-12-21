@@ -199,4 +199,16 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .fetchOne();
     }
 
+    // 특정 기간에 가입한 회원들의 MemberPayback 개수 조회
+    @Override
+    public long countByMemberCreatedAtBetween(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        Long count = jpaQueryFactory
+                .select(memberPayback.count())
+                .from(memberPayback)
+                .innerJoin(memberPayback.member, member)
+                .where(member.createdAt.between(startDateTime, endDateTime))
+                .fetchOne();
+        return count != null ? count : 0L;
+    }
+
 }
