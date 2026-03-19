@@ -60,6 +60,9 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         LocalDateTime todayStart = LocalDateTime.of(today, LocalTime.MIN);
         LocalDateTime todayEnd = LocalDateTime.of(today, LocalTime.MAX);
 
+        // 누적 회원 가입 수
+        long totalMemberCount = memberRepository.count();
+
         // 하루 가입수 (오늘)
         long todaySignupCount = memberRepository.countByCreatedAtBetween(todayStart, todayEnd);
 
@@ -75,7 +78,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         // 7일 가입 변화량
         long sevenDayChangeCount = recentSevenDaysCount - previousSevenDaysCount;
 
-        return MemberSignupStatsRes.of(todaySignupCount, sevenDayChangeCount);
+        return MemberSignupStatsRes.of(totalMemberCount, todaySignupCount, sevenDayChangeCount);
     }
 
     @Override
