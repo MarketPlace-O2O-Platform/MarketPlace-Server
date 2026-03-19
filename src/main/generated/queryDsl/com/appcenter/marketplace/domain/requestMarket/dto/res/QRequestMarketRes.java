@@ -13,8 +13,8 @@ public class QRequestMarketRes extends ConstructorExpression<RequestMarketRes> {
 
     private static final long serialVersionUID = 676958231L;
 
-    public QRequestMarketRes(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<Integer> count) {
-        super(RequestMarketRes.class, new Class<?>[]{long.class, String.class, String.class, int.class}, id, name, address, count);
+    public QRequestMarketRes(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<Integer> count, com.querydsl.core.types.Expression<Boolean> isEnroll) {
+        super(RequestMarketRes.class, new Class<?>[]{long.class, String.class, String.class, int.class, boolean.class}, id, name, address, count, isEnroll);
     }
 
 }

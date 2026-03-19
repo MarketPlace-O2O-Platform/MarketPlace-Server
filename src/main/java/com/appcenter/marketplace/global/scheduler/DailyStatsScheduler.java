@@ -15,10 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-/**
- * 일일 통계 저장 스케줄러
- * - 매일 자정 5분에 전날 통계를 DB에 저장
- */
 @Component
 @Slf4j
 @RequiredArgsConstructor
