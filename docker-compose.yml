@@ -2,11 +2,81 @@ version: '3.8'
 
 services:
   springboot:
-    container_name: marketplace
-    image: ${DOCKER_USER}/${DOCKER_REPO}:marketplace-server  # Docker Hub에서 가져올 이미지
+    container_name: marketplace-server
+    image: ${DOCKER_USER}/${DOCKER_REPO}:latest
     volumes:
-      - /home/serverking/marketplace:/app/image
+      - /home/serverking/marketplace/image:/app/image
+      - /home/serverking/marketplace/logs:/app/logs
     ports:
       - "8088:8080"
     environment:
       TZ: "Asia/Seoul"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: currumi-prometheus
+    ports:
+      - "9092:9090"
+    volumes:
+      - /home/serverking/marketplace/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+#  grafana:
+#    image: grafana/grafana:latest
+#    container_name: currumi-grafana
+#    ports:
+#      - "3002:3000"
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#    depends_on:
+#      - prometheus
+#    environment:
+#      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+#    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: currumi-redis
+    ports:
+      - "6383:6379"
+    environment:
+      TZ: "Asia/Seoul"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:latest
+    container_name: currumi-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki_data:/loki
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: currumi-promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+      - /var/log:/var/log
+      - /home/serverking/marketplace/logs:/app/logs
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+  loki_data:

@@ -11,6 +11,7 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.IssuedCouponRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
 import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponService;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     private final MemberCouponRepository memberCouponRepository;
     private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
+    private final MetricsConfig metricsConfig;
 
     @Override
     @Transactional
@@ -51,6 +53,9 @@ public class MemberCouponServiceImpl implements MemberCouponService {
                     .isExpired(false)
                     .build());
             coupon.reduce();
+
+            // 쿠폰 다운로드 메트릭 기록
+            metricsConfig.recordCouponDownload(coupon.getId(), coupon.getName());
 
         } else {
             throw new CustomException(COUPON_ALREADY_ISSUED);
@@ -78,6 +83,12 @@ public class MemberCouponServiceImpl implements MemberCouponService {
     public CouponHandleRes updateCoupon(Long memberCouponId) {
         MemberCoupon memberCoupon = findMemberCouponById(memberCouponId);
         memberCoupon.usedToggle();
+
+        // 쿠폰 사용 메트릭 기록 (사용 상태로 변경될 때만)
+        if (memberCoupon.getIsUsed()) {
+            metricsConfig.recordCouponUsage(memberCoupon.getCoupon().getId());
+        }
+
         return CouponHandleRes.toDto(memberCoupon);
     }
 

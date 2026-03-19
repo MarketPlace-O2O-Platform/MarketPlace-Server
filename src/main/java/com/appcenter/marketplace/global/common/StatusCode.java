@@ -79,6 +79,7 @@ public enum StatusCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
     /* 404 NOT_FOUND : 존재하지 않는 리소스 */
+    NOT_FOUND_INFO(NOT_FOUND, "존재하지 않는 정보입니다."),
     MEMBER_NOT_EXIST(NOT_FOUND, "존재하지 않는 회원입니다."),
     CATEGORY_NOT_EXIST(NOT_FOUND,"존재하지 않는 카테고리입니다."),
     MARKET_NOT_EXIST(NOT_FOUND,"존재하지 않는 매장입니다."),

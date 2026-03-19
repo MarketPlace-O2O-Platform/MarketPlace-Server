@@ -8,6 +8,7 @@ import com.appcenter.marketplace.domain.market.repository.MarketRepository;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.global.common.StatusCode;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.fcm.event.SubscribeMarketEvent;
 import com.appcenter.marketplace.global.fcm.event.UnSubscribeMarketEvent;
@@ -29,6 +30,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final MemberRepository memberRepository;
     private final MarketRepository marketRepository;
+    private final MetricsConfig metricsConfig;
 
 
     @Override
@@ -45,7 +47,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                     .market(market)
                     .build();
             favoriteRepository.save(favorite);
-
+            metricsConfig.recordFavorite(marketId);
             eventPublisher.publishEvent(new SubscribeMarketEvent(member,market));
 
         }

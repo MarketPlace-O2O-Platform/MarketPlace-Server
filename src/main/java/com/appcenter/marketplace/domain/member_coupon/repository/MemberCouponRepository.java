@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long> , MemberCouponRepositoryCustom {
@@ -13,4 +14,8 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
     @Modifying
     @Query(value = "DELETE FROM member_coupon WHERE coupon_id IN (:couponIds)", nativeQuery = true )
     void deleteAllByCouponIds(List<Long> couponIds);
+
+    long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    long countByIsUsedTrueAndModifiedAtBetween(LocalDateTime start, LocalDateTime end);
 }

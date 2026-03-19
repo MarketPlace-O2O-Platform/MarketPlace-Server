@@ -21,6 +21,7 @@ import com.appcenter.marketplace.domain.member_coupon.service.MemberCouponServic
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackService;
 import com.appcenter.marketplace.domain.payback.service.PaybackService;
 import com.appcenter.marketplace.global.common.Major;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,7 @@ public class AdminMarketServiceImpl implements AdminMarketService {
     private final MemberCouponService memberCouponService;
     private final PaybackService paybackService;
     private final MemberPaybackService memberPaybackService;
+    private final MetricsConfig metricsConfig;
 
     @Override
     public MarketPageRes<MarketRes> getAllMarkets(Long marketId, Integer size, String major) {
@@ -110,6 +112,7 @@ public class AdminMarketServiceImpl implements AdminMarketService {
 
         marketRepository.save(market);
         imageService.createImage(market, multipartFileList);
+        metricsConfig.recordMarketRegistration(marketReq.getMajor());
         return marketService.getMarketDetails(market.getId());
     }
 

@@ -9,6 +9,7 @@ import com.appcenter.marketplace.domain.member.dto.req.MemberLoginReq;
 import com.appcenter.marketplace.domain.member.dto.res.MemberRes;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member.service.MemberService;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import com.appcenter.marketplace.global.jwt.JwtTokenProvider;
 import com.appcenter.marketplace.global.oracleRepository.InuLoginRepository;
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final BetaMarketRepository betaMarketRepository;
     private final BetaCouponRepository betaCouponRepository;
+    private final MetricsConfig metricsConfig;
 
     @Override
     @Transactional
@@ -52,6 +54,9 @@ public class MemberServiceImpl implements MemberService {
         // 회원 추가
         Member newMember = memberRepository.save(memberLoginReq.toEntity(studentId));
         sendAllCouponsToMember(newMember);
+
+        // 회원 가입 메트릭 기록
+        metricsConfig.recordMemberSignup();
 
         return jwtTokenProvider.createAccessToken(newMember.getId(), newMember.getRole().name());
     }

@@ -1,7 +1,9 @@
 package com.appcenter.marketplace.global.exception;
 
 import com.appcenter.marketplace.global.common.ErrorResponse;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import io.sentry.Sentry;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,10 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ExceptionControllerAdvice {
+
+    private final MetricsConfig metricsConfig;
 
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
@@ -81,6 +86,7 @@ public class ExceptionControllerAdvice {
                 .message(e.getStatusCode().getMessage())
                 .build();
         Sentry.captureException(e);
+        metricsConfig.recordApiError("custom", e.getStatusCode().name());
 
         return ResponseEntity.status(e.getStatusCode().getStatus())
                 .body(errorResponse);

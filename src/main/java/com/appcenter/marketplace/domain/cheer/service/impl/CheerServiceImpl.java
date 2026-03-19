@@ -9,6 +9,7 @@ import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.tempMarket.TempMarket;
 import com.appcenter.marketplace.domain.tempMarket.repository.TempMarketRepository;
 
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class CheerServiceImpl implements CheerService {
     private final CheerRepository cheerRepository;
     private final MemberRepository memberRepository;
     private final TempMarketRepository tempMarketRepository;
+    private final MetricsConfig metricsConfig;
 
     @Override
     @Transactional
@@ -52,6 +54,7 @@ public class CheerServiceImpl implements CheerService {
 
         tempMarket.increaseCheerCount();
         member.reduceTicket();
+        metricsConfig.recordCheer(marketId);
 
         return CheerCountRes.toDto(tempMarket);
     }

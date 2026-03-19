@@ -12,6 +12,7 @@ import com.appcenter.marketplace.domain.member_payback.repository.MemberPaybackR
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackService;
 import com.appcenter.marketplace.domain.payback.Payback;
 import com.appcenter.marketplace.domain.payback.repository.PaybackRepository;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
     private final MemberPaybackRepository memberPaybackRepository;
     private final MemberRepository memberRepository;
     private final PaybackRepository paybackRepository;
+    private final MetricsConfig metricsConfig;
 
     @Value("${receipt.upload.path}")
     private String uploadFolder;
@@ -53,6 +55,10 @@ public class MemberPaybackServiceImpl implements MemberPaybackService {
                             .isExpired(false)
                             .build()
             );
+
+            // 환급 쿠폰 다운로드 메트릭 기록
+            metricsConfig.recordPaybackCouponDownload();
+
         }else{
             throw new CustomException(COUPON_ALREADY_ISSUED);
         }
