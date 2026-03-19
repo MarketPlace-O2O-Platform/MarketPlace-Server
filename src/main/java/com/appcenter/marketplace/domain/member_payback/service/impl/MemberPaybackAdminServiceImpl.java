@@ -8,8 +8,10 @@ import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.repository.MemberPaybackRepository;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
+import com.appcenter.marketplace.global.config.MetricsConfig;
 import com.appcenter.marketplace.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     private final MemberPaybackRepository memberPaybackRepository;
     private final MemberRepository memberRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final MetricsConfig metricsConfig;
 
     @Override
     @Transactional
@@ -37,6 +40,7 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
 
         MemberPayback memberPayback = findMemberPaybackById(memberPaybackId);
         memberPayback.completePayback();
+        metricsConfig.recordPaybackComplete();
 
         // TODO 추후, 사용완료 처리 후 알림 발송 추가해보기
 
@@ -103,6 +107,16 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
                 : 0.0;
 
         return RecentMemberPaybackStatsRes.of(recentMemberCount, avgPaybackCouponDownloadPerMember);
+    }
+
+    @Override
+    public List<TopMarketPaybackRes> getTopMarketsByPaybackCount() {
+        return memberPaybackRepository.findTopMarketsByPaybackCount(10);
+    }
+
+    @Override
+    public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
+        return memberPaybackRepository.findTopMarketsByCompletedPaybackCount(10);
     }
 
     private MemberPayback findMemberPaybackById(Long couponId) {

@@ -7,7 +7,9 @@ import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QAdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.QTopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -209,6 +211,41 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .where(member.createdAt.between(startDateTime, endDateTime))
                 .fetchOne();
         return count != null ? count : 0L;
+    }
+
+    // 환급 쿠폰 발급 수 기준 매장 Top N 조회
+    @Override
+    public List<TopMarketPaybackRes> findTopMarketsByPaybackCount(int limit) {
+        return jpaQueryFactory
+                .select(new QTopMarketPaybackRes(
+                        market.id,
+                        market.name,
+                        memberPayback.count()))
+                .from(memberPayback)
+                .innerJoin(memberPayback.payback, payback)
+                .innerJoin(payback.market, market)
+                .groupBy(market.id, market.name)
+                .orderBy(memberPayback.count().desc())
+                .limit(limit)
+                .fetch();
+    }
+
+    // 환급 완료 수 기준 매장 Top N 조회
+    @Override
+    public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(int limit) {
+        return jpaQueryFactory
+                .select(new QTopMarketPaybackRes(
+                        market.id,
+                        market.name,
+                        memberPayback.count()))
+                .from(memberPayback)
+                .innerJoin(memberPayback.payback, payback)
+                .innerJoin(payback.market, market)
+                .where(memberPayback.isPayback.eq(true))
+                .groupBy(market.id, market.name)
+                .orderBy(memberPayback.count().desc())
+                .limit(limit)
+                .fetch();
     }
 
 }

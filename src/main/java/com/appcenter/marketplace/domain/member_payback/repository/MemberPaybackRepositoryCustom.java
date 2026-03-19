@@ -5,6 +5,8 @@ import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 
+import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,6 @@ public interface MemberPaybackRepositoryCustom {
     List<AdminReceiptRes> findReceiptsForAdmin(Long memberPaybackId, Long marketId, Integer size);
     AdminReceiptRes findReceiptDetailForAdmin(Long memberPaybackId);
     long countByMemberCreatedAtBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
+    List<TopMarketPaybackRes> findTopMarketsByPaybackCount(int limit);
+    List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(int limit);
 }
