@@ -8,8 +8,10 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QAdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QTopMarketPaybackRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.QTopMemberReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -225,6 +227,28 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .innerJoin(memberPayback.payback, payback)
                 .innerJoin(payback.market, market)
                 .groupBy(market.id, market.name)
+                .orderBy(memberPayback.count().desc())
+                .limit(limit)
+                .fetch();
+    }
+
+    // 영수증 제출 수 기준 회원 Top N 조회 (기간 필터)
+    @Override
+    public List<TopMemberReceiptRes> findTopMembersByReceiptCount(int limit, LocalDateTime start, LocalDateTime end) {
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(memberPayback.receipt.isNotNull());
+        if (start != null && end != null) {
+            where.and(memberPayback.modifiedAt.between(start, end));
+        }
+
+        return jpaQueryFactory
+                .select(new QTopMemberReceiptRes(
+                        member.id,
+                        memberPayback.count()))
+                .from(memberPayback)
+                .innerJoin(memberPayback.member, member)
+                .where(where)
+                .groupBy(member.id)
                 .orderBy(memberPayback.count().desc())
                 .limit(limit)
                 .fetch();

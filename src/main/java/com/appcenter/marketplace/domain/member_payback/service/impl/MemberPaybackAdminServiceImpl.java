@@ -9,6 +9,7 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.repository.MemberPaybackRepository;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
 import com.appcenter.marketplace.global.config.MetricsConfig;
@@ -117,6 +118,26 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     @Override
     public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
         return memberPaybackRepository.findTopMarketsByCompletedPaybackCount(10);
+    }
+
+    @Override
+    public List<TopMemberReceiptRes> getTopMembersByReceiptCount(String period) {
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+
+        if (period != null) {
+            LocalDateTime now = LocalDateTime.now();
+            end = now;
+            start = switch (period.toUpperCase()) {
+                case "DAY"   -> now.minusDays(1);
+                case "WEEK"  -> now.minusWeeks(1);
+                case "MONTH" -> now.minusMonths(1);
+                default      -> null;
+            };
+            if (start == null) end = null; // 잘못된 값이면 전체 조회
+        }
+
+        return memberPaybackRepository.findTopMembersByReceiptCount(10, start, end);
     }
 
     private MemberPayback findMemberPaybackById(Long couponId) {
