@@ -51,6 +51,7 @@ public class AdminStatsService {
                 .couponDownloads(memberCouponRepository.countByCreatedAtBetween(start, end))
                 .couponUsages(memberCouponRepository.countByIsUsedTrueAndModifiedAtBetween(start, end))
                 .paybackDownloads(memberPaybackRepository.countByCreatedAtBetween(start, end))
+                .receiptSubmissions(memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(start, end))
                 .build();
     }
 

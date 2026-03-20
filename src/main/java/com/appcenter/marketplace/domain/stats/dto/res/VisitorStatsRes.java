@@ -22,4 +22,5 @@ public class VisitorStatsRes {
     private Long couponDownloads;
     private Long couponUsages;
     private Long paybackDownloads;
+    private Long receiptSubmissions;
 }
