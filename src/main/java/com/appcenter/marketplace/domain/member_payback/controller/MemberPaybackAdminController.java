@@ -6,6 +6,7 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
 
@@ -105,6 +106,15 @@ public class MemberPaybackAdminController {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
                         memberPaybackAdminService.getTopMarketsByCompletedPaybackCount()));
+    }
+
+    @Operation(summary = "기간별 영수증 제출 건수 통계 조회",
+            description = "하루, 일주일, 한달 기준 영수증 제출 건수를 한번에 조회합니다.")
+    @GetMapping("/stats/receipt-submissions")
+    public ResponseEntity<CommonResponse<ReceiptSubmissionStatsRes>> getReceiptSubmissionStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getReceiptSubmissionStats()));
     }
 
     @Operation(summary = "영수증 제출 횟수 회원 Top 10 조회",

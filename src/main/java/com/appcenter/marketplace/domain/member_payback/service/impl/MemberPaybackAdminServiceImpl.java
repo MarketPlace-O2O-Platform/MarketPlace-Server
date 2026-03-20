@@ -9,6 +9,8 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptStatsDataPoint;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.repository.MemberPaybackRepository;
 import com.appcenter.marketplace.domain.member_payback.service.MemberPaybackAdminService;
@@ -21,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_NOT_EXIST;
@@ -118,6 +122,34 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     @Override
     public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
         return memberPaybackRepository.findTopMarketsByCompletedPaybackCount(10);
+    }
+
+    @Override
+    public ReceiptSubmissionStatsRes getReceiptSubmissionStats() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+
+        // 최근 7일 날짜별 집계
+        List<ReceiptStatsDataPoint> dailyBreakdown = new ArrayList<>();
+        for (int i = 6; i >= 0; i--) {
+            LocalDate date = today.minusDays(i);
+            LocalDateTime start = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime end = LocalDateTime.of(date, LocalTime.MAX);
+            long count = memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(start, end);
+            dailyBreakdown.add(new ReceiptStatsDataPoint(date.format(formatter), count));
+        }
+
+        // 최근 4주 주별 집계
+        List<ReceiptStatsDataPoint> weeklyBreakdown = new ArrayList<>();
+        String[] weekLabels = {"4주 전", "3주 전", "2주 전", "이번 주"};
+        for (int i = 3; i >= 0; i--) {
+            LocalDateTime start = LocalDateTime.of(today.minusWeeks(i + 1), LocalTime.MIN);
+            LocalDateTime end = LocalDateTime.of(today.minusWeeks(i), LocalTime.MAX);
+            long count = memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(start, end);
+            weeklyBreakdown.add(new ReceiptStatsDataPoint(weekLabels[3 - i], count));
+        }
+
+        return new ReceiptSubmissionStatsRes(dailyBreakdown, weeklyBreakdown);
     }
 
     @Override
