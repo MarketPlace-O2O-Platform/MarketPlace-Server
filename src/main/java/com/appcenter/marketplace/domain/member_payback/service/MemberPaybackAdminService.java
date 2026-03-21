@@ -9,6 +9,7 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackR
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MemberPaybackAdminService {
@@ -29,6 +30,6 @@ public interface MemberPaybackAdminService {
 
     List<TopMemberReceiptRes> getTopMembersByReceiptCount(String period);
 
-    ReceiptSubmissionStatsRes getReceiptSubmissionStats();
+    ReceiptSubmissionStatsRes getReceiptSubmissionStats(String period, LocalDate startDate, LocalDate endDate);
 
 }

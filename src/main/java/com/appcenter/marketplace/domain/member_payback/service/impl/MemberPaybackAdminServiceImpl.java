@@ -125,31 +125,36 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     }
 
     @Override
-    public ReceiptSubmissionStatsRes getReceiptSubmissionStats() {
+    public ReceiptSubmissionStatsRes getReceiptSubmissionStats(String period, LocalDate startDate, LocalDate endDate) {
         LocalDate today = LocalDate.now();
+
+        // 날짜 직접 입력 우선, 없으면 period 적용, 둘 다 없으면 기본 7D
+        if (startDate == null || endDate == null) {
+            LocalDate periodStart = switch (period != null ? period.toUpperCase() : "7D") {
+                case "1M" -> today.minusMonths(1);
+                case "2M" -> today.minusMonths(2);
+                case "3M" -> today.minusMonths(3);
+                default   -> today.minusDays(6); // 7D
+            };
+            startDate = periodStart;
+            endDate = today;
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        List<ReceiptStatsDataPoint> breakdown = new ArrayList<>();
+        long totalCount = 0;
 
-        // 최근 7일 날짜별 집계
-        List<ReceiptStatsDataPoint> dailyBreakdown = new ArrayList<>();
-        for (int i = 6; i >= 0; i--) {
-            LocalDate date = today.minusDays(i);
-            LocalDateTime start = LocalDateTime.of(date, LocalTime.MIN);
-            LocalDateTime end = LocalDateTime.of(date, LocalTime.MAX);
-            long count = memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(start, end);
-            dailyBreakdown.add(new ReceiptStatsDataPoint(date.format(formatter), count));
+        LocalDate cursor = startDate;
+        while (!cursor.isAfter(endDate)) {
+            LocalDateTime dayStart = LocalDateTime.of(cursor, LocalTime.MIN);
+            LocalDateTime dayEnd = LocalDateTime.of(cursor, LocalTime.MAX);
+            long count = memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(dayStart, dayEnd);
+            breakdown.add(new ReceiptStatsDataPoint(cursor.format(formatter), count));
+            totalCount += count;
+            cursor = cursor.plusDays(1);
         }
 
-        // 최근 4주 주별 집계
-        List<ReceiptStatsDataPoint> weeklyBreakdown = new ArrayList<>();
-        String[] weekLabels = {"4주 전", "3주 전", "2주 전", "이번 주"};
-        for (int i = 3; i >= 0; i--) {
-            LocalDateTime start = LocalDateTime.of(today.minusWeeks(i + 1), LocalTime.MIN);
-            LocalDateTime end = LocalDateTime.of(today.minusWeeks(i), LocalTime.MAX);
-            long count = memberPaybackRepository.countByReceiptIsNotNullAndModifiedAtBetween(start, end);
-            weeklyBreakdown.add(new ReceiptStatsDataPoint(weekLabels[3 - i], count));
-        }
-
-        return new ReceiptSubmissionStatsRes(dailyBreakdown, weeklyBreakdown);
+        return new ReceiptSubmissionStatsRes(startDate, endDate, totalCount, breakdown);
     }
 
     @Override

@@ -16,8 +16,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 import static com.appcenter.marketplace.global.common.StatusCode.*;
 
@@ -108,13 +111,22 @@ public class MemberPaybackAdminController {
                         memberPaybackAdminService.getTopMarketsByCompletedPaybackCount()));
     }
 
-    @Operation(summary = "기간별 영수증 제출 건수 통계 조회",
-            description = "하루, 일주일, 한달 기준 영수증 제출 건수를 한번에 조회합니다.")
+    @Operation(summary = "영수증 제출 건수 통계 조회 (기간 필터)",
+            description = "기간별 일별 영수증 제출 건수를 조회합니다. <br>" +
+                    "period: 7D(최근 7일), 1M(1달), 2M(2달), 3M(3달) <br>" +
+                    "startDate + endDate: 직접 날짜 지정 (yyyy-MM-dd) <br>" +
+                    "파라미터 없을 시 기본 7D 적용. 날짜 직접 입력이 period보다 우선합니다.")
     @GetMapping("/stats/receipt-submissions")
-    public ResponseEntity<CommonResponse<ReceiptSubmissionStatsRes>> getReceiptSubmissionStats() {
+    public ResponseEntity<CommonResponse<ReceiptSubmissionStatsRes>> getReceiptSubmissionStats(
+            @Parameter(description = "기간 (7D | 1M | 2M | 3M)")
+            @RequestParam(required = false) String period,
+            @Parameter(description = "시작 날짜 (yyyy-MM-dd)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "종료 날짜 (yyyy-MM-dd)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
-                        memberPaybackAdminService.getReceiptSubmissionStats()));
+                        memberPaybackAdminService.getReceiptSubmissionStats(period, startDate, endDate)));
     }
 
     @Operation(summary = "영수증 제출 횟수 회원 Top 10 조회",
