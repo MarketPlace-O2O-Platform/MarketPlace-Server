@@ -11,10 +11,11 @@ import javax.annotation.processing.Generated;
 @Generated("com.querydsl.codegen.DefaultProjectionSerializer")
 public class QTopMemberReceiptRes extends ConstructorExpression<TopMemberReceiptRes> {
 
-    private static final long serialVersionUID = 1923847561L;
+    private static final long serialVersionUID = -852217512L;
 
     public QTopMemberReceiptRes(com.querydsl.core.types.Expression<Long> memberId, com.querydsl.core.types.Expression<Long> receiptCount) {
         super(TopMemberReceiptRes.class, new Class<?>[]{long.class, long.class}, memberId, receiptCount);
     }
 
 }
+

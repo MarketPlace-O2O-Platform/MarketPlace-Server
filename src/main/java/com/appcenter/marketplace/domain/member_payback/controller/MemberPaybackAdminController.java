@@ -130,8 +130,20 @@ public class MemberPaybackAdminController {
                         memberPaybackAdminService.getReceiptSubmissionStats(period, startDate, endDate)));
     }
 
-    @Operation(summary = "영수증 제출 횟수 회원 Top 10 조회",
-            description = "관리자가 영수증을 가장 많이 제출한 회원 Top 10을 조회합니다. <br>" +
+    @Operation(summary = "특정 회원 영수증 제출 내역 조회",
+            description = "관리자가 학번(memberId)으로 특정 회원의 영수증 제출 내역 전체를 조회합니다. <br>" +
+                    "회원의 계좌 정보(1회)와 제출한 영수증(환급 쿠폰) 목록을 함께 반환합니다.")
+    @GetMapping("/receipts/members/{memberId}")
+    public ResponseEntity<CommonResponse<MemberReceiptHistoryRes>> getReceiptHistoryByMemberId(
+            @Parameter(description = "조회할 회원 학번(memberId)")
+            @PathVariable(name = "memberId") Long memberId) {
+        return ResponseEntity
+                .ok(CommonResponse.from(COUPON_FOUND.getMessage(),
+                        memberPaybackAdminService.getReceiptHistoryByMemberId(memberId)));
+    }
+
+    @Operation(summary = "영수증 제출 횟수 회원 전체 조회",
+            description = "관리자가 영수증을 제출한 회원 전체를 제출 횟수 내림차순으로 조회합니다. <br>" +
                     "period 파라미터로 기간 필터 적용 가능합니다. <br>" +
                     "DAY(하루), WEEK(일주일), MONTH(한달) / 미입력 시 전체 기간")
     @GetMapping("/stats/top-members/receipt")

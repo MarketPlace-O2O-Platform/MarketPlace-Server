@@ -5,8 +5,11 @@ import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
+import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.MemberReceiptHistoryRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptItemRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptStatsDataPoint;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.appcenter.marketplace.global.common.StatusCode.COUPON_NOT_EXIST;
+import static com.appcenter.marketplace.global.common.StatusCode.MEMBER_NOT_EXIST;
 
 @Service
 @Transactional(readOnly = true)
@@ -123,6 +127,13 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
         return memberPaybackRepository.findTopMarketsByCompletedPaybackCount();
     }
+
+    @Override
+    public MemberReceiptHistoryRes getReceiptHistoryByMemberId(Long memberId) {
+        Member foundMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(MEMBER_NOT_EXIST));
+        List<ReceiptItemRes> receipts = memberPaybackRepository.findReceiptsByMemberId(memberId);
+        return new MemberReceiptHistoryRes(foundMember.getId(), foundMember.getAccount(), foundMember.getAccountNumber(), receipts);
     }
 
     @Override

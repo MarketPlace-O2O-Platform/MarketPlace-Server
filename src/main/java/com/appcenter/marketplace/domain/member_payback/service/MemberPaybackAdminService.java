@@ -5,6 +5,7 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.MemberReceiptHistoryRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
@@ -29,6 +30,8 @@ public interface MemberPaybackAdminService {
     List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount();
 
     List<TopMemberReceiptRes> getTopMembersByReceiptCount(String period);
+
+    MemberReceiptHistoryRes getReceiptHistoryByMemberId(Long memberId);
 
     ReceiptSubmissionStatsRes getReceiptSubmissionStats(String period, LocalDate startDate, LocalDate endDate);
 
