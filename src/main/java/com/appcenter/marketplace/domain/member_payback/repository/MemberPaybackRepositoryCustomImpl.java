@@ -283,6 +283,29 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .fetch();
     }
 
+    // 달력 기준 회원 영수증 제출 내역 조회 (최신 제출 시간순)
+    @Override
+    public List<TopMemberReceiptRes> findMemberReceiptCountByCalendar(LocalDateTime start, LocalDateTime end) {
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(memberPayback.receipt.isNotNull());
+        where.and(memberPayback.modifiedAt.between(start, end));
+
+        return jpaQueryFactory
+                .select(new QTopMemberReceiptRes(
+                        member.id,
+                        memberPayback.count(),
+                        Expressions.numberTemplate(Long.class,
+                                "SUM(CASE WHEN {0} = TRUE THEN 1 ELSE 0 END)", memberPayback.isPayback),
+                        Expressions.numberTemplate(Long.class,
+                                "SUM(CASE WHEN {0} = FALSE THEN 1 ELSE 0 END)", memberPayback.isPayback)))
+                .from(memberPayback)
+                .innerJoin(memberPayback.member, member)
+                .where(where)
+                .groupBy(member.id)
+                .orderBy(memberPayback.modifiedAt.max().desc())
+                .fetch();
+    }
+
     // 환급 완료 수 기준 매장 전체 조회 (기간 필터)
     @Override
     public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(LocalDateTime start, LocalDateTime end) {

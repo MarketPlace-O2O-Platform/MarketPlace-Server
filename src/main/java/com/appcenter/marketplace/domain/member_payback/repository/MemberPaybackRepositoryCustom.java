@@ -29,4 +29,5 @@ public interface MemberPaybackRepositoryCustom {
     List<TopMarketPaybackRes> findTopMarketsByPaybackCount(LocalDateTime start, LocalDateTime end);
     List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(LocalDateTime start, LocalDateTime end);
     List<TopMemberReceiptRes> findTopMembersByReceiptCount(LocalDateTime start, LocalDateTime end);
+    List<TopMemberReceiptRes> findMemberReceiptCountByCalendar(LocalDateTime start, LocalDateTime end);
 }
