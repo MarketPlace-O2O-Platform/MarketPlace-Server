@@ -6,9 +6,11 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.QIssuedCouponRes;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QAdminReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptItemRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QTopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.QTopMemberReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptItemRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
@@ -215,9 +217,28 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
         return count != null ? count : 0L;
     }
 
-    // 환급 쿠폰 발급 수 기준 매장 Top N 조회
+    // 특정 회원(학번)의 영수증 제출 내역 조회
     @Override
-    public List<TopMarketPaybackRes> findTopMarketsByPaybackCount(int limit) {
+    public List<ReceiptItemRes> findReceiptsByMemberId(Long memberId) {
+        return jpaQueryFactory
+                .select(new QReceiptItemRes(
+                        memberPayback.id,
+                        payback.name,
+                        memberPayback.createdAt,
+                        memberPayback.modifiedAt,
+                        memberPayback.receipt,
+                        memberPayback.isPayback))
+                .from(memberPayback)
+                .innerJoin(memberPayback.payback, payback)
+                .where(memberPayback.member.id.eq(memberId)
+                        .and(memberPayback.receipt.isNotNull()))
+                .orderBy(memberPayback.id.desc())
+                .fetch();
+    }
+
+    // 환급 쿠폰 발급 수 기준 매장 전체 조회
+    @Override
+    public List<TopMarketPaybackRes> findTopMarketsByPaybackCount() {
         return jpaQueryFactory
                 .select(new QTopMarketPaybackRes(
                         market.id,
@@ -228,13 +249,12 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .innerJoin(payback.market, market)
                 .groupBy(market.id, market.name)
                 .orderBy(memberPayback.count().desc())
-                .limit(limit)
                 .fetch();
     }
 
-    // 영수증 제출 수 기준 회원 Top N 조회 (기간 필터)
+    // 영수증 제출 수 기준 회원 전체 조회 (기간 필터)
     @Override
-    public List<TopMemberReceiptRes> findTopMembersByReceiptCount(int limit, LocalDateTime start, LocalDateTime end) {
+    public List<TopMemberReceiptRes> findTopMembersByReceiptCount(LocalDateTime start, LocalDateTime end) {
         BooleanBuilder where = new BooleanBuilder();
         where.and(memberPayback.receipt.isNotNull());
         if (start != null && end != null) {
@@ -250,13 +270,12 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .where(where)
                 .groupBy(member.id)
                 .orderBy(memberPayback.count().desc())
-                .limit(limit)
                 .fetch();
     }
 
-    // 환급 완료 수 기준 매장 Top N 조회
+    // 환급 완료 수 기준 매장 전체 조회
     @Override
-    public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(int limit) {
+    public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount() {
         return jpaQueryFactory
                 .select(new QTopMarketPaybackRes(
                         market.id,
@@ -268,7 +287,6 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .where(memberPayback.isPayback.eq(true))
                 .groupBy(market.id, market.name)
                 .orderBy(memberPayback.count().desc())
-                .limit(limit)
                 .fetch();
     }
 

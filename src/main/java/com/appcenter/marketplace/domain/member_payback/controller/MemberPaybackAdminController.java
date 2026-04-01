@@ -5,6 +5,7 @@ import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.MemberReceiptHistoryRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
@@ -91,8 +92,8 @@ public class MemberPaybackAdminController {
                         memberPaybackAdminService.getRecentMemberPaybackStats()));
     }
 
-    @Operation(summary = "환급 쿠폰 발급 매장 Top 10 조회",
-            description = "관리자가 회원들이 가장 많이 환급 쿠폰을 발급한 매장 Top 10을 조회합니다. <br>" +
+    @Operation(summary = "환급 쿠폰 발급 매장 전체 조회",
+            description = "관리자가 회원들이 환급 쿠폰을 발급한 매장 전체를 조회합니다. <br>" +
                     "매장 ID, 매장명, 환급 쿠폰 발급 수를 발급 수 내림차순으로 제공합니다.")
     @GetMapping("/stats/top-markets")
     public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByPaybackCount() {
@@ -101,8 +102,8 @@ public class MemberPaybackAdminController {
                         memberPaybackAdminService.getTopMarketsByPaybackCount()));
     }
 
-    @Operation(summary = "환급 완료 매장 Top 10 조회",
-            description = "관리자가 영수증 제출 후 환급까지 완료된 건수 기준 매장 Top 10을 조회합니다. <br>" +
+    @Operation(summary = "환급 완료 매장 전체 조회",
+            description = "관리자가 영수증 제출 후 환급까지 완료된 건수 기준 매장 전체를 조회합니다. <br>" +
                     "매장 ID, 매장명, 환급 완료 수를 완료 수 내림차순으로 제공합니다.")
     @GetMapping("/stats/top-markets/completed")
     public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByCompletedPaybackCount() {

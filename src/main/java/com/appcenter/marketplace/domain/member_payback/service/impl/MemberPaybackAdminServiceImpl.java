@@ -116,12 +116,13 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
 
     @Override
     public List<TopMarketPaybackRes> getTopMarketsByPaybackCount() {
-        return memberPaybackRepository.findTopMarketsByPaybackCount(10);
+        return memberPaybackRepository.findTopMarketsByPaybackCount();
     }
 
     @Override
     public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
-        return memberPaybackRepository.findTopMarketsByCompletedPaybackCount(10);
+        return memberPaybackRepository.findTopMarketsByCompletedPaybackCount();
+    }
     }
 
     @Override
@@ -174,7 +175,7 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
             if (start == null) end = null; // 잘못된 값이면 전체 조회
         }
 
-        return memberPaybackRepository.findTopMembersByReceiptCount(10, start, end);
+        return memberPaybackRepository.findTopMembersByReceiptCount(start, end);
     }
 
     private MemberPayback findMemberPaybackById(Long couponId) {
