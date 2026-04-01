@@ -31,6 +31,8 @@ public interface MemberPaybackAdminService {
 
     List<TopMemberReceiptRes> getTopMembersByReceiptCount(String period);
 
+    List<TopMemberReceiptRes> getMemberReceiptCountByCalendar(String period);
+
     MemberReceiptHistoryRes getReceiptHistoryByMemberId(Long memberId);
 
     ReceiptSubmissionStatsRes getReceiptSubmissionStats(String period, LocalDate startDate, LocalDate endDate);

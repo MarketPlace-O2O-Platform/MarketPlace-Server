@@ -219,6 +219,19 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
         return memberPaybackRepository.findTopMembersByReceiptCount(start, end);
     }
 
+    @Override
+    public List<TopMemberReceiptRes> getMemberReceiptCountByCalendar(String period) {
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = switch (period != null ? period.toUpperCase() : "") {
+            case "TODAY" -> today.atStartOfDay();
+            case "WEEK"  -> today.with(java.time.DayOfWeek.MONDAY).atStartOfDay();
+            default      -> today.atStartOfDay(); // 기본값: 오늘
+        };
+        LocalDateTime end = LocalDateTime.now();
+
+        return memberPaybackRepository.findTopMembersByReceiptCount(start, end);
+    }
+
     private MemberPayback findMemberPaybackById(Long couponId) {
         return memberPaybackRepository.findById(couponId)
                 .orElseThrow(() -> new CustomException(COUPON_NOT_EXIST));

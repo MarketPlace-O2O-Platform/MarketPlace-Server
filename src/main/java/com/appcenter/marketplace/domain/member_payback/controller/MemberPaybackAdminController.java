@@ -162,4 +162,18 @@ public class MemberPaybackAdminController {
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
                         memberPaybackAdminService.getTopMembersByReceiptCount(period)));
     }
+
+    @Operation(summary = "영수증 제출 횟수 회원 조회 (달력 기준)",
+            description = "오늘 또는 이번 주(월~오늘) 달력 기준으로 영수증을 제출한 회원을 조회합니다. <br>" +
+                    "TODAY: 오늘 자정(00:00)부터 현재까지 <br>" +
+                    "WEEK: 이번 주 월요일 자정부터 현재까지 <br>" +
+                    "미입력 시 오늘 기준 적용")
+    @GetMapping("/stats/top-members/receipt/calendar")
+    public ResponseEntity<CommonResponse<List<TopMemberReceiptRes>>> getMemberReceiptCountByCalendar(
+            @Parameter(description = "달력 기준 기간 필터 (TODAY | WEEK), 미입력 시 TODAY")
+            @RequestParam(required = false) String period) {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getMemberReceiptCountByCalendar(period)));
+    }
 }
