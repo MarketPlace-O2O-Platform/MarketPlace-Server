@@ -7,10 +7,14 @@ import lombok.Getter;
 public class TopMemberReceiptRes {
     private final Long memberId;
     private final Long receiptCount;
+    private final Long completedCount;
+    private final Long pendingCount;
 
     @QueryProjection
-    public TopMemberReceiptRes(Long memberId, Long receiptCount) {
+    public TopMemberReceiptRes(Long memberId, Long receiptCount, Long completedCount, Long pendingCount) {
         this.memberId = memberId;
         this.receiptCount = receiptCount;
+        this.completedCount = completedCount;
+        this.pendingCount = pendingCount;
     }
 }

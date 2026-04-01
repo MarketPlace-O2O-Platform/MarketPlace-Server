@@ -264,7 +264,9 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
         return jpaQueryFactory
                 .select(new QTopMemberReceiptRes(
                         member.id,
-                        memberPayback.count()))
+                        memberPayback.count(),
+                        memberPayback.isPayback.when(true).then(1L).otherwise(0L).sum(),
+                        memberPayback.isPayback.when(false).then(1L).otherwise(0L).sum()))
                 .from(memberPayback)
                 .innerJoin(memberPayback.member, member)
                 .where(where)

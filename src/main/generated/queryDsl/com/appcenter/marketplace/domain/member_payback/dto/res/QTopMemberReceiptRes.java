@@ -13,8 +13,8 @@ public class QTopMemberReceiptRes extends ConstructorExpression<TopMemberReceipt
 
     private static final long serialVersionUID = -852217512L;
 
-    public QTopMemberReceiptRes(com.querydsl.core.types.Expression<Long> memberId, com.querydsl.core.types.Expression<Long> receiptCount) {
-        super(TopMemberReceiptRes.class, new Class<?>[]{long.class, long.class}, memberId, receiptCount);
+    public QTopMemberReceiptRes(com.querydsl.core.types.Expression<Long> memberId, com.querydsl.core.types.Expression<Long> receiptCount, com.querydsl.core.types.Expression<Long> completedCount, com.querydsl.core.types.Expression<Long> pendingCount) {
+        super(TopMemberReceiptRes.class, new Class<?>[]{long.class, long.class, long.class, long.class}, memberId, receiptCount, completedCount, pendingCount);
     }
 
 }
