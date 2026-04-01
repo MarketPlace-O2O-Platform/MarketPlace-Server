@@ -15,7 +15,6 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -272,8 +271,10 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .select(new QTopMemberReceiptRes(
                         member.id,
                         memberPayback.count(),
-                        new CaseBuilder().when(memberPayback.isPayback.isTrue()).then(1L).otherwise(0L).sum(),
-                        new CaseBuilder().when(memberPayback.isPayback.isFalse()).then(1L).otherwise(0L).sum()))
+                        Expressions.numberTemplate(Long.class,
+                                "SUM(CASE WHEN {0} = TRUE THEN 1 ELSE 0 END)", memberPayback.isPayback),
+                        Expressions.numberTemplate(Long.class,
+                                "SUM(CASE WHEN {0} = FALSE THEN 1 ELSE 0 END)", memberPayback.isPayback)))
                 .from(memberPayback)
                 .innerJoin(memberPayback.member, member)
                 .where(where)
