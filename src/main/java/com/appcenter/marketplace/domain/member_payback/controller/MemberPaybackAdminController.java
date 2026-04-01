@@ -93,13 +93,17 @@ public class MemberPaybackAdminController {
     }
 
     @Operation(summary = "환급 쿠폰 발급 매장 전체 조회",
-            description = "관리자가 회원들이 환급 쿠폰을 발급한 매장 전체를 조회합니다. <br>" +
-                    "매장 ID, 매장명, 환급 쿠폰 발급 수를 발급 수 내림차순으로 제공합니다.")
+            description = "관리자가 회원들이 환급 쿠폰을 발급한 매장 전체를 발급 수 내림차순으로 조회합니다. <br>" +
+                    "매장 ID, 매장명, 환급 쿠폰 발급 수를 제공합니다. <br>" +
+                    "period 파라미터로 기간 필터 적용 가능합니다. <br>" +
+                    "DAY(하루), WEEK(일주일), MONTH(한달) / 미입력 시 전체 기간")
     @GetMapping("/stats/top-markets")
-    public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByPaybackCount() {
+    public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByPaybackCount(
+            @Parameter(description = "기간 필터 (DAY | WEEK | MONTH), 미입력 시 전체")
+            @RequestParam(required = false) String period) {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
-                        memberPaybackAdminService.getTopMarketsByPaybackCount()));
+                        memberPaybackAdminService.getTopMarketsByPaybackCount(period)));
     }
 
     @Operation(summary = "환급 완료 매장 전체 조회",

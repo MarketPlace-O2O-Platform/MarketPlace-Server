@@ -26,7 +26,7 @@ public interface MemberPaybackRepositoryCustom {
     AdminReceiptRes findReceiptDetailForAdmin(Long memberPaybackId);
     long countByMemberCreatedAtBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     List<ReceiptItemRes> findReceiptsByMemberId(Long memberId);
-    List<TopMarketPaybackRes> findTopMarketsByPaybackCount();
+    List<TopMarketPaybackRes> findTopMarketsByPaybackCount(LocalDateTime start, LocalDateTime end);
     List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount();
     List<TopMemberReceiptRes> findTopMembersByReceiptCount(LocalDateTime start, LocalDateTime end);
 }

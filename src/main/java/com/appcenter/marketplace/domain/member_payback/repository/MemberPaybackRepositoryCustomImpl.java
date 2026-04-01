@@ -236,9 +236,14 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .fetch();
     }
 
-    // 환급 쿠폰 발급 수 기준 매장 전체 조회
+    // 환급 쿠폰 발급 수 기준 매장 전체 조회 (기간 필터)
     @Override
-    public List<TopMarketPaybackRes> findTopMarketsByPaybackCount() {
+    public List<TopMarketPaybackRes> findTopMarketsByPaybackCount(LocalDateTime start, LocalDateTime end) {
+        BooleanBuilder where = new BooleanBuilder();
+        if (start != null && end != null) {
+            where.and(memberPayback.createdAt.between(start, end));
+        }
+
         return jpaQueryFactory
                 .select(new QTopMarketPaybackRes(
                         market.id,
@@ -247,6 +252,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .from(memberPayback)
                 .innerJoin(memberPayback.payback, payback)
                 .innerJoin(payback.market, market)
+                .where(where)
                 .groupBy(market.id, market.name)
                 .orderBy(memberPayback.count().desc())
                 .fetch();
