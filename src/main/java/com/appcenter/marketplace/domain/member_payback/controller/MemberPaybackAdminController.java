@@ -108,12 +108,16 @@ public class MemberPaybackAdminController {
 
     @Operation(summary = "환급 완료 매장 전체 조회",
             description = "관리자가 영수증 제출 후 환급까지 완료된 건수 기준 매장 전체를 조회합니다. <br>" +
-                    "매장 ID, 매장명, 환급 완료 수를 완료 수 내림차순으로 제공합니다.")
+                    "매장 ID, 매장명, 환급 완료 수를 완료 수 내림차순으로 제공합니다. <br>" +
+                    "period 파라미터로 기간 필터 적용 가능합니다. <br>" +
+                    "DAY(하루), WEEK(일주일), MONTH(한달) / 미입력 시 전체 기간")
     @GetMapping("/stats/top-markets/completed")
-    public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByCompletedPaybackCount() {
+    public ResponseEntity<CommonResponse<List<TopMarketPaybackRes>>> getTopMarketsByCompletedPaybackCount(
+            @Parameter(description = "기간 필터 (DAY | WEEK | MONTH), 미입력 시 전체")
+            @RequestParam(required = false) String period) {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
-                        memberPaybackAdminService.getTopMarketsByCompletedPaybackCount()));
+                        memberPaybackAdminService.getTopMarketsByCompletedPaybackCount(period)));
     }
 
     @Operation(summary = "영수증 제출 건수 통계 조회 (기간 필터)",

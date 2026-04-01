@@ -282,9 +282,15 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .fetch();
     }
 
-    // 환급 완료 수 기준 매장 전체 조회
+    // 환급 완료 수 기준 매장 전체 조회 (기간 필터)
     @Override
-    public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount() {
+    public List<TopMarketPaybackRes> findTopMarketsByCompletedPaybackCount(LocalDateTime start, LocalDateTime end) {
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(memberPayback.isPayback.eq(true));
+        if (start != null && end != null) {
+            where.and(memberPayback.modifiedAt.between(start, end));
+        }
+
         return jpaQueryFactory
                 .select(new QTopMarketPaybackRes(
                         market.id,
@@ -293,7 +299,7 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .from(memberPayback)
                 .innerJoin(memberPayback.payback, payback)
                 .innerJoin(payback.market, market)
-                .where(memberPayback.isPayback.eq(true))
+                .where(where)
                 .groupBy(market.id, market.name)
                 .orderBy(memberPayback.count().desc())
                 .fetch();

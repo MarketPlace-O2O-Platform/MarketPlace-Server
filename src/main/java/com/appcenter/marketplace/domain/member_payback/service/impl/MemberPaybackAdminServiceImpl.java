@@ -139,8 +139,23 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     }
 
     @Override
-    public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount() {
-        return memberPaybackRepository.findTopMarketsByCompletedPaybackCount();
+    public List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount(String period) {
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+
+        if (period != null) {
+            LocalDateTime now = LocalDateTime.now();
+            end = now;
+            start = switch (period.toUpperCase()) {
+                case "DAY"   -> now.minusDays(1);
+                case "WEEK"  -> now.minusWeeks(1);
+                case "MONTH" -> now.minusMonths(1);
+                default      -> null;
+            };
+            if (start == null) end = null;
+        }
+
+        return memberPaybackRepository.findTopMarketsByCompletedPaybackCount(start, end);
     }
 
     @Override

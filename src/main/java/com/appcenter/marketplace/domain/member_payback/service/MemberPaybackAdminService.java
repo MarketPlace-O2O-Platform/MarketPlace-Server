@@ -27,7 +27,7 @@ public interface MemberPaybackAdminService {
 
     List<TopMarketPaybackRes> getTopMarketsByPaybackCount(String period);
 
-    List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount();
+    List<TopMarketPaybackRes> getTopMarketsByCompletedPaybackCount(String period);
 
     List<TopMemberReceiptRes> getTopMembersByReceiptCount(String period);
 
