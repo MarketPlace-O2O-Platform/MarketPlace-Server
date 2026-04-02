@@ -288,7 +288,9 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
     public List<TopMemberReceiptRes> findMemberReceiptCountByCalendar(LocalDateTime start, LocalDateTime end) {
         BooleanBuilder where = new BooleanBuilder();
         where.and(memberPayback.receipt.isNotNull());
-        where.and(memberPayback.modifiedAt.between(start, end));
+        if (start != null && end != null) {
+            where.and(memberPayback.modifiedAt.between(start, end));
+        }
 
         return jpaQueryFactory
                 .select(new QTopMemberReceiptRes(

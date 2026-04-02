@@ -222,10 +222,13 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
     @Override
     public List<TopMemberReceiptRes> getMemberReceiptCountByCalendar(String period) {
         LocalDate today = LocalDate.now();
-        LocalDateTime start = switch (period != null ? period.toUpperCase() : "") {
-            case "WEEK" -> today.with(java.time.DayOfWeek.MONDAY).atStartOfDay();
-            default     -> today.atStartOfDay(); // TODAY 또는 미입력: 오늘 자정부터
-        };
+        String key = period != null ? period.toUpperCase() : "TODAY";
+        if (key.equals("ALL")) {
+            return memberPaybackRepository.findMemberReceiptCountByCalendar(null, null);
+        }
+        LocalDateTime start = key.equals("WEEK")
+                ? today.with(java.time.DayOfWeek.MONDAY).atStartOfDay()
+                : today.atStartOfDay();
         return memberPaybackRepository.findMemberReceiptCountByCalendar(start, LocalDateTime.now());
     }
 
