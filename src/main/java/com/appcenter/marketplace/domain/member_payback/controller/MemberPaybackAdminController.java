@@ -75,9 +75,9 @@ public class MemberPaybackAdminController {
                 .body(CommonResponse.from(COUPON_USED.getMessage(),  memberPaybackAdminService.manageCoupon(memberPaybackId)));
     }
 
-    @Operation(summary = "쿠폰 및 환급 통계 조회",
-            description = "관리자가 쿠폰 다운로드 및 환급 통계를 조회합니다. <br>" +
-                    "한명당 쿠폰 다운수와 쿠폰 다운 대비 환급율을 제공합니다.")
+    @Operation(summary = "환급 쿠폰 다운로드 및 환급 통계 조회",
+            description = "관리자가 환급 쿠폰 다운로드 및 환급 통계를 조회합니다. <br>" +
+                    "회원당 평균 환급 쿠폰 다운로드 수와 환급 쿠폰 다운 대비 환급 완료율을 제공합니다.")
     @GetMapping("/stats")
     public ResponseEntity<CommonResponse<CouponPaybackStatsRes>> getCouponPaybackStats() {
         return ResponseEntity
@@ -87,7 +87,7 @@ public class MemberPaybackAdminController {
 
     @Operation(summary = "최근 7일 가입 회원 환급 쿠폰 통계 조회",
             description = "관리자가 최근 7일간 가입한 회원들의 환급 쿠폰 통계를 조회합니다. <br>" +
-                    "최근 7일 가입 회원 수와 회원당 평균 환급 쿠폰 다운로드 수를 제공합니다.")
+                    "최근 7일 가입 회원 수와, 해당 회원들이 가입 후 7일 이내에 다운로드한 환급 쿠폰의 회원당 평균 수를 제공합니다.")
     @GetMapping("/stats/recent")
     public ResponseEntity<CommonResponse<RecentMemberPaybackStatsRes>> getRecentMemberPaybackStats() {
         return ResponseEntity
