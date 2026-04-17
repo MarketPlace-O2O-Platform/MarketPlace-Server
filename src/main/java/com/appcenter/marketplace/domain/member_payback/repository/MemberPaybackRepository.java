@@ -13,4 +13,10 @@ public interface MemberPaybackRepository extends JpaRepository<MemberPayback, Lo
 
     long countByReceiptIsNotNullAndModifiedAtBetween(LocalDateTime start, LocalDateTime end);
 
+    long countByReceiptIsNotNull();
+
+    long countByIsPaybackTrueAndReceiptSubmittedAtIsNotNull();
+
+    long countByIsExpiredTrueAndReceiptIsNull();
+
 }

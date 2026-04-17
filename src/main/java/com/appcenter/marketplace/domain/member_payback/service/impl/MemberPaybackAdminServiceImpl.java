@@ -3,14 +3,16 @@ package com.appcenter.marketplace.domain.member_payback.service.impl;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member.repository.MemberRepository;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
-import com.appcenter.marketplace.domain.member_coupon.repository.MemberCouponRepository;
 import com.appcenter.marketplace.domain.member_payback.MemberPayback;
 import com.appcenter.marketplace.domain.member.Member;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.AvgProcessingTimeRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.FunnelStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.MemberReceiptHistoryRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptItemRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.RetentionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptStatsDataPoint;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
@@ -40,7 +42,6 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
 
     private final MemberPaybackRepository memberPaybackRepository;
     private final MemberRepository memberRepository;
-    private final MemberCouponRepository memberCouponRepository;
     private final MetricsConfig metricsConfig;
 
     @Override
@@ -73,24 +74,20 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
 
     @Override
     public CouponPaybackStatsRes getCouponPaybackStats() {
-        // 전체 회원 수
         long totalMemberCount = memberRepository.count();
 
-        // 전체 쿠폰 다운 수 (MemberCoupon 총 개수)
-        long totalCouponDownloadCount = memberCouponRepository.count();
-
-        // 한명당 쿠폰 다운수
-        double avgCouponDownloadPerMember = totalMemberCount > 0
-                ? (double) totalCouponDownloadCount / totalMemberCount
-                : 0.0;
-
-        // 전체 환급 쿠폰 수 (MemberPayback 총 개수)
+        // 환급 쿠폰 다운로드 수 (MemberPayback 기준으로 통일)
         long totalPaybackCouponCount = memberPaybackRepository.count();
+
+        // 회원당 평균 환급 쿠폰 다운로드 수
+        double avgCouponDownloadPerMember = totalMemberCount > 0
+                ? (double) totalPaybackCouponCount / totalMemberCount
+                : 0.0;
 
         // 환급 완료된 쿠폰 수
         long completedPaybackCount = memberPaybackRepository.countByIsPayback(true);
 
-        // 쿠폰 다운 대비 환급율
+        // 환급 쿠폰 다운 대비 환급 완료율
         double paybackRate = totalPaybackCouponCount > 0
                 ? (double) completedPaybackCount / totalPaybackCouponCount * 100
                 : 0.0;
@@ -107,8 +104,8 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
         // 최근 7일간 가입한 회원 수
         long recentMemberCount = memberRepository.countByCreatedAtBetween(sevenDaysAgoStart, todayEnd);
 
-        // 최근 7일간 가입한 회원들의 환급 쿠폰 다운로드 수
-        long recentMemberPaybackCount = memberPaybackRepository.countByMemberCreatedAtBetween(sevenDaysAgoStart, todayEnd);
+        // 최근 7일 가입 회원들이 같은 기간 내에 다운로드한 수 (기간 고정)
+        long recentMemberPaybackCount = memberPaybackRepository.countByMemberCreatedAtBetweenAndCreatedAtBetween(sevenDaysAgoStart, todayEnd);
 
         // 회원당 평균 환급 쿠폰 다운로드 수
         double avgPaybackCouponDownloadPerMember = recentMemberCount > 0
@@ -230,6 +227,29 @@ public class MemberPaybackAdminServiceImpl implements MemberPaybackAdminService 
                 ? today.with(java.time.DayOfWeek.MONDAY).atStartOfDay()
                 : today.atStartOfDay();
         return memberPaybackRepository.findMemberReceiptCountByCalendar(start, LocalDateTime.now());
+    }
+
+    @Override
+    public FunnelStatsRes getFunnelStats() {
+        long totalDownloadCount = memberPaybackRepository.count();
+        long expiredCount = memberPaybackRepository.countByIsExpiredTrueAndReceiptIsNull();
+        long receiptSubmittedCount = memberPaybackRepository.countByReceiptIsNotNull();
+        long paybackCompletedCount = memberPaybackRepository.countByIsPayback(true);
+        return FunnelStatsRes.of(totalDownloadCount, expiredCount, receiptSubmittedCount, paybackCompletedCount);
+    }
+
+    @Override
+    public RetentionStatsRes getRetentionStats() {
+        long completedMemberCount = memberPaybackRepository.countCompletedMembersDistinct();
+        long retainedMemberCount = memberPaybackRepository.countRetainedMembersAfterPayback();
+        return RetentionStatsRes.of(completedMemberCount, retainedMemberCount);
+    }
+
+    @Override
+    public AvgProcessingTimeRes getAvgProcessingTime() {
+        long measuredCount = memberPaybackRepository.countByIsPaybackTrueAndReceiptSubmittedAtIsNotNull();
+        Double avgSeconds = memberPaybackRepository.getAvgProcessingSeconds();
+        return AvgProcessingTimeRes.of(measuredCount, avgSeconds);
     }
 
     private MemberPayback findMemberPaybackById(Long couponId) {

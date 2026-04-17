@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Table(name = "member_payback_coupon")
 @Entity
 @Getter
@@ -28,6 +30,9 @@ public class MemberPayback extends BaseEntity {
 
     @Column(nullable = true)
     private String receipt;
+
+    @Column(name = "receipt_submitted_at", nullable = true)
+    private LocalDateTime receiptSubmittedAt; // 영수증 제출 시간
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payback_coupon_id", nullable = false)
@@ -48,6 +53,7 @@ public class MemberPayback extends BaseEntity {
 
     public void updateReceipt(String receipt) {
         this.receipt = receipt;
+        this.receiptSubmittedAt = LocalDateTime.now();
     }
 
     public void completePayback() {

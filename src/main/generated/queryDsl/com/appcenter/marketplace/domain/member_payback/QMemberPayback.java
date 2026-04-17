@@ -42,6 +42,8 @@ public class QMemberPayback extends EntityPathBase<MemberPayback> {
 
     public final StringPath receipt = createString("receipt");
 
+    public final DateTimePath<java.time.LocalDateTime> receiptSubmittedAt = createDateTime("receiptSubmittedAt", java.time.LocalDateTime.class);
+
     public QMemberPayback(String variable) {
         this(MemberPayback.class, forVariable(variable), INITS);
     }

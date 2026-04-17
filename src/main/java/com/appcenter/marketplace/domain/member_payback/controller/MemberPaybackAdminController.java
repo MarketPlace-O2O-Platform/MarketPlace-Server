@@ -3,9 +3,12 @@ package com.appcenter.marketplace.domain.member_payback.controller;
 import com.appcenter.marketplace.domain.coupon.dto.res.CouponPageRes;
 import com.appcenter.marketplace.domain.member_coupon.dto.res.CouponHandleRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.AdminReceiptRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.AvgProcessingTimeRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.CouponPaybackStatsRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.FunnelStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.RecentMemberPaybackStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.MemberReceiptHistoryRes;
+import com.appcenter.marketplace.domain.member_payback.dto.res.RetentionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.ReceiptSubmissionStatsRes;
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
@@ -176,5 +179,35 @@ public class MemberPaybackAdminController {
         return ResponseEntity
                 .ok(CommonResponse.from(STATS_FOUND.getMessage(),
                         memberPaybackAdminService.getMemberReceiptCountByCalendar(period)));
+    }
+
+    @Operation(summary = "퍼널 전환율 조회",
+            description = "환급 쿠폰 퍼널 단계별 전환율을 조회합니다. <br>" +
+                    "다운로드 → 영수증 제출 전환율, 영수증 제출 → 환급 완료 전환율, 전체 전환율을 제공합니다.")
+    @GetMapping("/stats/funnel")
+    public ResponseEntity<CommonResponse<FunnelStatsRes>> getFunnelStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getFunnelStats()));
+    }
+
+    @Operation(summary = "환급 완료 후 재다운로드율 조회",
+            description = "환급 완료 경험이 있는 회원 중 이후 다시 쿠폰을 다운로드한 회원 비율을 조회합니다.")
+    @GetMapping("/stats/retention")
+    public ResponseEntity<CommonResponse<RetentionStatsRes>> getRetentionStats() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getRetentionStats()));
+    }
+
+    @Operation(summary = "평균 환급 처리 시간 조회",
+            description = "영수증 제출부터 환급 완료까지 평균 처리 시간을 조회합니다. <br>" +
+                    "시간(hours)과 일(days) 단위로 제공됩니다. <br>" +
+                    "측정 대상은 receiptSubmittedAt이 기록된 완료 건만 포함됩니다.")
+    @GetMapping("/stats/processing-time")
+    public ResponseEntity<CommonResponse<AvgProcessingTimeRes>> getAvgProcessingTime() {
+        return ResponseEntity
+                .ok(CommonResponse.from(STATS_FOUND.getMessage(),
+                        memberPaybackAdminService.getAvgProcessingTime()));
     }
 }

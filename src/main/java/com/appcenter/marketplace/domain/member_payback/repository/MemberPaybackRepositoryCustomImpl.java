@@ -16,6 +16,7 @@ import com.appcenter.marketplace.domain.member_payback.dto.res.TopMarketPaybackR
 import com.appcenter.marketplace.domain.member_payback.dto.res.TopMemberReceiptRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 import static com.appcenter.marketplace.domain.market.QMarket.market;
 import static com.appcenter.marketplace.domain.member.QMember.member;
+import com.appcenter.marketplace.domain.member_payback.QMemberPayback;
 import static com.appcenter.marketplace.domain.member_payback.QMemberPayback.memberPayback;
 import static com.appcenter.marketplace.domain.payback.QPayback.payback;
 
@@ -215,6 +217,68 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .where(member.createdAt.between(startDateTime, endDateTime))
                 .fetchOne();
         return count != null ? count : 0L;
+    }
+
+    // 특정 기간에 가입한 회원들이 같은 기간 내에 다운로드한 MemberPayback 개수 조회
+    @Override
+    public long countByMemberCreatedAtBetweenAndCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
+        Long count = jpaQueryFactory
+                .select(memberPayback.count())
+                .from(memberPayback)
+                .innerJoin(memberPayback.member, member)
+                .where(member.createdAt.between(start, end)
+                        .and(memberPayback.createdAt.between(start, end)))
+                .fetchOne();
+        return count != null ? count : 0L;
+    }
+
+    // 환급 완료 경험이 있는 고유 회원 수
+    @Override
+    public long countCompletedMembersDistinct() {
+        Long count = jpaQueryFactory
+                .select(memberPayback.member.id.countDistinct())
+                .from(memberPayback)
+                .where(memberPayback.isPayback.eq(true))
+                .fetchOne();
+        return count != null ? count : 0L;
+    }
+
+    // 환급 완료 후 재다운로드한 고유 회원 수
+    @Override
+    public long countRetainedMembersAfterPayback() {
+        QMemberPayback mp2 = new QMemberPayback("mp2");
+        Long count = jpaQueryFactory
+                .select(memberPayback.member.id.countDistinct())
+                .from(memberPayback)
+                .where(
+                    memberPayback.isPayback.eq(true)
+                    .and(JPAExpressions
+                        .selectOne()
+                        .from(mp2)
+                        .where(
+                            mp2.member.id.eq(memberPayback.member.id)
+                            .and(mp2.createdAt.gt(memberPayback.modifiedAt))
+                        )
+                        .exists())
+                )
+                .fetchOne();
+        return count != null ? count : 0L;
+    }
+
+    // 영수증 제출 → 환급 완료까지 평균 처리 시간 (초 단위)
+    @Override
+    public Double getAvgProcessingSeconds() {
+        return jpaQueryFactory
+                .select(Expressions.numberTemplate(Double.class,
+                        "AVG(TIMESTAMPDIFF(SECOND, {0}, {1}))",
+                        memberPayback.receiptSubmittedAt,
+                        memberPayback.modifiedAt))
+                .from(memberPayback)
+                .where(
+                    memberPayback.isPayback.eq(true)
+                    .and(memberPayback.receiptSubmittedAt.isNotNull())
+                )
+                .fetchOne();
     }
 
     // 특정 회원(학번)의 영수증 제출 내역 조회
