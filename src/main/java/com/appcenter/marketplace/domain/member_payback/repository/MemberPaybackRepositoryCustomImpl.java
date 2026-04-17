@@ -126,7 +126,8 @@ public class MemberPaybackRepositoryCustomImpl implements MemberPaybackRepositor
                 .update(memberPayback)
                 .set(memberPayback.isExpired, true)
                 .where(memberPayback.createdAt.before(LocalDateTime.now().minusDays(3))
-                        .and(memberPayback.isPayback.eq(false)))
+                        .and(memberPayback.isPayback.eq(false))
+                        .and(memberPayback.receipt.isNull()))
                 .execute();
     }
 
